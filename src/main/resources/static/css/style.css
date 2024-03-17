@@ -1,0 +1,196 @@
+/* Reset default styles and set up a base font family */
+/*body, html {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	font-family: 'Arial', sans-serif;
+	color: black;
+}*/
+html {
+    height: 100%;
+    background-color: #f9f9f9;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin: 0;
+}
+
+.content-wrap {
+    flex: 1;
+    width: 100%; /* Ensure the content wrapper takes the full width */
+}
+
+/* Styling for the startup screen */
+#startup {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+    background-color: #001f3f;
+	color: #fff;
+	opacity: 1;
+	transition: opacity 1s ease-out, visibility 1s ease-out;
+	overflow: hidden;
+}
+
+
+/* Logo styling with a scaling transition */
+#logo {
+	font-size: 3em;
+	color: #fff;
+	transform: scale(3);
+	transition: transform 0.5s ease-out;
+}
+
+/* Main content styling with opacity transition */
+#main-content {
+	visibility: hidden;
+	opacity: 0;
+	transition: visibility 0s, opacity 1.5s linear;
+	height: 100%;
+}
+
+/* Styles for elements when scrolled */
+.scrolled #logo {
+	transform: scale(1);
+}
+
+.scrolled #main-content {
+	visibility: visible;
+	opacity: 1;
+	overflow: auto;
+}
+
+
+/* Styling for the navigation bar */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200px; /* Adjust the width as needed */
+    background-color: #333;
+    padding-top: 20px;
+    box-sizing: border-box;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    margin-bottom: 10px;
+}
+
+nav ul li a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: #555;
+}
+
+/* Adjust the styles for the main content to make space for the navigation */
+#main-content {
+    margin-left: 220px; /* Adjust this value to match the width of the navigation + some margin */
+}
+/* Hero section styling */
+.hero {
+    /*background-image: url('background-image.jpg');*/
+    background-size: cover;
+    /*height: 10%;*/
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: black;
+    background-color: #f9f9f9;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.5rem;
+    max-width: 500px;
+    margin-bottom: 20px;
+}
+
+
+#services {
+    padding-top: 200px;
+    text-align: center;
+}
+
+#services form {
+    margin-top: 20px;
+}
+
+#services label {
+    font-size: 1.2rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+#services input[type="text"] {
+    width: 300px;
+    padding: 10px;
+    font-size: 1.2rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#services button {
+    background-color: #001f3f;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#services button:hover {
+    background-color: #000;
+}
+
+.bottom-sections-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 50px 0;
+    background-color: #fff;
+}
+
+.bottom-sections-container section {
+    flex-basis: 45%;
+}
+
+.bottom-sections-container h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.bottom-sections-container p {
+    font-size: 1.2rem;
+    line-height: 1.5;
+}
+
+.footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    width: 100%; /* Ensure the footer spans the full width of the viewport */
+}
