@@ -77,6 +77,6 @@ public class GptController {
             }
         }
 
-        return "Flashcards generated successfully.";
+        return "OK.";
     }    
 }
