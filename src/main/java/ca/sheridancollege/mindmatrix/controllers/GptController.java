@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
-
 import ca.sheridancollege.mindmatrix.beans.Flashcard;
 import ca.sheridancollege.mindmatrix.gpt.GptRequest;
 import ca.sheridancollege.mindmatrix.gpt.GptResponse;
