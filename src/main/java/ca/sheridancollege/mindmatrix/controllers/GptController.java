@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
+
 import ca.sheridancollege.mindmatrix.beans.Flashcard;
 import ca.sheridancollege.mindmatrix.gpt.GptRequest;
 import ca.sheridancollege.mindmatrix.gpt.GptResponse;
@@ -36,7 +38,7 @@ public class GptController {
     @GetMapping("/flash")
     public String generateFlashcards(@RequestParam("prompt") String prompt, @RequestParam("number") Integer number) {
         List<Flashcard> flashcards = new ArrayList<>();
-        
+                
         for (int i = 0; i < number; i++) {
             String data = "always use the format Q: and A: and with short answer and question, " + prompt;
             GptRequest request = new GptRequest(model, data);
@@ -48,7 +50,7 @@ public class GptController {
                 Flashcard card = new Flashcard();
                 
                 card.setSubject(prompt);
-                
+              
                 if (message != null && message.getContent() != null) {
                     String resp = message.getContent();
                     String[] lines = resp.split("\n");
@@ -67,7 +69,7 @@ public class GptController {
                         		|| flashcardRepository.findByAnswer(card.getAnswer()) == null) {
                             
                         	flashcardRepository.save(card);
-                            flashcards.add(card); 
+                            flashcards.add(card);
                         } else {
                             i--; 
                         }
@@ -80,6 +82,6 @@ public class GptController {
             }
         }
 
-        return "Flashcards Created";
+        return "Flashcards generated successfully.";
     }    
 }
