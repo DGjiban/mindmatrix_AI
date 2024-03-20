@@ -22,6 +22,10 @@ public class Flashcard {
 	
 	@NonNull
     @Column(nullable = false, columnDefinition = "TEXT")
+    private String subject;
+	
+	@NonNull
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String question;
 
     @NonNull

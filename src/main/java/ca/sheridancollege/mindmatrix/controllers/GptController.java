@@ -36,7 +36,7 @@ public class GptController {
     @GetMapping("/flash")
     public String generateFlashcards(@RequestParam("prompt") String prompt, @RequestParam("number") Integer number) {
         List<Flashcard> flashcards = new ArrayList<>();
-
+                
         for (int i = 0; i < number; i++) {
             String data = "always use the format Q: and A: and with short answer and question, " + prompt;
             GptRequest request = new GptRequest(model, data);
@@ -45,11 +45,14 @@ public class GptController {
             if (responseEntity.getBody().getChoices() != null && !responseEntity.getBody().getChoices().isEmpty()) {
                 GptResponse.Message message = responseEntity.getBody().getChoices().get(0).getMessage();
 
+                Flashcard card = new Flashcard();
+                
+                card.setSubject(prompt);
+              
                 if (message != null && message.getContent() != null) {
                     String resp = message.getContent();
                     String[] lines = resp.split("\n");
 
-                    Flashcard card = new Flashcard();
                     for (String line : lines) {
                         if (line.startsWith("Q:")) {
                             card.setQuestion(line.replace("Q: ", "").trim());
@@ -64,7 +67,7 @@ public class GptController {
                         		|| flashcardRepository.findByAnswer(card.getAnswer()) == null) {
                             
                         	flashcardRepository.save(card);
-                            flashcards.add(card); 
+                            flashcards.add(card);
                         } else {
                             i--; 
                         }
