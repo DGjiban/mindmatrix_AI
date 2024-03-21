@@ -85,7 +85,6 @@ public class GptController {
             }
         }
 
-<<<<<<< Updated upstream
         return "Flashcards generated successfully.";
     }  
     
@@ -104,10 +103,15 @@ public class GptController {
 
             if (responseEntity.getBody().getChoices() != null && !responseEntity.getBody().getChoices().isEmpty()) {
                 String response = responseEntity.getBody().getChoices().get(0).getMessage().getContent();
+                
+                System.out.println(response);
+                
                 Quiz quiz = organizeFlashQuestion(response); 
                 
                 if (quiz != null) {
                     quiz.setSubject(subject);
+                    
+                    System.out.println(quiz);
  
                     quizRepository.save(quiz);
                     quizzes.add(quiz);
@@ -144,13 +148,8 @@ public class GptController {
 			return new Quiz(null, subject, question, answers, correctAnswerIndex);
 		} else {
 			return null;
-		}
-	}
-
-    
-        
-=======
-        return "Flashcard generated successfully.";
+		} 
+		
     }    
->>>>>>> Stashed changes
+
 }
