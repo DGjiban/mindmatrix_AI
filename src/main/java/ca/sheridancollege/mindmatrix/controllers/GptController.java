@@ -43,7 +43,7 @@ public class GptController {
         List<Flashcard> flashcards = new ArrayList<>();
                 
         for (int i = 0; i < number; i++) {
-            String data = "always use the format Q: and A: and with short answer and question, " + prompt;
+            String data = "always use the format Q: and A: with short question, " + prompt;
             GptRequest request = new GptRequest(model, data);
             ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
 
@@ -85,6 +85,7 @@ public class GptController {
             }
         }
 
+<<<<<<< Updated upstream
         return "Flashcards generated successfully.";
     }  
     
@@ -148,4 +149,8 @@ public class GptController {
 
     
         
+=======
+        return "Flashcard generated successfully.";
+    }    
+>>>>>>> Stashed changes
 }
