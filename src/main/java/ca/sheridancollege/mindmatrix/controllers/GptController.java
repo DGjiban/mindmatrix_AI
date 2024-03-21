@@ -39,7 +39,7 @@ public class GptController {
                 
         for (int i = 0; i < number; i++) {
             String data = "always use the format Q: and A: and with short answer and question, " + prompt;
-            GptRequest request = new GptRequest(model, data);
+            GptRequest request = new GptRequest(model, data, 150);
             ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
 
             if (responseEntity.getBody().getChoices() != null && !responseEntity.getBody().getChoices().isEmpty()) {
