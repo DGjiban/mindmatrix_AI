@@ -43,13 +43,8 @@ public class GptController {
         List<Flashcard> flashcards = new ArrayList<>();
                 
         for (int i = 0; i < number; i++) {
-<<<<<<< HEAD
             String data = "always use the format Q: and A: and with short answer and question, " + prompt;
             GptRequest request = new GptRequest(model, data, 150);
-=======
-            String data = "always use the format Q: and A: with short question, " + prompt;
-            GptRequest request = new GptRequest(model, data);
->>>>>>> main
             ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
 
             if (responseEntity.getBody().getChoices() != null && !responseEntity.getBody().getChoices().isEmpty()) {
@@ -103,7 +98,7 @@ public class GptController {
             String prompt = "Generate a quiz question and multiple-choice answers on " + subject;
             
            
-            GptRequest request = new GptRequest(model, prompt);
+            GptRequest request = new GptRequest(model, prompt, 150);
             ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
 
             if (responseEntity.getBody().getChoices() != null && !responseEntity.getBody().getChoices().isEmpty()) {
