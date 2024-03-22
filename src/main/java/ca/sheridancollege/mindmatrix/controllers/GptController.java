@@ -96,7 +96,7 @@ public class GptController {
 
 		for (int i = 0; i < number; i++) {
 
-			String prompt = "Generate a quiz question and multiple-choice answers on " + subject;
+			String prompt = "Generate a multiple-choice question start with 'Question:' and answer about" + subject;
 
 			GptRequest request = new GptRequest(model, prompt, 150);
 			ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
@@ -107,7 +107,9 @@ public class GptController {
 				System.out.println(response);
 
 				Quiz quiz = organizeQuizQuestion(response);
-
+				
+				System.out.println(quiz);
+				
 				if (quiz != null) {
 					quiz.setSubject(subject);
 
@@ -133,23 +135,26 @@ public class GptController {
 		int correctAnswerIndex = -1;
 
 		for (String line : lines) {
-			if (line.startsWith("Q:") || line.startsWith("Question:")) {
+			if (line.startsWith("Q: ") || line.startsWith("Question: ")) {
 				question = line.substring(2).trim();
 			} else if (line.matches("^[A-Z]:.*")) {
 				answers.add(line.substring(2).trim());
-			} else if (line.startsWith("Correct Answer:")) {
-				String correctAnswerMark = line.substring("Correct Answer:".length()).trim();
+			} else if (line.startsWith("Answer: ")) {
+				String correctAnswerMark = line.substring("Answer: ".length()).trim();
 				correctAnswerIndex = "ABC".indexOf(correctAnswerMark);
 			}
 		}
 
 		if (question != null && !answers.isEmpty() && correctAnswerIndex != -1) {
-			return new Quiz(null, subject, question, answers, correctAnswerIndex);
+			Quiz result = new Quiz(null, subject, question, answers, correctAnswerIndex);
+			System.out.println(result);
+			return result;
 		} else {
 			return null;
 		}
 
 	}
 
-    }    
+        
 }
+
