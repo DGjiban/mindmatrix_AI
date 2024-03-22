@@ -134,7 +134,7 @@ public class GptController {
 		int correctAnswerIndex = -1;
 		    
 		for (String line : lines) {
-			if (line.startsWith("Q:")) {
+			if (line.startsWith("Q:") || line.startsWith("Question:")) {
 				question = line.substring(2).trim();
 			} else if (line.matches("^[A-Z]:.*")) {
 				answers.add(line.substring(2).trim());
