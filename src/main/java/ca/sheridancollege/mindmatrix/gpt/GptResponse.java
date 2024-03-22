@@ -2,9 +2,7 @@ package ca.sheridancollege.mindmatrix.gpt;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 public class GptResponse {

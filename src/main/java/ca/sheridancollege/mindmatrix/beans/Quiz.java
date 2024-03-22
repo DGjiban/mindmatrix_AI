@@ -1,10 +1,15 @@
 package ca.sheridancollege.mindmatrix.beans;
 
+import java.util.List;
+
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +19,7 @@ import lombok.NonNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Flashcard {
+public class Quiz {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +33,10 @@ public class Flashcard {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String question;
 
-    @NonNull
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String answer;
-	
+	@ElementCollection
+	@CollectionTable(name = "quiz_answers", joinColumns = @JoinColumn(name = "quiz_id"))
+	@Column(name = "answer")
+	private List<String> answers;
+
+    private int correctAnswerIndex;
 }
