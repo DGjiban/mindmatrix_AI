@@ -44,7 +44,11 @@ public class GptController {
                 
         for (int i = 0; i < number; i++) {
             String data = "always use the format Q: and A: with short question, " + prompt;
+<<<<<<< Updated upstream
             GptRequest request = new GptRequest(model, data);
+=======
+            GptRequest request = new GptRequest(model, data, 300);
+>>>>>>> Stashed changes
             ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
 
             if (responseEntity.getBody().getChoices() != null && !responseEntity.getBody().getChoices().isEmpty()) {
@@ -95,18 +99,32 @@ public class GptController {
         
         for (int i = 0; i < number; i++) {
          
+<<<<<<< Updated upstream
             String prompt = "Generate a quiz question and multiple-choice answers on " + subject;
             
            
             GptRequest request = new GptRequest(model, prompt);
+=======
+            String prompt = "Generate a multiple choice question on " + subject + ", you must identify the question from the answers using 'Question: '"
+            		+ "and the correct answer must be identified by 'Correct Answer: ";
+            
+           
+            GptRequest request = new GptRequest(model, prompt, 300);
+>>>>>>> Stashed changes
             ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
 
             if (responseEntity.getBody().getChoices() != null && !responseEntity.getBody().getChoices().isEmpty()) {
                 String response = responseEntity.getBody().getChoices().get(0).getMessage().getContent();
                 
+<<<<<<< Updated upstream
                 System.out.println(response);
                 
                 Quiz quiz = organizeFlashQuestion(response); 
+=======
+                Quiz quiz = organizeQuizQuestion(response);
+                
+                System.out.println(quiz);
+>>>>>>> Stashed changes
                 
                 if (quiz != null) {
                     quiz.setSubject(subject);
@@ -126,6 +144,7 @@ public class GptController {
     }
     
     
+<<<<<<< Updated upstream
     private Quiz organizeFlashQuestion(String response) {
 		String[] lines = response.split("\n");
 		String question = null;
@@ -150,6 +169,48 @@ public class GptController {
 			return null;
 		} 
 		
+=======
+    private Quiz organizeQuizQuestion(String response) {
+        
+        System.out.println("Full response from AI: " + response);
+
+        String[] lines = response.split("\n");
+        String question = null;
+        String subject = null;
+        List<String> answers = new ArrayList<>();
+        String correctAnswer = null;
+
+        for (String line : lines) {
+            
+            System.out.println("Processing line: " + line);
+
+            if (line.startsWith("Q: ") || line.startsWith("Question: ")) {
+            	
+                question = line.replace("Q: ", "").replace("Question: ", "").trim();
+                
+            } else if (line.matches("^[A-D]\\) .*")) {
+            	
+                answers.add(line.substring(line.indexOf(") ") + 2).trim());
+                
+            } else if (line.startsWith("Correct answer: ") || line.startsWith("Answer: ")) {
+            	
+                correctAnswer = line.replace("Correct Answer: ", "").trim();
+            }
+        }
+
+        
+        System.out.println("Question: " + question);
+        System.out.println("Answers: " + answers);
+        System.out.println("Correct Answer is: " + correctAnswer);
+
+        if (question != null && !answers.isEmpty() && correctAnswer != null) {
+           
+            return new Quiz(null, subject, question, answers, correctAnswer);
+        } else {
+            System.out.println("Failed to organize question and answers properly.");
+            return null;
+        }
+>>>>>>> Stashed changes
     }    
 
 }
