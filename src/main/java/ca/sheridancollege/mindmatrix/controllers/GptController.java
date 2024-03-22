@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import ca.sheridancollege.mindmatrix.beans.Flashcard;
+import ca.sheridancollege.mindmatrix.beans.Quiz;
 import ca.sheridancollege.mindmatrix.gpt.GptRequest;
 import ca.sheridancollege.mindmatrix.gpt.GptResponse;
 import ca.sheridancollege.mindmatrix.repositories.FlashCardRepository;
+import ca.sheridancollege.mindmatrix.repositories.QuizRepository;
 
 @RestController
 @RequestMapping("/chat")
@@ -33,13 +35,21 @@ public class GptController {
     @Autowired
     private FlashCardRepository flashcardRepository;
     
+    @Autowired
+    private QuizRepository quizRepository;
+    
     @GetMapping("/flash")
     public String generateFlashcards(@RequestParam("prompt") String prompt, @RequestParam("number") Integer number) {
         List<Flashcard> flashcards = new ArrayList<>();
                 
         for (int i = 0; i < number; i++) {
+<<<<<<< HEAD
             String data = "always use the format Q: and A: and with short answer and question, " + prompt;
             GptRequest request = new GptRequest(model, data, 150);
+=======
+            String data = "always use the format Q: and A: with short question, " + prompt;
+            GptRequest request = new GptRequest(model, data);
+>>>>>>> main
             ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
 
             if (responseEntity.getBody().getChoices() != null && !responseEntity.getBody().getChoices().isEmpty()) {
@@ -81,5 +91,70 @@ public class GptController {
         }
 
         return "Flashcards generated successfully.";
+    }  
+    
+    
+    @GetMapping("/quiz")
+    public String generateQuiz(@RequestParam("subject") String subject, @RequestParam("number") Integer number) {
+        List<Quiz> quizzes = new ArrayList<>();
+        
+        for (int i = 0; i < number; i++) {
+         
+            String prompt = "Generate a quiz question and multiple-choice answers on " + subject;
+            
+           
+            GptRequest request = new GptRequest(model, prompt);
+            ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
+
+            if (responseEntity.getBody().getChoices() != null && !responseEntity.getBody().getChoices().isEmpty()) {
+                String response = responseEntity.getBody().getChoices().get(0).getMessage().getContent();
+                
+                System.out.println(response);
+                
+                Quiz quiz = organizeFlashQuestion(response); 
+                
+                if (quiz != null) {
+                    quiz.setSubject(subject);
+                    
+                    System.out.println(quiz);
+ 
+                    quizRepository.save(quiz);
+                    quizzes.add(quiz);
+                } else {
+                    return "Invalid response format.";
+                }
+            } else {
+                return "Failed to get response.";
+            }
+        }
+        return "Quiz generated successfully.";
+    }
+    
+    
+    private Quiz organizeFlashQuestion(String response) {
+		String[] lines = response.split("\n");
+		String question = null;
+		String subject = null;
+		List<String> answers = new ArrayList<>();
+		int correctAnswerIndex = -1;
+		    
+		for (String line : lines) {
+			if (line.startsWith("Q:")) {
+				question = line.substring(2).trim();
+			} else if (line.matches("^[A-Z]:.*")) {
+				answers.add(line.substring(2).trim());
+		    } else if (line.startsWith("Correct Answer:")) {
+		    	String correctAnswerMark = line.substring("Correct Answer:".length()).trim();
+		    	correctAnswerIndex = "ABC".indexOf(correctAnswerMark);
+		    }
+		}
+
+		if (question != null && !answers.isEmpty() && correctAnswerIndex != -1) {
+			return new Quiz(null, subject, question, answers, correctAnswerIndex);
+		} else {
+			return null;
+		} 
+		
     }    
+
 }
