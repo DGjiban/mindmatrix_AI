@@ -36,7 +36,10 @@ public class GptController {
     @GetMapping("/flash")
     public String generateFlashcards(@RequestParam("prompt") String prompt, @RequestParam("number") Integer number) {
         List<Flashcard> flashcards = new ArrayList<>();
+        
+        boolean success = true;
 
+       
         for (int i = 0; i < number; i++) {
             String data = "always use the format Q: and A: and with short answer and question, " + prompt;
             GptRequest request = new GptRequest(model, data);
@@ -78,5 +81,7 @@ public class GptController {
         }
 
         return "Flashcards generated successfully.";
+        
+		
     }    
 }
