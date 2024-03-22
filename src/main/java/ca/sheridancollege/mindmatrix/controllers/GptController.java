@@ -23,11 +23,34 @@ import ca.sheridancollege.mindmatrix.repositories.QuizRepository;
 @RequestMapping("/chat")
 public class GptController {
 
+<<<<<<< HEAD
+    @Value(("${openai.api.url}"))
+    private String apiURL;
+    
+    @Autowired
+    private RestTemplate template;
+    
+    @Autowired
+    private FlashCardRepository flashcardRepository;
+    
+    @GetMapping("/flash")
+    public String generateFlashcards(@RequestParam("prompt") String prompt, @RequestParam("number") Integer number) {
+        List<Flashcard> flashcards = new ArrayList<>();
+        
+        boolean success = true;
+
+       
+        for (int i = 0; i < number; i++) {
+            String data = "always use the format Q: and A: and with short answer and question, " + prompt;
+            GptRequest request = new GptRequest(model, data);
+            ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
+=======
 	@Value("${openai.model}")
 	private String model;
 
 	@Value(("${openai.api.url}"))
 	private String apiURL;
+>>>>>>> main
 
 	@Autowired
 	private RestTemplate template;
@@ -151,4 +174,11 @@ public class GptController {
 
 	}
 
+<<<<<<< HEAD
+        return "Flashcards generated successfully.";
+        
+		
+    }    
+=======
+>>>>>>> main
 }
