@@ -38,5 +38,6 @@ public class Quiz {
 	@Column(name = "answer")
 	private List<String> answers;
 
-    private int correctAnswerIndex;
+	@NonNull
+    private String correctAnswerIndex;
 }
