@@ -91,61 +91,80 @@ public class GptController {
 	}
 
 	@GetMapping("/quiz")
-	public String generateQuiz(@RequestParam("subject") String subject, @RequestParam("number") Integer number) {
-		List<Quiz> quizzes = new ArrayList<>();
+    public String generateQuiz(@RequestParam("subject") String subject, @RequestParam("number") Integer number) {
+        List<Quiz> quizzes = new ArrayList<>();
+        
+        for (int i = 0; i < number; i++) {
+         
+            String prompt = "Generate a multiple choice question on " + subject + ", you must identify the question from the answers using 'Question: '"
+            		+ "and the correct answer must be identified by 'Correct Answer: ";
+            
+           
+            GptRequest request = new GptRequest(model, prompt, 300);
+            ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
 
-		for (int i = 0; i < number; i++) {
+            if (responseEntity.getBody().getChoices() != null && !responseEntity.getBody().getChoices().isEmpty()) {
+                String response = responseEntity.getBody().getChoices().get(0).getMessage().getContent();
+                
+                Quiz quiz = organizeQuizQuestion(response, subject);
+                
+                System.out.println(quiz);
+                
+                if (quiz != null) {
+                    quiz.setSubject(subject);
+                    
+                    System.out.println(quiz);
+ 
+                    quizRepository.save(quiz);
+                    quizzes.add(quiz);
+                } else {
+                    return "Invalid response format.";
+                }
+            } else {
+                return "Failed to get response.";
+            }
+        }
+        return "Quiz generated successfully.";
+    }
+    
+    
+    private Quiz organizeQuizQuestion(String response, String subject) {
+        
+       //System.out.println("Full response from AI: " + response);
 
-			String prompt = "Generate a quiz question and multiple-choice answers on " + subject;
+        String[] lines = response.split("\n");
+        String question = null;
+        List<String> answers = new ArrayList<>();
+        String correctAnswer = null;
 
-			GptRequest request = new GptRequest(model, prompt, 150);
-			ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
+        for (String line : lines) {
+            
+        	//System.out.println("Processing line: " + line);
 
-			if (responseEntity.getBody().getChoices() != null && !responseEntity.getBody().getChoices().isEmpty()) {
-				String response = responseEntity.getBody().getChoices().get(0).getMessage().getContent();
+            if (line.startsWith("Q: ") || line.startsWith("Question: ")) {
+            	
+                question = line.replace("Q: ", "").replace("Question: ", "").trim();
+                
+            } else if (line.matches("^[A-D]\\) .*")) {
+            	
+                answers.add(line.substring(line.indexOf(") ") + 2).trim());
+                
+            } else if (line.startsWith("Correct Answer: ") || line.startsWith("Answer: ")) {
+                
+            	correctAnswer = line.substring(line.indexOf(": ") + 2).trim();
+            }
+        }
+ 
+        /*System.out.println("Question: " + question);
+        System.out.println("Answers: " + answers);
+        System.out.println("Correct Answer is: " + correctAnswer);*/
 
-				System.out.println(response);
-
-				Quiz quiz = organizeQuizQuestion(response);
-
-				if (quiz != null) {
-					quiz.setSubject(subject);
-
-					System.out.println(quiz);
-
-					quizRepository.save(quiz);
-					quizzes.add(quiz);
-				} else {
-					return "Invalid response format.";
-				}
-			} else {
-				return "Failed to get response.";
-			}
-		}
-		return "Quiz generated successfully.";
-	}
-
-	private Quiz organizeQuizQuestion(String response) {
-		String[] lines = response.split("\n");
-		String question = null;
-		String subject = null;
-		List<String> answers = new ArrayList<>();
-		String correctAnswer = null;
-
-		for (String line : lines) {
-			if (line.startsWith("Q:") || line.startsWith("Question:")) {
-				question = line.substring(2).trim();
-			} else if (line.matches("^[A-Z]:.*")) {
-				answers.add(line.substring(2).trim());
-			} else if (line.startsWith("Correct Answer: ") || line.startsWith("Answer: ")) {
-	            correctAnswer = line.substring(line.indexOf(": ") + 2).trim();
-			}
-		}
-
-		if (question != null && !answers.isEmpty() && correctAnswer != null) {
-			return new Quiz(null, subject, question, answers, correctAnswer);
-		} else {
-			return null;
-		}
-	}
+        if (question != null && !answers.isEmpty() && correctAnswer != null) {
+           
+            return new Quiz(null, subject, question, answers, correctAnswer);
+        } else {
+            System.out.println("Failed to organize question and answers properly.");
+            return null;
+        }
+    }
 }
