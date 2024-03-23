@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 import ca.sheridancollege.mindmatrix.beans.Flashcard;
+import ca.sheridancollege.mindmatrix.beans.Quiz;
 
 public interface FlashCardRepository extends CrudRepository<Flashcard, Long> {
 	
