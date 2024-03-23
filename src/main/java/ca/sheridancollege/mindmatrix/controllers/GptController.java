@@ -96,7 +96,8 @@ public class GptController {
 
 		for (int i = 0; i < number; i++) {
 
-			String prompt = "Generate a quiz question and multiple-choice answers on " + subject;
+			String prompt = "Generate a multiple choice question on " + subject + ", you must identify the question from the answers using 'Question: '"
+            		+ "and the correct answer must be identified by 'Correct Answer: ";
 
 			GptRequest request = new GptRequest(model, prompt, 150);
 			ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
