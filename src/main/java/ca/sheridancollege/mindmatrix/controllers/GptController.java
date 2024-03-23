@@ -148,7 +148,4 @@ public class GptController {
 		} else {
 			return null;
 		}
-
-	}
-  
 }
