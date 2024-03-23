@@ -84,7 +84,6 @@ public class GptController {
                 return "Failed to get response.";
             }
         }
-
         return "Flashcards generated successfully.";
     }  
     
@@ -107,7 +106,7 @@ public class GptController {
                 
                 Quiz quiz = organizeQuizQuestion(response, subject);
                 
-                System.out.println(quiz);
+                //System.out.println(quiz);
                 
                 if (quiz != null) {
                     quiz.setSubject(subject);
