@@ -130,22 +130,22 @@ public class GptController {
 		String question = null;
 		String subject = null;
 		List<String> answers = new ArrayList<>();
-		int correctAnswerIndex = -1;
+		String correctAnswer = null;
 
 		for (String line : lines) {
 			if (line.startsWith("Q:") || line.startsWith("Question:")) {
 				question = line.substring(2).trim();
 			} else if (line.matches("^[A-Z]:.*")) {
 				answers.add(line.substring(2).trim());
-			} else if (line.startsWith("Correct Answer:")) {
-				String correctAnswerMark = line.substring("Correct Answer:".length()).trim();
-				correctAnswerIndex = "ABC".indexOf(correctAnswerMark);
+			} else if (line.startsWith("Correct Answer: ") || line.startsWith("Answer: ")) {
+	            correctAnswer = line.substring(line.indexOf(": ") + 2).trim();
 			}
 		}
 
-		if (question != null && !answers.isEmpty() && correctAnswerIndex != -1) {
-			return new Quiz(null, subject, question, answers, correctAnswerIndex);
+		if (question != null && !answers.isEmpty() && correctAnswer != null) {
+			return new Quiz(null, subject, question, answers, correctAnswer);
 		} else {
 			return null;
 		}
+	}
 }
