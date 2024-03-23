@@ -105,15 +105,13 @@ public class GptController {
             if (responseEntity.getBody().getChoices() != null && !responseEntity.getBody().getChoices().isEmpty()) {
                 String response = responseEntity.getBody().getChoices().get(0).getMessage().getContent();
                 
-                Quiz quiz = organizeQuizQuestion(response);
+                Quiz quiz = organizeQuizQuestion(response, subject);
                 
                 System.out.println(quiz);
                 
                 if (quiz != null) {
                     quiz.setSubject(subject);
                     
-                    System.out.println(quiz);
- 
                     quizRepository.save(quiz);
                     quizzes.add(quiz);
                 } else {
@@ -127,19 +125,16 @@ public class GptController {
     }
     
     
-    private Quiz organizeQuizQuestion(String response) {
+    private Quiz organizeQuizQuestion(String response, String subject) {
         
-        System.out.println("Full response from AI: " + response);
-
         String[] lines = response.split("\n");
         String question = null;
-        String subject = null;
         List<String> answers = new ArrayList<>();
         String correctAnswer = null;
 
         for (String line : lines) {
             
-            System.out.println("Processing line: " + line);
+        	System.out.println("Processing line: " + line);
 
             if (line.startsWith("Q: ") || line.startsWith("Question: ")) {
             	
@@ -149,17 +144,11 @@ public class GptController {
             	
                 answers.add(line.substring(line.indexOf(") ") + 2).trim());
                 
-            } else if (line.startsWith("Correct answer: ") || line.startsWith("Answer: ")) {
-            	
-                correctAnswer = line.replace("Correct Answer: ", "").trim();
+            } else if (line.startsWith("Correct Answer: ") || line.startsWith("Answer: ")) {
+                correctAnswer = line.substring(line.indexOf(": ") + 2).trim();
             }
         }
-
-        
-        System.out.println("Question: " + question);
-        System.out.println("Answers: " + answers);
-        System.out.println("Correct Answer is: " + correctAnswer);
-
+ 
         if (question != null && !answers.isEmpty() && correctAnswer != null) {
            
             return new Quiz(null, subject, question, answers, correctAnswer);
