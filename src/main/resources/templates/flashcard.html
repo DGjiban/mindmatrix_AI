@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MindMatrix</title>
+<link rel="stylesheet" href="/css/style.css">
+<script src="/js/script.js" defer></script>
+</head>
+<body>
+	<div class="content-wrap">
+		<div id="startup">
+		<h1 id="logo">MindMatrix</h1>
+	</div>
+	
+	<main id="main-content">
+		<nav>
+			<ul>
+				<li><a href="#home">Home</a></li>
+				<li><a href="#services">Services</a></li>
+				<li><a href="#about">About</a></li>
+				<li><a href="#contact">Contact</a></li>
+			</ul>
+		</nav>
+		<section id="home" class="hero">
+			<h1>Welcome to MindMatrix</h1>
+			<p>Your journey into the world of knowledge begins here.</p>
+		</section>
+
+		<section id="services">
+			<!-- Update the form in the programForm.html file -->
+			<!-- Replace the existing form with this one -->
+			<form id="program-form" action="/chat/flash" method="get">
+				<label for="search">How many Flashcards:</label> 
+				<input type="number" id="number" name="number" required>
+				<label for="search">Search for a Subject:</label>
+				<input type="text" id="prompt" name="prompt" required>
+				<button type="submit">Generate Flashcard</button>
+			</form>
+		</section>
+		
+		<section id="services">
+			<!-- Update the form in the programForm.html file -->
+			<!-- Replace the existing form with this one -->
+			<form id="program-form" action="/chat/quiz" method="get">
+				<label for="search">How many Quizzes:</label> 
+				<input type="number" id="number" name="number" required>
+				<label for="search">Search for a Subject:</label>
+				<input type="text" id="subject" name="subject" required>
+				<button type="submit">Generate Quiz</button>
+			</form>
+		</section>
+		
+		
+	</main>
+	</div>
+
+	<footer class="footer">
+		<p>&copy; 2024 MindMatrix. All rights reserved.</p>
+	</footer>
+	
+</body>
+</html>
