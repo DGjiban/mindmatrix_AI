@@ -21,3 +21,37 @@ window.onload = function() {
 
     window.addEventListener('scroll', onScroll);
 };
+
+// Flash JS
+document.querySelectorAll('.flashcard-container').forEach(container => {
+  container.addEventListener('click', function() {
+    const flashcard = this.querySelector('.flashcard');
+    flashcard.classList.toggle('is-flipped');
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    const flashcards = document.querySelectorAll('.flashcard-container .flashcard');
+
+    flashcards.forEach(flashcard => {
+        const question = flashcard.querySelector('.flashcard-front h2');
+        const answer = flashcard.querySelector('.flashcard-back p');
+
+        adjustFontSizeBasedOnContentLength(question);
+        adjustFontSizeBasedOnContentLength(answer);
+    });
+
+    function adjustFontSizeBasedOnContentLength(element) {
+        if (!element) return; // If the element doesn't exist, do nothing
+
+        let contentLength = element.textContent.length;
+
+        if (contentLength > 100) { // Adjust these values based on your needs
+            element.style.fontSize = '14px'; // Smaller font size for longer content
+        } else if (contentLength > 50) {
+            element.style.fontSize = '16px'; // Medium font size
+        } else {
+            element.style.fontSize = '18px'; // Larger font size for shorter content
+        }
+    }
+});
