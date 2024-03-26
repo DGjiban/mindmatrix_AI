@@ -39,5 +39,5 @@ public class Quiz {
 	private List<String> answers;
 
 	@NonNull
-    private String correctAnswerIndex;
+    private String correctAnswer;
 }
