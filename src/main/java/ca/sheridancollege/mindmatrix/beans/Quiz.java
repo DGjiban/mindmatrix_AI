@@ -40,4 +40,6 @@ public class Quiz {
 
 	@NonNull
     private String correctAnswerIndex;
+	
+	private String correctAnswerText;
 }

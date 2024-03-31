@@ -9,14 +9,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ca.sheridancollege.mindmatrix.beans.Flashcard;
+import ca.sheridancollege.mindmatrix.beans.Quiz;
 //import ca.sheridancollege.mindmatrix.repositories.FlashCardRepository;
 import ca.sheridancollege.mindmatrix.services.FlashcardService;
+import ca.sheridancollege.mindmatrix.services.QuizService;
 
 @Controller
 public class WebController {
 	
 	@Autowired
     private FlashcardService flashcardService;
+	
+	@Autowired
+    private QuizService quizService;
 	
 	@GetMapping("/")
 	public String index(Model model) {
@@ -33,11 +38,11 @@ public class WebController {
         return "index"; // Redirecting back to index page with flashcards
     }
 	
-//	@GetMapping("/flashcards")
-//	public String flashcards(Model model) {
-//		Iterable<Flashcard> flashcards = flashCardRepository.findAll();
-//		model.addAttribute("welcome", "This is Flashcard");
-//        model.addAttribute("flashcards", flashcards);
-//        return "index";
-//	}
+	@GetMapping("/quizzes/generate")
+    public String generateQuizzes(@RequestParam("subject") String subject, 
+                                  @RequestParam("number") int number, Model model) {
+        List<Quiz> quizzes = quizService.getOrCreateQuizzes(subject, number);
+        model.addAttribute("quizzes", quizzes);
+        return "index"; // Or adjust based on your page structure
+    }
 }
