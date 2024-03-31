@@ -37,16 +37,6 @@
 			        <input type="text" id="prompt" name="prompt" required>
 			        <button type="submit">Generate Flashcard</button>
 			    </form>
-			    <div th:each="flashcard : ${flashcards}" class="flashcard-container">
-				    <div class="flashcard">
-				        <div class="flashcard-front">
-				            <h2 th:text="${flashcard.question}">Question Placeholder</h2>
-				        </div>
-				        <div class="flashcard-back">
-				            <p th:text="${flashcard.answer}">Answer Placeholder</p>
-				        </div>
-				    </div>
-				</div>
 			</section>
 	
 	        <section id="quizzes">
@@ -60,19 +50,6 @@
 			
 			        <button type="submit">Start Quiz</button>
 			    </form>
-			
-			    <!-- Dynamically display quizzes -->
-			    <div th:if="${quizzes != null}">
-			        <div th:each="quiz, quizStat : ${quizzes}" class="quiz-container">
-			            <div class="quiz-question">
-			                <h3 th:text="${quiz.question}">Quiz Question Placeholder</h3>
-			            </div>
-			            <div th:each="answer, stat : ${quiz.answers}" class="quiz-answer">
-			                <input type="radio" th:id="${'answer' + quizStat.index + '_' + stat.index}" th:name="${'quiz' + quizStat.index}" th:value="${stat.index}">
-			                <label th:for="${'answer' + quizStat.index + '_' + stat.index}" th:text="${answer}">Answer Placeholder</label>
-			            </div>
-			        </div>
-			    </div>
 			</section>
 	    </div>
 

@@ -27,24 +27,21 @@
 			<p>Your journey into the world of knowledge begins here.</p>
 		</section>
 
-		<section id="services">
-			<!-- Update the form in the programForm.html file -->
-			<!-- Replace the existing form with this one -->
-			<form id="program-form" action="/chat/flash" method="get">
-				<label for="search">How many Flashcards:</label> 
-				<input type="number" id="number" name="number" required>
-				<label for="search">Search for a Subject:</label>
-				<input type="text" id="prompt" name="prompt" required>
-				<button type="submit">Generate Flashcard</button>
-			</form>
-		</section>
 		
-		<div th:each="flashcard : ${flashcards}">
-		    <div>
-		        <h2 th:text="${flashcard.question}">Question Placeholder</h2>
-		        <p th:text="${flashcard.answer}">Answer Placeholder</p>
-		    </div>
-		</div>
+		<div class="bottom-sections-container">
+	        <section id="flashcards">
+			    <h2>Flashcards</h2>
+			    <div th:each="flashcard : ${flashcards}" class="flashcard-container">
+				    <div class="flashcard">
+				        <div class="flashcard-front">
+				            <h2 th:text="${flashcard.question}">Question Placeholder</h2>
+				        </div>
+				        <div class="flashcard-back">
+				            <p th:text="${flashcard.answer}">Answer Placeholder</p>
+				        </div>
+				    </div>
+				</div>
+			</section>
 		
 		
 	</main>
