@@ -128,6 +128,23 @@ nav ul li a:hover {
     margin-bottom: 20px;
 }
 
+.btn {
+    display: inline-block;
+    background-color: #001f3f;
+    color: #fff;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    margin-top: 20px; /* Adds some space above the button */
+}
+
+.btn:hover {
+    background-color: #000;
+}
+
 
 #services {
     padding-top: 200px;
@@ -170,11 +187,12 @@ nav ul li a:hover {
     display: flex;
     justify-content: space-around;
     padding: 50px 0;
-    background-color: #fff;
+    background-color: #f9f9f9;
 }
 
 .bottom-sections-container section {
     flex-basis: 45%;
+    text-align: center;
 }
 
 .bottom-sections-container h2 {
@@ -194,3 +212,78 @@ nav ul li a:hover {
     padding: 20px 0;
     width: 100%; /* Ensure the footer spans the full width of the viewport */
 }
+
+
+/* Flashcard styles */
+/* .flashcard {
+     border: 2px solid #007bff;
+     border-radius: 5px;
+     padding: 20px;
+     margin: 20px auto;
+     width: 300px;
+     text-align: center;
+}
+
+.navigation {
+     text-align: center;
+     margin-top: 20px;
+} */
+.flashcard-container {
+  perspective: 1000px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.flashcard {
+  width: 300px;
+  height: 200px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 6px 0 rgba(0,0,0,0.2);
+}
+
+.flashcard-front, .flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 20px;
+  color: white;
+}
+
+.flashcard-front {
+  background: #007bff;
+  color: white;
+}
+
+.flashcard-back {
+  background: #28a745;
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.flashcard-container:hover .flashcard {
+  transform: rotateY(180deg);
+}
+
+.flashcard h2, .flashcard p {
+  margin: 0;
+}
+
+.flashcard.is-flipped {
+  transform: rotateY(180deg);
+}
+
+/* Quiz style */
+.modal { display: none; /* Hidden by default */ }
+.modal-content { /* Styles for the modal content */ }
+.close { /* Style for the close button */ }
