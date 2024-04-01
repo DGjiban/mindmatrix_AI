@@ -27,37 +27,37 @@ public class FlashcardService {
 
     @Autowired
     private RestTemplate template;
-
-    public List<Flashcard> getOrCreateFlashcards(String subject, int number) {
-        List<Flashcard> flashcards = flashCardRepository.findBySubject(subject);
-
-        if (flashcards.isEmpty()) {
-            flashcards = generateFlashcards(subject, number);
-            // Assuming generateFlashcards now saves the flashcards to the database
-            // and returns the list of generated flashcards
-        } else if (flashcards.size() > number) {
-            flashcards = flashcards.subList(0, number);
-        }
-
-        return flashcards;
-    }
-    
+   
     // Method to generate flashcards
     public List<Flashcard> generateFlashcards(String subject, int number) {
-        List<Flashcard> flashcards = new ArrayList<>();
-        for (int i = 0; i < number; i++) {
-            String data = "always use the format Q: and A: and with short answer and question, " + subject;
-            GptRequest request = new GptRequest(model, data, 150);
+        
+    	List<Flashcard> flashcards = new ArrayList<>();
+        
+        //for (int i = 0; i < number; i++) {
+        
+        for (int i=number; flashcards.size() < number; i--) {
+        	
+        	String data = "always use the format Q: and A: and with short answer and question, " + subject;
+            GptRequest request = new GptRequest(model, data, 10000);
             ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
 
             if (responseEntity.getBody() != null && responseEntity.getBody().getChoices() != null && !responseEntity.getBody().getChoices().isEmpty()) {
                 GptResponse.Choice choice = responseEntity.getBody().getChoices().get(0);
                 if (choice != null && choice.getMessage() != null) {
                     String resp = choice.getMessage().getContent();
+                    
                     Flashcard card = parseFlashcardFromResponse(resp, subject);
+                   
                     if (card != null) {
-                    	flashCardRepository.save(card);
-                        flashcards.add(card);
+                    	if (flashCardRepository.findByQuestion(card.getQuestion()) == null
+								&& flashCardRepository.findByAnswer(card.getAnswer()) == null) {
+
+                    		flashCardRepository.save(card);
+							flashcards.add(card);
+						} else {
+							i--;
+						}
+					
                     }
                 }
             }
@@ -77,10 +77,8 @@ public class FlashcardService {
 			}
 		}
 
-
         // Set the subject, question, and answer of the flashcard
         flashcard.setSubject(subject);
-
 
         // Ensure that both question and answer are not empty
         if (flashcard.getQuestion().isEmpty() || flashcard.getAnswer().isEmpty()) {
