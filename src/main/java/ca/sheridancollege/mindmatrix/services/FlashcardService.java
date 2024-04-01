@@ -38,7 +38,7 @@ public class FlashcardService {
         for (int i=number; flashcards.size() < number; i--) {
         	
         	String data = "always use the format Q: and A: and with short answer and question, " + subject;
-            GptRequest request = new GptRequest(model, data, 10000);
+            GptRequest request = new GptRequest(model, data, 1000);
             ResponseEntity<GptResponse> responseEntity = template.postForEntity(apiURL, request, GptResponse.class);
 
             if (responseEntity.getBody() != null && responseEntity.getBody().getChoices() != null && !responseEntity.getBody().getChoices().isEmpty()) {
