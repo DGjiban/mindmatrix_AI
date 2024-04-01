@@ -30,19 +30,24 @@ public class WebController {
 	}
 	
 	@GetMapping("/flashcards/generate")
-    public String generateFlashcards(@RequestParam("prompt") String subject, 
-                                     @RequestParam("number") int number, Model model) {
-        model.addAttribute("message", "Welcome to MindMatrix");
-        List<Flashcard> flashcards = flashcardService.getOrCreateFlashcards(subject, number);
-        model.addAttribute("flashcards", flashcards);
-        return "index"; // Redirecting back to index page with flashcards
+    public String generateFlashcards(@RequestParam("prompt") String subject, @RequestParam("number") int number, Model model) {
+       
+		model.addAttribute("message", "Welcome to MindMatrix");
+        
+		List<Flashcard> flashcards = flashcardService.getOrCreateFlashcards(subject, number);
+        
+		model.addAttribute("flashcards", flashcards);
+        
+		return "index"; // Redirecting back to index page with flashcards
     }
 	
 	@GetMapping("/quizzes/generate")
-    public String generateQuizzes(@RequestParam("subject") String subject, 
-                                  @RequestParam("number") int number, Model model) {
+    public String generateQuizzes(@RequestParam("subject") String subject, @RequestParam("number") int number, Model model) {
+		
         List<Quiz> quizzes = quizService.getOrCreateQuizzes(subject, number);
+        
         model.addAttribute("quizzes", quizzes);
+        
         return "index"; // Or adjust based on your page structure
     }
 }
