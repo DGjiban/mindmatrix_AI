@@ -31,7 +31,7 @@ public class QuizService {
     
     public List<Quiz> getOrCreateQuizzes(String subject, int number) {
         List<Quiz> quizzes = quizRepository.findBySubject(subject);
-
+                
         // If no quizzes are found for the subject, generate new ones.
         if (quizzes.isEmpty()) {
             quizzes = generateQuizzes(subject, number);
@@ -96,9 +96,9 @@ public class QuizService {
             	
                 answers.add(line.substring(line.indexOf(") ") - 1).trim());
                 
-            } else if (line.startsWith("Correct Answer:") || line.startsWith("Answer:")) {
+            } else if (line.startsWith("Correct ") || line.startsWith("Answer:")) {
                 
-            	correctAnswer = line.substring(line.indexOf(": ") + 2).trim();
+            	correctAnswer = line.replace("Correct Answer:", "").trim();
             }
         }
  
@@ -119,42 +119,4 @@ public class QuizService {
         }
     }
     	
-    	/*String[] parts = response.split("\n");
-        Quiz quiz = new Quiz();
-        quiz.setSubject(subject);
-        List<String> answers = new ArrayList<>();
-        String correctAnswerText = null;
-
-        //quiz.setQuestion(lines.length > 0 ? lines[0].trim() : "");
-
-        // Skip the first part assuming it's the question repeated as an answer.
-        for (int i = 1; i < parts.length; i++) {
-            String trimmedPart = parts[i].trim();
-            if (!trimmedPart.isEmpty()) {
-                // Check if the part indicates a correct answer or is a regular answer
-                if (trimmedPart.matches("^\\*[A-D]\\) .+") 
-                		|| trimmedPart.startsWith("The correct answer is:")
-                		|| trimmedPart.startsWith("*The correct answer is: ") 
-                		|| trimmedPart.startsWith("Question:") 
-                		|| trimmedPart.startsWith("Question")) {
-                	
-                    correctAnswerText = trimmedPart.replaceAll("The correct answer is:  ", "").trim();
-                    
-                    // If it's marked as the correct answer explicitly, don't add to answers list
-                    if (!trimmedPart.startsWith("The correct answer is  ")) {
-                        answers.add(trimmedPart.replaceFirst("^\\*", "").trim()); // Remove the "*" before adding
-                    }
-                } else {
-                    answers.add(trimmedPart);
-                }
-            }
-        }
-        
-        System.out.println(correctAnswerText);
-        
-        quiz.setAnswers(answers);
-        quiz.setCorrectAnswerText(correctAnswerText);
-        return quiz;
-    }*/
-
 }
