@@ -33,6 +33,8 @@ public class WebController {
                                      @RequestParam("number") int number, Model model) {
         model.addAttribute("message", "Welcome to MindMatrix");
         List<Flashcard> flashcards = flashcardService.generateFlashcards(subject, number);
+        
+        
         model.addAttribute("flashcards", flashcards);
         System.out.println(flashcards);
         return "flashcard"; // Redirecting back to index page with flashcards
