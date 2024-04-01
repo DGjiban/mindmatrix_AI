@@ -35,6 +35,7 @@ public class WebController {
         model.addAttribute("message", "Welcome to MindMatrix");
         List<Flashcard> flashcards = flashcardService.getOrCreateFlashcards(subject, number);
         model.addAttribute("flashcards", flashcards);
+        System.out.println(flashcards);
         return "flashcard"; // Redirecting back to index page with flashcards
     }
 	

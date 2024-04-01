@@ -10,46 +10,53 @@
 <body>
 	<div class="content-wrap">
 		<div id="startup">
-		<h1 id="logo">MindMatrix</h1>
-	</div>
-	
-	<main id="main-content">
-		<nav>
-			<ul>
-				<li><a th:href="@{/}">Home</a></li>
-				<li><a href="#services">Services</a></li>
-				<li><a href="#about">About</a></li>
-				<li><a href="#contact">Contact</a></li>
-			</ul>
-		</nav>
-		<section id="home" class="hero">
-			<h1 th:text="${welcome}"></h1>
-			<p>Your journey into the world of knowledge begins here.</p>
-		</section>
+			<h1 id="logo">MindMatrix</h1>
+		</div>
 
-		
-		<div class="bottom-sections-container">
-	        <section id="flashcards">
-			    <h2>Flashcards</h2>
-			    <div th:each="flashcard : ${flashcards}" class="flashcard-container">
-				    <div class="flashcard">
-				        <div class="flashcard-front">
-				            <h2 th:text="${flashcard.question}">Question Placeholder</h2>
-				        </div>
-				        <div class="flashcard-back">
-				            <p th:text="${flashcard.answer}">Answer Placeholder</p>
-				        </div>
-				    </div>
-				</div>
+		<main id="main-content">
+			<nav>
+				<ul>
+					<li><a th:href="@{/}">Home</a></li>
+					<li><a href="#services">Services</a></li>
+					<li><a href="#about">About</a></li>
+					<li><a href="#contact">Contact</a></li>
+				</ul>
+			</nav>
+			<section id="home" class="hero">
+				<h1 th:text="${welcome}"></h1>
+				<p>Your journey into the world of knowledge begins here.</p>
 			</section>
-		
-		
-	</main>
+
+			<div class="bottom-sections-container">
+				<section id="flashcards">
+					<h2>Flashcards</h2>
+					<div th:each="flashcard, flashcardIndex : ${flashcards}"
+						class="flashcard-container">
+						<div class="flashcard">
+							<div class="flashcard-front">
+								<h2 th:text="${flashcard.question}">Question Placeholder</h2>
+							</div>
+							<div class="flashcard-back">
+								<p th:text="${flashcard.answer}">Answer Placeholder</p>
+							</div>
+						</div>
+					</div>
+					<br>
+					<br>
+					<br>
+					<div class=navigation-buttons>
+						<button id="prevButton">Back</button>
+						<button id="nextButton">Next</button>
+					</div>
+				</section>
+			</div>
+
+		</main>
 	</div>
 
 	<footer class="footer">
 		<p>&copy; 2024 MindMatrix. All rights reserved.</p>
 	</footer>
-	
+
 </body>
 </html>

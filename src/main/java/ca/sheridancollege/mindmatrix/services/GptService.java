@@ -50,6 +50,7 @@ public class GptService {
                 GptResponse.Choice choice = responseEntity.getBody().getChoices().get(0);
                 if (choice != null && choice.getMessage() != null) {
                     String resp = choice.getMessage().getContent();
+                    System.out.println(resp);
                     Flashcard card = parseFlashcardFromResponse(resp, subject);
                     if (card != null) {
                         flashcardRepository.save(card);
@@ -64,35 +65,16 @@ public class GptService {
     private Flashcard parseFlashcardFromResponse(String response, String subject) {
         Flashcard flashcard = new Flashcard();
         String[] lines = response.split("\n");
-        StringBuilder question = new StringBuilder();
-        StringBuilder answer = new StringBuilder();
-        boolean isAnswer = false;
-
         for (String line : lines) {
-            if (line.startsWith("Q:")) {
-                // Start of the question part
-                isAnswer = false;
-                // Append this line to the question StringBuilder, removing the "Q: " part
-                question.append(line.substring(2).trim()).append(" ");
-            } else if (line.startsWith("A:")) {
-                // Start of the answer part
-                isAnswer = true;
-                // Append this line to the answer StringBuilder, removing the "A: " part
-                answer.append(line.substring(2).trim()).append(" ");
-            } else {
-                // Continuation of the current part (question or answer)
-                if (isAnswer) {
-                    answer.append(line.trim()).append(" ");
-                } else {
-                    question.append(line.trim()).append(" ");
-                }
-            }
-        }
+			if (line.startsWith("Q:")) {
+				flashcard.setQuestion(line.replace("Q: ", "").trim());
+			} else if (line.startsWith("A:")) {
+				flashcard.setAnswer(line.replace("A: ", "").trim());
+			}
+		}
 
         // Set the subject, question, and answer of the flashcard
         flashcard.setSubject(subject);
-        flashcard.setQuestion(question.toString().trim());
-        flashcard.setAnswer(answer.toString().trim());
 
         // Ensure that both question and answer are not empty
         if (flashcard.getQuestion().isEmpty() || flashcard.getAnswer().isEmpty()) {
