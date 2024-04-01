@@ -31,29 +31,38 @@ document.querySelectorAll('.flashcard-container').forEach(container => {
 });
 
 document.addEventListener("DOMContentLoaded", function() {
-    const flashcards = document.querySelectorAll('.flashcard-container .flashcard');
+    const flashcards = document.querySelectorAll('.flashcard-container');
+    let currentIndex = 0;
 
-    flashcards.forEach(flashcard => {
-        const question = flashcard.querySelector('.flashcard-front h2');
-        const answer = flashcard.querySelector('.flashcard-back p');
+    // Show the first flashcard initially, hide all others
+    showFlashcard(currentIndex);
 
-        adjustFontSizeBasedOnContentLength(question);
-        adjustFontSizeBasedOnContentLength(answer);
+    function showFlashcard(index) {
+        // Hide all flashcards
+        flashcards.forEach((flashcard, i) => {
+            if (i !== index) {
+                flashcard.style.display = 'none';
+            } else {
+                flashcard.style.display = 'block'; // Show the current flashcard
+            }
+        });
+    }
+
+    // Next button click event
+    document.getElementById('nextButton').addEventListener('click', function() {
+        currentIndex++;
+        if (currentIndex >= flashcards.length) {
+            currentIndex = 0; // Wrap around to the first flashcard
+        }
+        showFlashcard(currentIndex);
     });
 
-    function adjustFontSizeBasedOnContentLength(element) {
-        if (!element) return; // If the element doesn't exist, do nothing
-
-        let contentLength = element.textContent.length;
-
-        if (contentLength > 100) { // Adjust these values based on your needs
-            element.style.fontSize = '14px'; // Smaller font size for longer content
-        } else if (contentLength > 50) {
-            element.style.fontSize = '16px'; // Medium font size
-        } else {
-            element.style.fontSize = '18px'; // Larger font size for shorter content
+    // Previous button click event
+    document.getElementById('prevButton').addEventListener('click', function() {
+        currentIndex--;
+        if (currentIndex < 0) {
+            currentIndex = flashcards.length - 1; // Wrap around to the last flashcard
         }
-    }
+        showFlashcard(currentIndex);
+    });
 });
-
-
