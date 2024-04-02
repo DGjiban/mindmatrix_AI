@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ca.sheridancollege.mindmatrix.beans.Flashcard;
 import ca.sheridancollege.mindmatrix.beans.Quiz;
-//import ca.sheridancollege.mindmatrix.repositories.FlashCardRepository;
 import ca.sheridancollege.mindmatrix.services.FlashcardService;
 import ca.sheridancollege.mindmatrix.services.QuizService;
 
@@ -33,9 +32,12 @@ public class WebController {
     public String generateFlashcards(@RequestParam("prompt") String subject, 
                                      @RequestParam("number") int number, Model model) {
         model.addAttribute("message", "Welcome to MindMatrix");
-        List<Flashcard> flashcards = flashcardService.getOrCreateFlashcards(subject, number);
+        List<Flashcard> flashcards = flashcardService.generateFlashcards(subject, number);
+        
+        
         model.addAttribute("flashcards", flashcards);
-        return "index"; // Redirecting back to index page with flashcards
+        System.out.println(flashcards);
+        return "flashcard"; // Redirecting back to index page with flashcards
     }
 	
 	@GetMapping("/quizzes/generate")
@@ -43,6 +45,6 @@ public class WebController {
                                   @RequestParam("number") int number, Model model) {
         List<Quiz> quizzes = quizService.getOrCreateQuizzes(subject, number);
         model.addAttribute("quizzes", quizzes);
-        return "index"; // Or adjust based on your page structure
+        return "quiz"; // Or adjust based on your page structure
     }
 }

@@ -250,7 +250,7 @@ nav ul li a:hover {
   position: absolute;
   width: 100%;
   height: 100%;
-  -webkit-backface-visibility: hidden; /* Safari */
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   display: flex;
   align-items: center;
@@ -285,5 +285,27 @@ nav ul li a:hover {
 
 /* Quiz style */
 .modal { display: none; /* Hidden by default */ }
-.modal-content { /* Styles for the modal content */ }
-.close { /* Style for the close button */ }
+
+.navigation-buttons {
+    display: flex;
+    justify-content: center; /* Align items horizontally in the center */
+}
+
+
+#prevButton,
+#nextButton {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    margin: 8px 50px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#prevButton:hover,
+#nextButton:hover {
+    background-color: #0096ff;
+}
+
+
