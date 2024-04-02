@@ -1,11 +1,6 @@
-/* Reset default styles and set up a base font family */
-/*body, html {
-	margin: 0;
-	padding: 0;
-	height: 100%;
-	font-family: 'Arial', sans-serif;
-	color: black;
-}*/
+/* Importar uma fonte personalizada do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap');
+
 html {
     height: 100%;
     background-color: #f9f9f9;
@@ -16,62 +11,55 @@ body {
     flex-direction: column;
     height: 100%;
     margin: 0;
+    font-family: 'Open+Sans', sans-serif;
 }
 
 .content-wrap {
     flex: 1;
-    width: 100%; /* Ensure the content wrapper takes the full width */
+    width: 100%;
 }
 
-/* Styling for the startup screen */
 #startup {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     background-color: #001f3f;
-	color: #fff;
-	opacity: 1;
-	transition: opacity 1s ease-out, visibility 1s ease-out;
-	overflow: hidden;
+    color: #fff;
+    transition: opacity 1s ease-out;
+    overflow: hidden;
 }
 
-
-/* Logo styling with a scaling transition */
 #logo {
-	font-size: 3em;
-	color: #fff;
-	transform: scale(3);
-	transition: transform 0.5s ease-out;
+    font-size: 3em;
+    color: #fff;
+    transform: scale(3);
+    transition: transform 0.5s ease-out;
 }
 
-/* Main content styling with opacity transition */
 #main-content {
-	visibility: hidden;
-	opacity: 0;
-	transition: visibility 0s, opacity 1.5s linear;
-	height: 100%;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 1.5s linear;
+    height: 100%;
 }
 
-/* Styles for elements when scrolled */
 .scrolled #logo {
-	transform: scale(1);
+    transform: scale(1);
 }
 
 .scrolled #main-content {
-	visibility: visible;
-	opacity: 1;
-	overflow: auto;
+    visibility: visible;
+    opacity: 1;
+    overflow: auto;
 }
 
-
-/* Styling for the navigation bar */
 nav {
     position: fixed;
     top: 0;
     left: 0;
     height: 100%;
-    width: 200px; /* Adjust the width as needed */
+    width: 200px;
     background-color: #333;
     padding-top: 20px;
     box-sizing: border-box;
@@ -99,15 +87,11 @@ nav ul li a:hover {
     background-color: #555;
 }
 
-/* Adjust the styles for the main content to make space for the navigation */
 #main-content {
-    margin-left: 220px; /* Adjust this value to match the width of the navigation + some margin */
+    margin-left: 220px;
 }
-/* Hero section styling */
+
 .hero {
-    /*background-image: url('background-image.jpg');*/
-    background-size: cover;
-    /*height: 10%;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -128,61 +112,6 @@ nav ul li a:hover {
     margin-bottom: 20px;
 }
 
-.btn {
-    display: inline-block;
-    background-color: #001f3f;
-    color: #fff;
-    padding: 15px 30px;
-    font-size: 1.2rem;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-    margin-top: 20px; /* Adds some space above the button */
-}
-
-.btn:hover {
-    background-color: #000;
-}
-
-
-#services {
-    padding-top: 200px;
-    text-align: center;
-}
-
-#services form {
-    margin-top: 20px;
-}
-
-#services label {
-    font-size: 1.2rem;
-    display: block;
-    margin-bottom: 10px;
-}
-
-#services input[type="text"] {
-    width: 300px;
-    padding: 10px;
-    font-size: 1.2rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-#services button {
-    background-color: #001f3f;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#services button:hover {
-    background-color: #000;
-}
-
 .bottom-sections-container {
     display: flex;
     justify-content: space-around;
@@ -193,16 +122,62 @@ nav ul li a:hover {
 .bottom-sections-container section {
     flex-basis: 45%;
     text-align: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.bottom-sections-container section:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .bottom-sections-container h2 {
-    font-size: 2rem;
-    margin-bottom: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
 }
 
 .bottom-sections-container p {
-    font-size: 1.2rem;
-    line-height: 1.5;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+.bottom-sections-container button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: transform 0.2s ease-in-out, background-color 0.3s ease;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.bottom-sections-container button:hover {
+    transform: translateY(-3px);
+    background-color: #0056b3;
+}
+
+.footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .bottom-sections-container {
+        flex-direction: column;
+    }
+    
+    .bottom-sections-container section {
+        margin-bottom: 30px;
+    }
 }
 
 .footer {
@@ -213,21 +188,6 @@ nav ul li a:hover {
     width: 100%; /* Ensure the footer spans the full width of the viewport */
 }
 
-
-/* Flashcard styles */
-/* .flashcard {
-     border: 2px solid #007bff;
-     border-radius: 5px;
-     padding: 20px;
-     margin: 20px auto;
-     width: 300px;
-     text-align: center;
-}
-
-.navigation {
-     text-align: center;
-     margin-top: 20px;
-} */
 .flashcard-container {
   perspective: 1000px;
   margin-bottom: 20px;
@@ -284,16 +244,23 @@ nav ul li a:hover {
 }
 
 /* Quiz style */
-.modal { display: none; /* Hidden by default */ }
+.modal { 
+	display: none; /* Hidden by default */
+}
 
 .navigation-buttons {
     display: flex;
     justify-content: center; /* Align items horizontally in the center */
+	position: relative;
+    z-index: 1;
 }
 
 
 #prevButton,
-#nextButton {
+#nextButton,
+#QuizprevButton,
+#QuiznextButton,
+#QuizFinishButton {
     background-color: #4CAF50;
     color: white;
     padding: 12px 20px;
@@ -302,10 +269,80 @@ nav ul li a:hover {
     cursor: pointer;
     border-radius: 4px;
 }
-
 #prevButton:hover,
-#nextButton:hover {
+#nextButton:hover,
+#QuizprevButton:hover,
+#QuiznextButton:hover,
+#QuizFinishButton:hover {
     background-color: #0096ff;
 }
 
+#flashcard-counter,
+#quiz-counter {
+  font-size: 1em;
+  margin-top: 20px;
+  color: #555;
+}
 
+input[type="number"] {
+  width: 50px;
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+input[type="text"] {
+  width: 120px;
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.quiz-container {
+    display: none; /* Esconde todas as questões do quiz */
+}
+.quiz-container:first-child {
+    display: block; /* Mostra apenas a primeira questão por padrão */
+}
+.quiz-container:not(:first-child) #QuizprevButton {
+    display: inline-block;
+}
+
+.quiz-container {
+    max-width: 600px; /* ajuste conforme necessário */
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px auto; /* centraliza na página */
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left; /* alinha o texto à esquerda */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* alinha os itens ao centro */
+    position: relative;
+    z-index: 2;
+}
+
+/* Estilização dos rótulos e input rádio */
+.quiz-answer label {
+    margin-left: 25px; /* espaço à esquerda para as opções de resposta */
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 5px; /* espaço entre as opções de resposta */
+}
+
+.quiz-answer input[type="radio"] {
+    margin-right: 10px; /* espaço à direita do botão de rádio */
+}
+
+#quiz-results {
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: none; /* Esconde até que os resultados sejam calculados */
+}

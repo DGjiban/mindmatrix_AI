@@ -30,7 +30,7 @@ public class QuizService {
     private RestTemplate template;
     
     public List<Quiz> getOrCreateQuizzes(String subject, int number) {
-        List<Quiz> quizzes = quizRepository.findBySubject(subject);
+        List<Quiz> quizzes = new ArrayList<Quiz>(); //quizRepository.findBySubject(subject);
                 
         // If no quizzes are found for the subject, generate new ones.
         if (quizzes.isEmpty()) {

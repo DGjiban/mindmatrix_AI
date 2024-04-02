@@ -23,12 +23,12 @@
 				</ul>
 			</nav>
 			<section id="home" class="hero">
-				<h1>Welcome to MindMatrix</h1>
 				<p>Your journey into the world of knowledge begins here.</p>
 			</section>
 
+
 			<section id="quizzes">
-				<h2>Quizzes</h2>
+			<div id="quiz-results"></div>
 				<!-- Dynamically display quizzes -->
 				<div th:if="${quizzes != null}">
 					<div th:each="quiz, quizStat : ${quizzes}" class="quiz-container">
@@ -44,9 +44,14 @@
 						</div>
 					</div>
 				</div>
+				<div class=navigation-buttons>
+					<button id="QuizprevButton">Back</button>
+					<button id="QuiznextButton">Next</button>
+					<button id="QuizFinishButton">Finish</button>
+					 <p id="quiz-counter">1 of X</p>
+				</div>
 			</section>
 	</div>
-
 
 	</main>
 	</div>
