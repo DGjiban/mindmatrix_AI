@@ -102,9 +102,9 @@ public class QuizService {
             }
         }
  
-        System.out.println("*Question: " + question);
-        System.out.println("*Answers: " + answers);
-        System.out.println(correctAnswer);
+       // System.out.println("*Question: " + question);
+       // System.out.println("*Answers: " + answers);
+       // System.out.println(correctAnswer);
 
         if (question != null && !answers.isEmpty() && correctAnswer != null) {
             quiz.setSubject(subject);
@@ -123,5 +123,4 @@ public class QuizService {
         return quizRepository.findById(id).orElse(null);
     }
 
-    	
 }
