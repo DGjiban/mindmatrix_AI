@@ -3,13 +3,18 @@ package ca.sheridancollege.mindmatrix.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ca.sheridancollege.mindmatrix.beans.Flashcard;
 import ca.sheridancollege.mindmatrix.beans.Quiz;
+import ca.sheridancollege.mindmatrix.beans.QuizResult;
+import ca.sheridancollege.mindmatrix.beans.UserAnswer;
 import ca.sheridancollege.mindmatrix.services.FlashcardService;
 import ca.sheridancollege.mindmatrix.services.QuizService;
 
@@ -47,4 +52,25 @@ public class WebController {
         model.addAttribute("quizzes", quizzes);
         return "quiz"; // Or adjust based on your page structure
     }
+	
+	
+	@PostMapping("/quizzes/verify")
+    public ResponseEntity<QuizResult> verifyQuiz(@RequestBody List<UserAnswer> answers) {
+        int correctCount = 0;
+        
+        System.out.println(answers.indexOf(0));
+        
+        for (UserAnswer userAnswer : answers) {
+            Quiz quiz = quizService.findQuizById(userAnswer.getQuizId());
+            System.out.println(quiz);
+            if (quiz != null && quiz.getCorrectAnswerText().equals("Correct answer: " + userAnswer.getSelectedAnswer())) {
+                System.out.println(quiz);
+            	correctCount++;
+            }
+        }	
+
+        QuizResult result = new QuizResult(correctCount, answers.size());
+        return ResponseEntity.ok(result); // Retorna o resultado como JSON
+    }
+
 }

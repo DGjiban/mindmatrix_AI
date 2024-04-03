@@ -113,26 +113,38 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-document.getElementById('QuizFinishButton').addEventListener('click', function() {
-    // Obtem todos os inputs marcados
-    const selectedAnswers = document.querySelectorAll('.quiz-container input[type="radio"]:checked');
-    let correctAnswersCount = 0;
 
-    selectedAnswers.forEach(input => {
-        // Verifica se a resposta selecionada é a correta
-        if (input.dataset.correct === "true") {
-            correctAnswersCount++;
-        }
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('QuizFinishButton').addEventListener('click', function() {
+        const answers = [];
+
+        document.querySelectorAll('.quiz-container').forEach(container => {
+            const quizId = container.getAttribute('data-quiz-id');
+            const selectedInput = container.querySelector('input[type="radio"]:checked');
+
+            if (selectedInput) {
+                // Encontrar o label associado que contém o texto completo da resposta
+                const labelText = container.querySelector(`label[for="${selectedInput.id}"]`).innerText;
+
+                answers.push({
+                    quizId: quizId,
+                    selectedAnswer: labelText // Enviando o texto completo ao invés de apenas o valor
+                });
+            }
+        });
+
+        fetch('/quizzes/verify', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(answers)
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('quiz-results').innerHTML = `You answered correctly ${data.correctAnswers} out of ${data.totalQuestions} questions.`;
+            document.getElementById('quiz-results').style.display = 'block';
+        })
+        .catch(error => console.error('Error:', error));
     });
-
-    // Calcula o total de perguntas
-    const totalQuestions = document.querySelectorAll('.quiz-container').length;
-
-    // Exibe os resultados
-    const resultsDiv = document.getElementById('quiz-results');
-    resultsDiv.textContent = `You answered correctly ${correctAnswersCount} out of ${totalQuestions} questions.`;
-    resultsDiv.style.display = 'block'; // Mostra os resultados
 });
-
-
-
