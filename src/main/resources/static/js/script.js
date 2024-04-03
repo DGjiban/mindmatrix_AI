@@ -113,10 +113,26 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
+document.getElementById('QuizFinishButton').addEventListener('click', function() {
+    // Obtem todos os inputs marcados
+    const selectedAnswers = document.querySelectorAll('.quiz-container input[type="radio"]:checked');
+    let correctAnswersCount = 0;
 
-function restartQuiz() {
-    // Recarregar a página ou redefinir o estado do quiz
-    window.location.reload();
-}
+    selectedAnswers.forEach(input => {
+        // Verifica se a resposta selecionada é a correta
+        if (input.dataset.correct === "true") {
+            correctAnswersCount++;
+        }
+    });
+
+    // Calcula o total de perguntas
+    const totalQuestions = document.querySelectorAll('.quiz-container').length;
+
+    // Exibe os resultados
+    const resultsDiv = document.getElementById('quiz-results');
+    resultsDiv.textContent = `You answered correctly ${correctAnswersCount} out of ${totalQuestions} questions.`;
+    resultsDiv.style.display = 'block'; // Mostra os resultados
+});
+
 
 
