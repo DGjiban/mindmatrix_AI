@@ -30,7 +30,7 @@ public class QuizService {
     private RestTemplate template;
     
     public List<Quiz> getOrCreateQuizzes(String subject, int number) {
-        List<Quiz> quizzes = quizRepository.findBySubject(subject);
+        List<Quiz> quizzes = new ArrayList<Quiz>(); //quizRepository.findBySubject(subject);
                 
         // If no quizzes are found for the subject, generate new ones.
         if (quizzes.isEmpty()) {
@@ -98,13 +98,13 @@ public class QuizService {
                 
             } else if (line.startsWith("Correct ") || line.startsWith("Answer:")) {
                 
-            	correctAnswer = line.replace("Correct Answer:", "").trim();
+            	correctAnswer = line.trim();
             }
         }
  
-        System.out.println("*Question: " + question);
-        System.out.println("*Answers: " + answers);
-        System.out.println("*Correct Answer is: " + correctAnswer);
+       // System.out.println("*Question: " + question);
+       // System.out.println("*Answers: " + answers);
+       // System.out.println(correctAnswer);
 
         if (question != null && !answers.isEmpty() && correctAnswer != null) {
             quiz.setSubject(subject);
@@ -118,5 +118,9 @@ public class QuizService {
             return null;
         }
     }
-    	
+    
+    public Quiz findQuizById(Long id) {
+        return quizRepository.findById(id).orElse(null);
+    }
+
 }

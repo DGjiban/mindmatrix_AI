@@ -50,7 +50,8 @@ public class FlashcardService {
                    
                     if (card != null) {
                     	if (flashCardRepository.findByQuestion(card.getQuestion()) == null
-								&& flashCardRepository.findByAnswer(card.getAnswer()) == null) {
+								||
+								flashCardRepository.findByAnswer(card.getAnswer()) == null) {
 
                     		flashCardRepository.save(card);
 							flashcards.add(card);
