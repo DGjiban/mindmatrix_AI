@@ -4,15 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MindMatrix</title>
+
+
+
+
 <link rel="stylesheet" href="/css/style.css">
 <script src="/js/script.js" defer></script>
+
+<!-- Language Translation API Weglot start here-->
+
+
+<script type="text/javascript" src="https://cdn.weglot.com/weglot.min.js"></script>
+<script>
+    Weglot.initialize({
+        api_key: 'wg_da9e1bc06ffb50ab190ecf58a9b02ad10'
+    });
+</script><!-- Language Translation API Weglot complete here-->
+
+
 </head>
 <body>
 	<div class="content-wrap">
 		<div id="startup">
 			<h1 id="logo">MindMatrix</h1>
 		</div>
-
+		
 		<main id="main-content">
 			<nav>
 				<ul>
@@ -50,14 +66,23 @@
 					<button id="QuizFinishButton">Finish</button>
 					 <p id="quiz-counter">1 of X</p>
 				</div>
+				
 			</section>
-	</div>
+	<!--  </div>-->
 
 	</main>
 	</div>
-
+	
 	<footer class="footer">
+	
+		<!-- Add this HTML for share links -->
+		<div id="shareLinks" style="display: none;">
+		<p>Share This:</p>
+		<div class="sharethis-inline-share-buttons"></div>
+		</div>
+	
 		<p>&copy; 2024 MindMatrix. All rights reserved.</p>
+	
 	</footer>
 
 </body>

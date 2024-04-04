@@ -119,4 +119,35 @@ function restartQuiz() {
     window.location.reload();
 }
 
+//Language translation API
+document.addEventListener("DOMContentLoaded", function(){
+	//Function to load ShareThis script
+	function loadShareThisScript(){
+		const script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = 'https://platform-api.sharethis.com/js/sharethis.js#property=6601a93bfb0d8000121105be&product=inline-share-buttons&source=platform';
+		script.async = true;
+		document.head.appendChild(script);
+	}
+	
+	//Event listener for Finish button
+	document.getElementById('QuizFinishButton').addEventListener('click', function() {
+		//load sharethis script
+		loadShareThisScript();
+		//show the sharelinks
+		document.getElementById('shareLinks').style.display = 'block';
+	});
+		
+	
+});
+
+
+
+
+
+
+
+
+
+
 
