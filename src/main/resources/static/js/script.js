@@ -119,7 +119,7 @@ function restartQuiz() {
     window.location.reload();
 }
 
-//Language translation API
+//Social media share API
 document.addEventListener("DOMContentLoaded", function(){
 	//Function to load ShareThis script
 	function loadShareThisScript(){
