@@ -22,6 +22,8 @@ window.onload = function() {
     window.addEventListener('scroll', onScroll);
 };
 
+
+
 // Flash JS
 document.addEventListener("DOMContentLoaded", function() {
     const flashcards = document.querySelectorAll('.flashcard-container');
@@ -74,6 +76,9 @@ document.addEventListener("DOMContentLoaded", function() {
     let currentQuizIndex = 0;
     const totalQuizzes = quizContainers.length;
     const counterElement = document.getElementById('quiz-counter');
+    
+    
+   
 
     // Função para atualizar o contador
     function updateQuizCounter() {
@@ -107,6 +112,8 @@ document.addEventListener("DOMContentLoaded", function() {
             showQuiz(currentQuizIndex);
         }
     });
+    
+   
 
     // Inicia o quiz mostrando a primeira questão e inicializando o contador
     showQuiz(currentQuizIndex);
@@ -141,13 +148,55 @@ document.addEventListener("DOMContentLoaded", function(){
 	
 });
 
+//Timer
+
+//Function starts to store input values
+function storeInputValues() {
+
+const quizTimerValue = document.getElementById('quizTimer').value;
+
+localStorage.setItem('quizTimer', quizTimerValue);
+
+//start timer
+		let timer = quizTimerValue;
+		
+          const interval = setInterval(() => {
+               // timer--;          
+               if (timer <= 0) {						
+				clearInterval(interval);
+					
+				window.location.href = 'quiz.html';
+ 				 				
+ 			}	 localStorage.setItem('timer', timer);
+ 				 
+             }, 1000);  
+      }//end function
+   
+   //Retrive and display value
+     const quizTimerValue = localStorage.getItem('timer');
+	 document.getElementById('quizTimer').textContent = quizTimerValue;
+	 
+const s = quizTimerValue;
+let time = s * 60;
+const timerEl = document.getElementById('timer');
+
+//Set interval to update timer every second
+const a = setInterval(updateTimer, 1000);
+//Function to update the timer
+function updateTimer()
+{
+	const minutes = Math.floor(time / 60);
+	let seconds = time % 60;
+	timerEl.innerHTML = `${minutes}:${seconds}`;
+	time--;
+	
+	if(time < 0)
+	{
+		clearTimeout(a);
+	}
+}
 
 
 
 
-
-
-
-
-
-
+	 
