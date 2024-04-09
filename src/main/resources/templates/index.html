@@ -6,6 +6,14 @@
 <title>MindMatrix</title>
 <link rel="stylesheet" href="/css/style.css">
 <script src="/js/script.js" defer></script>
+
+<script type="text/javascript" src="https://cdn.weglot.com/weglot.min.js"></script>
+<script>
+    Weglot.initialize({
+        api_key: 'wg_da9e1bc06ffb50ab190ecf58a9b02ad10'
+    });  
+</script>  <!-- Language Translation API Weglot complete here-->
+
 </head>
 <body>
 	<div class="content-wrap">
@@ -55,7 +63,7 @@
 							name="subject" required>
 
 						<p>
-							<button type="submit">Start Quiz</button>
+							<button type="submit" onclick="storeInputValues()">Start Quiz</button>
 					</form>
 				</section>
 			</div>
