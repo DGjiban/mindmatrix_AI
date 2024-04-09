@@ -3,7 +3,7 @@ window.onload = function() {
 	const mainContent = document.getElementById('main-content');
 
 	function onScroll() {
-		// Apply styles to fade out the startup section
+		
 		startup.style.opacity = 0;
 		startup.style.visibility = 'hidden';
 		// Set startup to absolute position after the transition to remove it from the flow
@@ -75,24 +75,24 @@ document.addEventListener("DOMContentLoaded", function() {
 	const totalQuizzes = quizContainers.length;
 	const counterElement = document.getElementById('quiz-counter');
 
-	// Função para atualizar o contador
+	// update counter
 	function updateQuizCounter() {
 		counterElement.textContent = `${currentQuizIndex + 1} of ${totalQuizzes}`;
 	}
 
-	// Função para mostrar a questão do quiz atual
+	// show the current quiz
 	function showQuiz(index) {
-		// Esconde todas as questões
+		// hide the questions
 		quizContainers.forEach((container, i) => {
 			container.style.display = 'none';
 		});
-		// Mostra a questão atual
+		// show the current question
 		quizContainers[index].style.display = 'block';
-		// Atualiza o contador
+		// call the update counter function
 		updateQuizCounter();
 	}
 
-	// Evento de clique para o botão "Previous"
+	// Prev button
 	document.getElementById('QuizprevButton').addEventListener('click', function() {
 		if (currentQuizIndex > 0) {
 			currentQuizIndex--;
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 	});
 
-	// Evento de clique para o botão "Next"
+	// Next button
 	document.getElementById('QuiznextButton').addEventListener('click', function() {
 		if (currentQuizIndex < totalQuizzes - 1) {
 			currentQuizIndex++;
@@ -108,12 +108,13 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 	});
 
-	// Inicia o quiz mostrando a primeira questão e inicializando o contador
+	// start the quiz
 	showQuiz(currentQuizIndex);
 });
 
-function finish(){
-		
+
+document.addEventListener("DOMContentLoaded", function() {
+	document.getElementById('QuizFinishButton').addEventListener('click', function() {
 		loadShareThisScript();
 		
 		document.getElementById('shareLinks').style.display = 'block';
@@ -157,11 +158,6 @@ function finish(){
 			correctAnswer.style.display = 'block';
 		});
 	});
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-	document.getElementById('QuizFinishButton').addEventListener('click', function() {
-		finish();
 	});
 });
 
@@ -217,7 +213,7 @@ function updateTimer()
 	
 	if(time < 0)
 	{
-		finish();
+		//finish();
 		clearTimeout(a);
 	}
 }
