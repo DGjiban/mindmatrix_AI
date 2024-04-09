@@ -112,10 +112,12 @@ document.addEventListener("DOMContentLoaded", function() {
 	showQuiz(currentQuizIndex);
 });
 
-
-
-document.addEventListener("DOMContentLoaded", function() {
-	document.getElementById('QuizFinishButton').addEventListener('click', function() {
+function finish(){
+		
+		loadShareThisScript();
+		
+		document.getElementById('shareLinks').style.display = 'block';
+		
 		const answers = [];
 
 		document.querySelectorAll('.quiz-container').forEach(container => {
@@ -123,12 +125,12 @@ document.addEventListener("DOMContentLoaded", function() {
 			const selectedInput = container.querySelector('input[type="radio"]:checked');
 
 			if (selectedInput) {
-				// Encontrar o label associado que contém o texto completo da resposta
+				
 				const labelText = container.querySelector(`label[for="${selectedInput.id}"]`).innerText;
 
 				answers.push({
 					quizId: quizId,
-					selectedAnswer: labelText // Enviando o texto completo ao invés de apenas o valor
+					selectedAnswer: labelText
 				});
 			}
 		});
@@ -146,15 +148,77 @@ document.addEventListener("DOMContentLoaded", function() {
 				document.getElementById('quiz-results').style.display = 'block';
 			})
 			.catch(error => console.error('Error:', error));
-	});
-
 	document.querySelectorAll('.show-answer-button').forEach(button => {
 		button.addEventListener('click', function() {
-			// Find the parent container of the clicked button
+			
 			const quizContainer = this.closest('.quiz-container');
-			// Toggle the visibility of the correct answer within the container
+			
 			const correctAnswer = quizContainer.querySelector('.correct-answer');
-			correctAnswer.style.display = 'block'; // Display the correct answer
+			correctAnswer.style.display = 'block';
 		});
 	});
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+	document.getElementById('QuizFinishButton').addEventListener('click', function() {
+		finish();
+	});
 });
+
+
+//Function to load ShareThis script
+function loadShareThisScript(){
+	const script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = 'https://platform-api.sharethis.com/js/sharethis.js#property=6601a93bfb0d8000121105be&product=inline-share-buttons&source=platform';
+		script.async = true;
+		document.head.appendChild(script);
+	}
+
+
+
+//Timer
+function storeInputValues() {
+
+const quizTimerValue = document.getElementById('quizTimer').value;
+
+localStorage.setItem('quizTimer', quizTimerValue);
+
+//start timer
+		let timer = quizTimerValue;
+		
+          const interval = setInterval(() => {
+                       
+               if (timer <= 0) {						
+				clearInterval(interval);
+					
+				window.location.href = 'quiz.html';
+ 				 				
+ 			}	 localStorage.setItem('timer', timer);
+ 				 
+             }, 1000);  
+      }
+   
+     const quizTimerValue = localStorage.getItem('timer');
+	 document.getElementById('quizTimer').textContent = quizTimerValue;
+	 
+const s = quizTimerValue;
+let time = s * 60;
+const timerEl = document.getElementById('timer');
+
+const a = setInterval(updateTimer, 1000);
+
+function updateTimer()
+{
+	const minutes = Math.floor(time / 60);
+	let seconds = time % 60;
+	timerEl.innerHTML = `${minutes}:${seconds}`;
+	time--;
+	
+	if(time < 0)
+	{
+		finish();
+		clearTimeout(a);
+	}
+}
+
