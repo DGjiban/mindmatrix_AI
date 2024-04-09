@@ -4,15 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MindMatrix</title>
+
+
+
+
 <link rel="stylesheet" href="/css/style.css">
 <script src="/js/script.js" defer></script>
+
+<!-- Language Translation API Weglot start here-->
+
+
+<script type="text/javascript" src="https://cdn.weglot.com/weglot.min.js"></script>
+<script>
+    Weglot.initialize({
+        api_key: 'wg_da9e1bc06ffb50ab190ecf58a9b02ad10'
+    });
+</script><!-- Language Translation API Weglot complete here-->
+
+
 </head>
 <body>
+
 	<div class="content-wrap">
 		<div id="startup">
 			<h1 id="logo">MindMatrix</h1>
 		</div>
-
+		
 		<main id="main-content">
 			<nav>
 				<ul>
@@ -26,47 +43,64 @@
 				<p>Your journey into the world of knowledge begins here.</p>
 			</section>
 
+
 			<section id="quizzes">
-				<div id="quiz-results"></div>
+			<div id="quiz-results"></div>
 				<!-- Dynamically display quizzes -->
 				<div th:if="${quizzes != null}">
-					<div th:each="quiz : ${quizzes}" class="quiz-container"
-						th:attr="data-quiz-id=${quiz.id}">
+					<div th:each="quiz, quizStat : ${quizzes}" class="quiz-container">
 						<div class="quiz-question">
 							<h3 th:text="${quiz.question}">Quiz Question Placeholder</h3>
 						</div>
-
 						<div th:each="answer, stat : ${quiz.answers}" class="quiz-answer">
 							<input type="radio"
-								th:id="${'answer' + stat.index + '_' + quiz.id}"
-								th:name="${'quiz' + quiz.id}" th:value="${stat.index}">
-							<label th:for="${'answer' + stat.index + '_' + quiz.id}"
+								th:id="${'answer' + quizStat.index + '_' + stat.index}"
+								th:name="${'quiz' + quizStat.index}" th:value="${stat.index}">
+							<label th:for="${'answer' + quizStat.index + '_' + stat.index}"
 								th:text="${answer}">Answer Placeholder</label>
-						</div>
-						<p>
-						<p>
-
-							<!-- Button to reveal the correct answer -->
-						<div class="show-answer-container">
-							<button class="show-answer-button">Show Correct Answer</button>
-							<p class="correct-answer" style="display: none;"
-								th:text="${quiz.correctAnswerText}"></p>
 						</div>
 					</div>
 				</div>
-				<div class="navigation-buttons">
+				<div class=navigation-buttons>
 					<button id="QuizprevButton">Back</button>
 					<button id="QuiznextButton">Next</button>
 					<button id="QuizFinishButton">Finish</button>
-					<p id="quiz-counter">1 of X</p>
+					 <p id="quiz-counter">1 of X</p>
+					 
+					
+					 
 				</div>
+				
+			
 			</section>
-	</div>
+			
+	<!--  </div>-->
+	
+		 <!-- TIMER -->
+		
+	 <p>Quiz time: <span id="quizTimer"> </span> Minutes</p>
+	 
+	 <div id="timer">
+		 <P>10:00</P>
+		</div>
+	 
 	</main>
+	
 	</div>
-
+	
 	<footer class="footer">
+	
+		<!-- Add this HTML for share links -->
+		<div id="shareLinks" style="display: none;">
+		<p>Share This:</p>
+		<div class="sharethis-inline-share-buttons"></div>
+		</div>
+	
 		<p>&copy; 2024 MindMatrix. All rights reserved.</p>
+	
 	</footer>
+	
+	
+
 </body>
 </html>

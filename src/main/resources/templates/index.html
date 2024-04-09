@@ -5,67 +5,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MindMatrix</title>
 <link rel="stylesheet" href="/css/style.css">
+
+
 <script src="/js/script.js" defer></script>
+<!-- Language Translation API Weglot start here-->
+
+
+<script type="text/javascript" src="https://cdn.weglot.com/weglot.min.js"></script>
+<script>
+    Weglot.initialize({
+        api_key: 'wg_da9e1bc06ffb50ab190ecf58a9b02ad10'
+    });  
+</script>  <!-- Language Translation API Weglot complete here-->
+
+
 </head>
 <body>
 	<div class="content-wrap">
 		<div id="startup">
-			<h1 id="logo">MindMatrix</h1>
-		</div>
-
-		<main id="main-content">
-			<nav>
-				<ul>
-					<li><a th:href="@{/}">Home</a></li>
-					<li><a href="#services">Services</a></li>
-					<li><a href="#about">About</a></li>
-					<li><a href="#contact">Contact</a></li>
-				</ul>
-			</nav>
-			<section id="home" class="hero">
-				<h1 th:text="${message}">Welcome to MindMatrix</h1>
-				<p>Your journey into the world of knowledge begins here.</p>
+		<h1 id="logo">MindMatrix</h1>
+	</div>
+	
+	<main id="main-content">
+		<nav>
+			<ul>
+				<li><a th:href="@{/}">Home</a></li>
+				<li><a href="#services">Services</a></li>
+				<li><a href="#about">About</a></li>
+				<li><a href="#contact">Contact</a></li>
+			</ul>
+		</nav>
+		<section id="home" class="hero">
+			<h1 th:text="${message}">Welcome to MindMatrix</h1>
+			<p>Your journey into the world of knowledge begins here.</p>
+		</section>
+		
+		<div class="bottom-sections-container">
+	        <section id="flashcards" style="border: 2px solid black; border-radius: 5px;">
+			    <h2>Flashcards</h2>
+			    <form id="program-form" action="/flashcards/generate" method="get">
+			        <label for="search">How many Flashcards:</label> 
+			        <input type="number" id="number" name="number" min="1" required>
+			        
+			        <label for="search">Search for a Subject:</label>
+			        <input type="text" id="prompt" name="prompt" required>
+			        
+			        <p>
+			        <button type="submit">Generate Flashcard</button>
+			        
+			    </form>
 			</section>
+	
+	        <section id="quizzes" style="border: 2px solid black; border-radius: 5px;">
+			    <h2>Quizzes</h2>
+			    <form id="quizRequestForm" action="/quizzes/generate" method="get">
+			       	<label for="number">Quiz time:</label>
+			        <input type="number" id="quizTimer" name="quizTimer" min="1" required>
+			       	
+			       	<label for="number">Number of Questions:</label>
+			        <input type="number" id="quizNumber" name="number" min="1" required>
+			       
+			        <label for="subject">Subject:</label>
+			        <input type="text" id="subject" name="subject" required>     
+			     <p><button type="submit" onclick="storeInputValues()">Start Quiz</button>
+			        
+			    </form>
+			</section>
+	    </div>
 
-			<div class="bottom-sections-container">
-				<section id="flashcards"
-					style="border: 2px solid black; border-radius: 5px;">
-					<h2>Flashcards</h2>
-					<form id="program-form" action="/flashcards/generate" method="get">
-						<label for="search">Number of Flashcards:</label> <input
-							type="number" id="number" name="number" min="1" required>
-
-						<label for="search">Subject:</label> <input
-							type="text" id="prompt" name="prompt" required>
-
-						<p>
-							<button type="submit">Generate Flashcard</button>
-					</form>
-				</section>
-
-				<section id="quizzes"
-					style="border: 2px solid black; border-radius: 5px;">
-					<h2>Quizzes</h2>
-					<form id="quizRequestForm" action="/quizzes/generate" method="get">
-						<label for="number">Quiz time:</label> <input type="number"
-							id="quizTimer" name="quizTimer" min="1" required> <label
-							for="number">Number of Questions:</label> <input type="number"
-							id="quizNumber" name="number" min="1" required> <label
-							for="subject">Subject:</label> <input type="text" id="subject"
-							name="subject" required>
-
-						<p>
-							<button type="submit">Start Quiz</button>
-					</form>
-				</section>
-			</div>
-
-		</main>
+	</main>
 	</div>
 
 	<footer class="footer">
 		<p>&copy; 2024 MindMatrix. All rights reserved.</p>
 	</footer>
-
+	
 </body>
 </html>
