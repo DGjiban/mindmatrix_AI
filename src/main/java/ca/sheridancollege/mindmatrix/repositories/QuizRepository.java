@@ -11,4 +11,6 @@ public interface QuizRepository extends CrudRepository<Quiz, Long> {
 	Quiz findByQuestion(String question);
 	
 	List<Quiz> findBySubject(String subject);
+	
+    Quiz findQuizById(Long id); 
 }
