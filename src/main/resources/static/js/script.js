@@ -213,6 +213,7 @@ function updateTimer()
 	if(time < 0)
 	{
 		
+		
 		clearTimeout(a);
 	}
 }
