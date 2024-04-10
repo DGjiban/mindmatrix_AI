@@ -210,7 +210,8 @@ function updateTimer()
 	
 	if(time < 0)
 	{
-		//finish();
+		
+		
 		clearTimeout(a);
 	}
 }
