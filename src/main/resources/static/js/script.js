@@ -215,6 +215,9 @@ function updateTimer()
 		
 		
 		clearTimeout(a);
+		document.getElementById("timer").innerHTML = "Times Up!";
+
 	}
 }
+
 
