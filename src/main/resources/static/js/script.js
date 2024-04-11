@@ -212,9 +212,10 @@ function updateTimer()
 	
 	if(time < 0)
 	{
-		
-		
+
 		clearTimeout(a);
+		document.getElementById("timer").innerHTML = "Times Up!";
 	}
 }
+
 
