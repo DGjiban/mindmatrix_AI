@@ -72,5 +72,11 @@ public class WebController {
         QuizResult result = new QuizResult(correctCount, answers.size());
         return ResponseEntity.ok(result); // Retorna o resultado como JSON
     }
+	
+	 @GetMapping("/about")
+	    public String aboutPage() {
+	        return "about"; // Refers to src/main/resources/templates/about.html
+	    }
+	}
 
-}
+
