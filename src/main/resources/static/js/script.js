@@ -3,7 +3,7 @@ window.onload = function() {
 	const mainContent = document.getElementById('main-content');
 
 	function onScroll() {
-		// Apply styles to fade out the startup section
+		
 		startup.style.opacity = 0;
 		startup.style.visibility = 'hidden';
 		// Set startup to absolute position after the transition to remove it from the flow
@@ -75,24 +75,24 @@ document.addEventListener("DOMContentLoaded", function() {
 	const totalQuizzes = quizContainers.length;
 	const counterElement = document.getElementById('quiz-counter');
 
-	// Função para atualizar o contador
+	// update counter
 	function updateQuizCounter() {
 		counterElement.textContent = `${currentQuizIndex + 1} of ${totalQuizzes}`;
 	}
 
-	// Função para mostrar a questão do quiz atual
+	// show the current quiz
 	function showQuiz(index) {
-		// Esconde todas as questões
+		// hide the questions
 		quizContainers.forEach((container, i) => {
 			container.style.display = 'none';
 		});
-		// Mostra a questão atual
+		// show the current question
 		quizContainers[index].style.display = 'block';
-		// Atualiza o contador
+		// call the update counter function
 		updateQuizCounter();
 	}
 
-	// Evento de clique para o botão "Previous"
+	// Prev button
 	document.getElementById('QuizprevButton').addEventListener('click', function() {
 		if (currentQuizIndex > 0) {
 			currentQuizIndex--;
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 	});
 
-	// Evento de clique para o botão "Next"
+	// Next button
 	document.getElementById('QuiznextButton').addEventListener('click', function() {
 		if (currentQuizIndex < totalQuizzes - 1) {
 			currentQuizIndex++;
@@ -108,14 +108,17 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 	});
 
-	// Inicia o quiz mostrando a primeira questão e inicializando o contador
+	// start the quiz
 	showQuiz(currentQuizIndex);
 });
 
 
-
 document.addEventListener("DOMContentLoaded", function() {
 	document.getElementById('QuizFinishButton').addEventListener('click', function() {
+		loadShareThisScript();
+		
+		document.getElementById('shareLinks').style.display = 'block';
+		
 		const answers = [];
 
 		document.querySelectorAll('.quiz-container').forEach(container => {
@@ -123,12 +126,12 @@ document.addEventListener("DOMContentLoaded", function() {
 			const selectedInput = container.querySelector('input[type="radio"]:checked');
 
 			if (selectedInput) {
-				// Encontrar o label associado que contém o texto completo da resposta
+				
 				const labelText = container.querySelector(`label[for="${selectedInput.id}"]`).innerText;
 
 				answers.push({
 					quizId: quizId,
-					selectedAnswer: labelText // Enviando o texto completo ao invés de apenas o valor
+					selectedAnswer: labelText
 				});
 			}
 		});
@@ -146,15 +149,73 @@ document.addEventListener("DOMContentLoaded", function() {
 				document.getElementById('quiz-results').style.display = 'block';
 			})
 			.catch(error => console.error('Error:', error));
-	});
-
 	document.querySelectorAll('.show-answer-button').forEach(button => {
 		button.addEventListener('click', function() {
-			// Find the parent container of the clicked button
+			
 			const quizContainer = this.closest('.quiz-container');
-			// Toggle the visibility of the correct answer within the container
+			
 			const correctAnswer = quizContainer.querySelector('.correct-answer');
-			correctAnswer.style.display = 'block'; // Display the correct answer
+			correctAnswer.style.display = 'block';
 		});
 	});
+	});
 });
+
+
+//Function to load ShareThis script
+function loadShareThisScript(){
+	const script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = 'https://platform-api.sharethis.com/js/sharethis.js#property=6601a93bfb0d8000121105be&product=inline-share-buttons&source=platform';
+		script.async = true;
+		document.head.appendChild(script);
+	}
+
+
+//Timer
+function storeInputValues() {
+
+const quizTimerValue = document.getElementById('quizTimer').value;
+
+localStorage.setItem('quizTimer', quizTimerValue);
+
+//start timer
+		let timer = quizTimerValue;
+		
+          const interval = setInterval(() => {
+                       
+               if (timer <= 0) {						
+				clearInterval(interval);
+					
+				window.location.href = 'quiz.html';
+ 				 				
+ 			}	 localStorage.setItem('timer', timer);
+ 				 
+             }, 1000);  
+      }
+   
+     const quizTimerValue = localStorage.getItem('timer');
+	 document.getElementById('quizTimer').textContent = quizTimerValue;
+	 
+const s = quizTimerValue;
+let time = s * 60;
+const timerEl = document.getElementById('timer');
+
+const a = setInterval(updateTimer, 1000);
+
+function updateTimer()
+{
+	const minutes = Math.floor(time / 60);
+	let seconds = time % 60;
+	timerEl.innerHTML = `${minutes}:${seconds}`;
+	time--;
+	
+	if(time < 0)
+	{
+
+		clearTimeout(a);
+		document.getElementById("timer").innerHTML = "Times Up!";
+	}
+}
+
+
