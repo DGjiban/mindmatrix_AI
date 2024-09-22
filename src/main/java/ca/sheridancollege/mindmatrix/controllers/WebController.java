@@ -53,6 +53,14 @@ public class WebController {
         return "quiz"; // Or adjust based on your page structure
     }
 	
+	@GetMapping("/games/generate")
+	public String generateGames(@RequestParam("subject") String subject, 
+	                            @RequestParam("number") int number, Model model) {
+	    List<Quiz> games = quizService.getOrCreateQuizzes(subject, number);
+	    model.addAttribute("games", games);
+	    return "game"; // This should match "game.html"
+	}
+	
 	
 	@PostMapping("/quizzes/verify")
     public ResponseEntity<QuizResult> verifyQuiz(@RequestBody List<UserAnswer> answers) {
