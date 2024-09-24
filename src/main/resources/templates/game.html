@@ -4,47 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MindMatrix - Game</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script th:src="@{/js/script.js}" defer></script>
- <style>
-        /* Debugging Styles */
-        .content-wrap {
-            background-color: #f0f0f0; /* Light gray background for visibility */
-        }
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/script.js" defer></script>
 
-        .game-container {
-            background-color: #e0e0e0; /* Slightly darker gray for visibility */
-            border: 2px solid #ccc; /* Border to help see the container */
-            padding: 20px;
-        }
-
-        .card {
-            background-color: #fff; /* White background for cards */
-            border: 1px solid #ddd; /* Light border to see card edges */
-        }
-    </style>
 </head>
 <body>
     <div class="content-wrap">
-        <nav>
-            <ul>
-                <li><a th:href="@{/}">Home</a></li>
-                <li><a th:href="@{/challenge}">Challenge</a></li>
-                <li><a th:href="@{/about}">About</a></li>
-                <li><a th:href="@{/contact}">Contact</a></li>
-            </ul>
-        </nav>
+        <div id="startup">
+            <h1 id="logo">MindMatrix - Game</h1>
+        </div>
 
         <main id="main-content">
+        <nav>
+				<ul>
+					<li><a th:href="@{/}">Home</a></li>
+                    <li><a th:href="@{/challenge}">Challenge</a></li>
+					<li><a th:href="@{/about}">About</a></li>
+                    <li><a th:href="@{/contact}">Contact</a></li>
+				</ul>
+			</nav>
             <section id="game">
+                <!-- Container to display the stacked cards -->
                 <div class="game-container">
+                    <!-- Cards will be displayed here -->
                     <form id="game-form">
                         <div th:each="game, iterStat : ${games}" class="card" th:attr="data-quiz-id=${game.id}" th:classappend="${iterStat.index == 0} ? 'active'">
                             <div class="card-question" th:text="${game.question}">Question</div>
                             <ul class="card-options">
                                 <li th:each="answer, stat : ${game.answers}">
                                     <input type="radio" th:id="${'answer' + stat.index + '_' + game.id}" th:name="${'quiz' + game.id}" th:value="${stat.index}" required>
-                                    <label th:for="${'answer' + stat.index + '_' + game.id}" th:text="${answer}">Answer</label>
+                                    <label th:for="${'answer' + stat.index + '_' + game.id}" th:text="${answer}">Answer Placeholder</label>
                                 </li>
                             </ul>
                             <button type="button" class="next-button">Next</button>
@@ -52,8 +41,10 @@
                     </form>
                 </div>
 
+                <!-- Button to show answers after all questions are completed -->
                 <button id="show-answers-btn">Show Correct Answers</button>
 
+                <!-- Results Table -->
                 <table id="results-table">
                     <thead>
                         <tr>
@@ -62,14 +53,17 @@
                             <th>Correct Answer</th>
                         </tr>
                     </thead>
-                    <tbody id="results-body"></tbody>
+                    <tbody id="results-body">
+                        <!-- Rows will be dynamically inserted here -->
+                    </tbody>
                 </table>
             </section>
         </main>
-
+</div>
         <footer class="footer">
             <p>&copy; 2024 MindMatrix. All rights reserved.</p>
         </footer>
-    </div>
+    
+
 </body>
 </html>
