@@ -5,20 +5,169 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Challenge | MindMatrix</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="/js/script.js" defer></script>
+      <style>
+        /* Global styles */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            font-family: 'Open Sans', sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body {
+            display: flex;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px; /* Set the width of the navigation */
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            margin-bottom: 10px; /* Space between menu items */
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+        }
+
+        /* Main content */
+        .content-wrap {
+            margin-left: 250px; /* Margin to account for the fixed navigation */
+            padding: 20px;
+            width: calc(100% - 250px); /* Adjust width based on navigation */
+            box-sizing: border-box;
+        }
+
+        .ch {
+            background-color: #004080;
+            color: white;
+            padding: 50px;
+            padding-left: 250px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .ch h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .ch p {
+            font-size: 1.5rem;
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #challenge {
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        #games {
+            border: 2px solid black;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #fff;
+            margin: 0 auto;
+            max-width: 600px;
+        }
+
+        #games h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #gameRequestForm label {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        #gameRequestForm input[type="number"],
+        #gameRequestForm input[type="text"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            display: block;
+            margin-bottom: 10px;
+            width: calc(100% - 22px);
+        }
+
+        #gameRequestForm button {
+            background-color: #ff9900;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+            width: 100%;
+        }
+
+        #gameRequestForm button:hover {
+            background-color: #e68a00;
+        }
+
+        .footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            margin-top: auto;
+        }
+    </style>
 </head>
 <body>
-    <div class="content-wrap">
-        <nav>
-            <ul>
+    <nav>
+        <ul>
                 <li><a th:href="@{/}">Home</a></li>
                 <li><a th:href="@{/challenge}">Challenge</a></li>
                 <li><a th:href="@{/about}">About</a></li>
                 <li><a th:href="@{/contact}">Contact</a></li>
             </ul>
         </nav>
+        
+        <section id="home" class="ch">
+            <h1 th:text="${message}">Challenge Yourself!</h1>
+            <p>Your journey into the world of knowledge begins here.</p>
+        </section>
 
         <main id="challenge">
-            <section id="games" style="border: 2px solid black; border-radius: 5px;">
+            <section id="games">
                 <h2>Games</h2>
                 <form id="gameRequestForm" action="/games/generate" method="get">
                     <label for="number">Number of Questions:</label>
@@ -31,10 +180,10 @@
                 </form>
             </section>
         </main>
-
-        <footer class="footer">
-            <p>&copy; 2024 MindMatrix. All rights reserved.</p>
-        </footer>
     </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 MindMatrix. All rights reserved.</p>
+    </footer>
 </body>
 </html>

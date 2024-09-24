@@ -56,10 +56,14 @@ public class WebController {
         return "quiz"; // Or adjust based on your page structure
     }
 	
-	@GetMapping("/challenge")
-	public String challengePage() {
-		return "challenge"; // Refers to src/main/resources/templates/about.html
-	}
+
+	    @GetMapping("/challenge")
+	    public String showChallengePage(Model model) {
+	        model.addAttribute("message", "Challenge Yourself!");
+	        return "challenge"; // The name of your Thymeleaf template file without the extension
+	    }
+	
+
 	
 	@GetMapping("/games/generate")
     public String generateGames(@RequestParam("subject") String subject, 

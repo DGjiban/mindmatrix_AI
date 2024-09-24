@@ -2,13 +2,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap');
 
 /* Global styles */
+/* Global styles */
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
-    font-family: 'Open+Sans', sans-serif;
+    font-family: 'Open Sans', sans-serif;
+    display: flex;
+    flex-direction: column;
 }
+
 
 body {
     display: flex;
@@ -18,9 +22,9 @@ body {
 .content-wrap {
     flex: 1;
     width: 100%;
-    padding-bottom: 50px; /* Increase this value as needed */
-    
+    padding-bottom: 50px; /* Adjust based on the footer height if needed */
 }
+
 
 /* Startup screen */
 #startup {
@@ -129,6 +133,8 @@ nav ul li a:hover {
     margin-bottom: 20px;
 }
 
+
+
 /* Bottom Sections */
 .bottom-sections-container {
     display: flex;
@@ -187,7 +193,9 @@ nav ul li a:hover {
     text-align: center;
     padding: 20px 0;
     width: 100%;
+    margin-top: auto; /* Pushes the footer to the bottom of the page */
 }
+
 
 /* Media Queries */
 @media (max-width: 768px) {
@@ -295,42 +303,43 @@ nav ul li a:hover {
 
 /* Tab Component */
 .tab-container {
-            display: flex;
-            flex-direction: row; /* Align items horizontally */
-            justify-content: space-between;
-            margin-top: 20px;
-        }
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    margin-top: 20px;
+}
 
-        .tab-buttons {
-            display: flex;
-            flex-direction: column;
-            margin-right: 20px;
-        }
+.tab-buttons {
+    display: flex;
+    flex-direction: row; /* Align buttons horizontally */
+    margin-bottom: 10px; /* Space between buttons and content */
+}
 
-        .tab-link {
-            padding: 10px 20px;
-            margin: 5px 0;
-            background-color: #f0f0f0;
-            border: none;
-            cursor: pointer;
-        }
+.tab-link {
+    padding: 10px 20px;
+    margin-right: 5px; /* Space between buttons */
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    flex: 1; /* Buttons take equal space */
+    text-align: center; /* Center text inside buttons */
+}
 
-        .tab-link.active {
-            background-color: #007bff;
-            color: white;
-        }
+.tab-link.active {
+    background-color: #007bff;
+    color: white;
+}
 
-        .tab-content {
-            display: none;
-            flex: 1; /* Takes the remaining space next to the buttons */
-            padding: 20px;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
-        }
+.tab-content {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
 
-        .tab-content.active {
-            display: block;
-        }
+.tab-content.active {
+    display: block;
+}
+
 
 /* Form Styling */
 form {
@@ -494,13 +503,13 @@ input[type="text"] {
         }
 
         /* Footer */
-        .footer {
+       /*  .footer {
             background-color: #333;
             color: #fff;
             text-align: center;
             padding: 20px 0;
             width: 100%;
-        }
+        } */
 
         /* Responsive Design for About Page */
         @media (max-width: 768px) {
@@ -594,11 +603,13 @@ input[type="text"] {
             background-color: #0056b3;
         }
         
- /* Challenge Page Styles */
+ /* Challen/* Challenge Page Specific Styles */
 #challenge {
+    flex: 1;
     padding: 20px;
     margin-left: 200px; /* Space for the fixed navigation panel */
 }
+
 
 /* Games Section */
 #games {
@@ -653,10 +664,6 @@ input[type="text"] {
     background-color: #e68a00;
 }
 
-/* Adjust the margin for the footer */
-.footer {
-    margin-top: 20px;
-}
 
 
 /* Game.html */
