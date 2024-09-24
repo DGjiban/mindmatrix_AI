@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge | MindMatrix</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="content-wrap">
+        <nav>
+            <ul>
+                <li><a th:href="@{/}">Home</a></li>
+                <li><a th:href="@{/challenge}">Challenge</a></li>
+                <li><a th:href="@{/about}">About</a></li>
+                <li><a th:href="@{/contact}">Contact</a></li>
+            </ul>
+        </nav>
+
+        <main id="challenge">
+            <section id="games" style="border: 2px solid black; border-radius: 5px;">
+                <h2>Games</h2>
+                <form id="gameRequestForm" action="/games/generate" method="get">
+                    <label for="number">Number of Questions:</label>
+                    <input type="number" id="gameNumber" name="number" min="1" required>
+                    
+                    <label for="subject">Subject:</label>
+                    <input type="text" id="gameSubject" name="subject" required>
+                
+                    <button type="submit">Start Game</button>
+                </form>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 MindMatrix. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -56,13 +56,18 @@ public class WebController {
         return "quiz"; // Or adjust based on your page structure
     }
 	
-	@GetMapping("/games/generate")
-	public String generateGames(@RequestParam("subject") String subject, 
-	                            @RequestParam("number") int number, Model model) {
-	    List<Quiz> games = quizService.getOrCreateQuizzes(subject, number);
-	    model.addAttribute("games", games);
-	    return "game"; // This should match "game.html"
+	@GetMapping("/challenge")
+	public String challengePage() {
+		return "challenge"; // Refers to src/main/resources/templates/about.html
 	}
+	
+	@GetMapping("/games/generate")
+    public String generateGames(@RequestParam("subject") String subject, 
+                                @RequestParam("number") int number, Model model) {
+        List<Quiz> games = quizService.getOrCreateQuizzes(subject, number);
+        model.addAttribute("games", games);
+        return "game"; // Returns the "game.html" page
+    }
 	
 	
 	@PostMapping("/quizzes/verify")
@@ -94,10 +99,6 @@ public class WebController {
 	    return ResponseEntity.ok(response);
 	}
 
-<<<<<<< HEAD
-        QuizResult result = new QuizResult(correctCount, answers.size());
-        return ResponseEntity.ok(result); // Retorna o resultado como JSON
-    }
 	
 	 @GetMapping("/about")
 	    public String aboutPage() {
@@ -109,8 +110,7 @@ public class WebController {
 		public String contactPage() {
 			return "contact"; // Refers to src/main/resources/templates/about.html
 		}
-	}
+	
+}
 
-=======
->>>>>>> Richard
 

@@ -26,7 +26,7 @@
             <nav>
                 <ul>
                     <li><a th:href="@{/}">Home</a></li>
-                    <li><a href="#services">Services</a></li>
+                    <li><a th:href="@{/challenge}">Challenge</a></li>
 					<li><a th:href="@{/about}">About</a></li>
                     <li><a th:href="@{/contact}">Contact</a></li>
                 </ul>
@@ -81,21 +81,9 @@
 					</form>
 				</section>
 				
-				<section id="games"
-					style="border: 2px solid black; border-radius: 5px;">
-					<h2>Games</h2>
-					<form id="gameRequestForm" action="/games/generate" method="get">
-					    <label for="number">Number of Questions:</label>
-					    <input type="number" id="gameNumber" name="number" min="1" required>
-					    
-					    <label for="subject">Subject:</label>
-					    <input type="text" id="gameSubject" name="subject" required>
-					
-					    <button type="submit">Start Game</button>
-					</form>
-				</section>
+		
 			</div>
->>>>>>> Richard
+
 
     <footer class="footer">
         <p>&copy; 2024 MindMatrix. All rights reserved.</p>

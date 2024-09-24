@@ -217,7 +217,64 @@ function updateTimer()
 		document.getElementById("timer").innerHTML = "Times Up!";
 	}
 }
+ document.addEventListener("DOMContentLoaded", function () {
+            const cards = document.querySelectorAll('.card');
+            let currentCardIndex = 0;
+            const answers = [];
+            const answerMapping = ['A', 'B', 'C', 'D'];
 
+            const updateCardStack = () => {
+                cards.forEach((card, index) => {
+                    const relativeIndex = (index - currentCardIndex + cards.length) % cards.length;
+                    card.style.zIndex = cards.length - relativeIndex;
+                    if (relativeIndex === 0) { card.style.transform = 'translateY(0px) scale(1)'; card.style.opacity = 1; }
+                    else if (relativeIndex === 1) { card.style.transform = 'translateY(10px) scale(0.98)'; card.style.opacity = 0.8; }
+                    else if (relativeIndex === 2) { card.style.transform = 'translateY(20px) scale(0.96)'; card.style.opacity = 0.6; }
+                    else { card.style.opacity = 0; }
+                });
+            };
+
+            updateCardStack();
+
+            document.querySelectorAll('.next-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const currentCard = cards[currentCardIndex];
+                    const quizId = currentCard.getAttribute('data-quiz-id');
+                    const selectedAnswer = currentCard.querySelector('input[type="radio"]:checked');
+                    if (selectedAnswer) { answers.push({ quizId, selectedAnswer: selectedAnswer.value }); }
+                    currentCardIndex++;
+                    if (currentCardIndex < cards.length) { updateCardStack(); } 
+                    else { document.getElementById('show-answers-btn').style.display = 'block'; }
+                });
+            });
+
+            document.getElementById('show-answers-btn').addEventListener('click', function () {
+                fetch('/quizzes/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(answers)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    const resultsBody = document.getElementById('results-body');
+                    resultsBody.innerHTML = '';
+                    result.answers.forEach(answer => {
+                        const row = document.createElement('tr');
+                        const questionCell = document.createElement('td');
+                        questionCell.textContent = answer.question;
+                        const selectedAnswerCell = document.createElement('td');
+                        selectedAnswerCell.textContent = answerMapping[answer.selected];
+                        const correctAnswerCell = document.createElement('td');
+                        correctAnswerCell.textContent = answerMapping[answer.correct];
+                        row.appendChild(questionCell);
+                        row.appendChild(selectedAnswerCell);
+                        row.appendChild(correctAnswerCell);
+                        resultsBody.appendChild(row);
+                    });
+                    document.getElementById('results-table').style.display = 'block';
+                });
+            });
+        });
 
 
 
