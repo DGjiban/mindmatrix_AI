@@ -65,13 +65,13 @@ public class WebController {
 	
 
 	
-	@GetMapping("/games/generate")
-    public String generateGames(@RequestParam("subject") String subject, 
-                                @RequestParam("number") int number, Model model) {
-        List<Quiz> games = quizService.getOrCreateQuizzes(subject, number);
-        model.addAttribute("games", games);
-        return "game"; // Returns the "game.html" page
-    }
+	    @GetMapping("/games/generate")
+		public String generateGames(@RequestParam("subject") String subject, 
+		                            @RequestParam("number") int number, Model model) {
+		    List<Quiz> games = quizService.getOrCreateQuizzes(subject, number);
+		    model.addAttribute("games", games);
+		    return "game"; // This should match "game.html"
+		}
 	
 	
 	@PostMapping("/quizzes/verify")
