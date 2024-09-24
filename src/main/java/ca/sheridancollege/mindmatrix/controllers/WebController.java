@@ -1,6 +1,9 @@
 package ca.sheridancollege.mindmatrix.controllers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,24 +56,65 @@ public class WebController {
         return "quiz"; // Or adjust based on your page structure
     }
 	
+
+	    @GetMapping("/challenge")
+	    public String showChallengePage(Model model) {
+	        model.addAttribute("message", "Challenge Yourself!");
+	        return "challenge"; // The name of your Thymeleaf template file without the extension
+	    }
+	
+
+	
+	    @GetMapping("/games/generate")
+		public String generateGames(@RequestParam("subject") String subject, 
+		                            @RequestParam("number") int number, Model model) {
+		    List<Quiz> games = quizService.getOrCreateQuizzes(subject, number);
+		    model.addAttribute("games", games);
+		    return "game"; // This should match "game.html"
+		}
+	
 	
 	@PostMapping("/quizzes/verify")
-    public ResponseEntity<QuizResult> verifyQuiz(@RequestBody List<UserAnswer> answers) {
-        int correctCount = 0;
-        
-        System.out.println(answers.indexOf(0));
-        
-        for (UserAnswer userAnswer : answers) {
-            Quiz quiz = quizService.findQuizById(userAnswer.getQuizId());
-            System.out.println(quiz);
-            if (quiz != null && quiz.getCorrectAnswerText().equals("Correct answer: " + userAnswer.getSelectedAnswer())) {
-                System.out.println(quiz);
-            	correctCount++;
-            }
-        }	
+	public ResponseEntity<Map<String, Object>> verifyQuiz(@RequestBody List<UserAnswer> answers) {
+	    List<Map<String, String>> results = new ArrayList<>();
+	    int correctCount = 0;
 
-        QuizResult result = new QuizResult(correctCount, answers.size());
-        return ResponseEntity.ok(result); // Retorna o resultado como JSON
-    }
+	    for (UserAnswer userAnswer : answers) {
+	        Quiz quiz = quizService.findQuizById(userAnswer.getQuizId());
+	        String correctAnswer = quiz.getCorrectAnswerText().replace("Correct answer: ", "").trim();
 
+	        Map<String, String> result = new HashMap<>();
+	        result.put("question", quiz.getQuestion());
+	        result.put("selectedAnswer", userAnswer.getSelectedAnswer());
+	        result.put("correctAnswer", correctAnswer);
+
+	        if (userAnswer.getSelectedAnswer().equals(correctAnswer)) {
+	            correctCount++;
+	        }
+
+	        results.add(result);
+	    }
+
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("correctCount", correctCount);
+	    response.put("total", answers.size());
+	    response.put("answers", results);
+
+	    return ResponseEntity.ok(response);
+	}
+
+	
+	 @GetMapping("/about")
+	    public String aboutPage() {
+	        return "about"; // Refers to src/main/resources/templates/about.html
+	    }
+	
+
+	@GetMapping("/contact")
+		public String contactPage() {
+			return "contact"; // Refers to src/main/resources/templates/about.html
+		}
+	
 }
+
+

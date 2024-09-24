@@ -20,6 +20,8 @@ public class GptController {
 
 	@Autowired
 	private FlashcardService flashcardService;
+	
+	@Autowired
 	private QuizService quizService;
 	
 	@GetMapping("/flash")
@@ -40,6 +42,16 @@ public class GptController {
             return ResponseEntity.ok(quizzes); // Return the list of quizzes
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to generate quizzes: " + e.getMessage());
+        }
+    }
+    
+    @GetMapping("/game")
+    public ResponseEntity<?> generateGames(@RequestParam("subject") String subject, @RequestParam("number") int number) {
+        try {
+            List<Quiz> games = quizService.generateQuizzes(subject, number);
+            return ResponseEntity.ok(games);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to generate games: " + e.getMessage());
         }
     }
 

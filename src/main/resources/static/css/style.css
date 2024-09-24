@@ -1,24 +1,32 @@
-/* Importar uma fonte personalizada do Google Fonts */
+/* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap');
 
-html {
+/* Global styles */
+/* Global styles */
+html, body {
     height: 100%;
+    margin: 0;
+    padding: 0;
     background-color: #f9f9f9;
+    font-family: 'Open Sans', sans-serif;
+    display: flex;
+    flex-direction: column;
 }
+
 
 body {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    margin: 0;
-    font-family: 'Open+Sans', sans-serif;
 }
 
 .content-wrap {
     flex: 1;
     width: 100%;
+    padding-bottom: 50px; /* Adjust based on the footer height if needed */
 }
 
+
+/* Startup screen */
 #startup {
     display: flex;
     justify-content: center;
@@ -37,15 +45,18 @@ body {
     transition: transform 0.5s ease-out;
 }
 
+.scrolled #logo {
+    transform: scale(1);
+}
+
+/* Main content visibility */
 #main-content {
     visibility: hidden;
     opacity: 0;
     transition: visibility 0s, opacity 1.5s linear;
     height: 100%;
-}
-
-.scrolled #logo {
-    transform: scale(1);
+    margin-left: 220px;
+    padding-bottom: 20px;
 }
 
 .scrolled #main-content {
@@ -54,6 +65,21 @@ body {
     overflow: auto;
 }
 
+/* Hero Section */
+.hero {
+    background-color: #004080;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Navigation */
 nav {
     position: fixed;
     top: 0;
@@ -87,18 +113,13 @@ nav ul li a:hover {
     background-color: #555;
 }
 
-#main-content {
-    margin-left: 220px;
-}
-
+/* Hero Section */
 .hero {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    background-color: #004080;
+    color: white;
+    padding: 50px;
     text-align: center;
-    color: black;
-    background-color: #f9f9f9;
+    margin: 0;
 }
 
 .hero h1 {
@@ -112,6 +133,9 @@ nav ul li a:hover {
     margin-bottom: 20px;
 }
 
+
+
+/* Bottom Sections */
 .bottom-sections-container {
     display: flex;
     justify-content: space-around;
@@ -162,14 +186,18 @@ nav ul li a:hover {
     background-color: #0056b3;
 }
 
+/* Footer */
 .footer {
     background-color: #333;
     color: #fff;
     text-align: center;
     padding: 20px 0;
     width: 100%;
+    margin-top: auto; /* Pushes the footer to the bottom of the page */
 }
 
+
+/* Media Queries */
 @media (max-width: 768px) {
     .bottom-sections-container {
         flex-direction: column;
@@ -180,161 +208,87 @@ nav ul li a:hover {
     }
 }
 
-.footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 0 0;
-    width: 100%; /* Ensure the footer spans the full width of the viewport */
-}
-
+/* Flashcard Styles */
 .flashcard-container {
-  perspective: 1000px;
-  margin-bottom: 20px;
-  margin-top: 20px;
+    perspective: 1000px;
+    margin: 20px 0;
 }
 
 .flashcard {
-  width: 300px;
-  height: 200px;
-  margin: 0 auto;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  text-align: center;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-  box-shadow: 0 4px 6px 0 rgba(0,0,0,0.2);
+    width: 300px;
+    height: 200px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .flashcard-front, .flashcard-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  padding: 20px;
-  color: white;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 20px;
+    color: white;
 }
 
 .flashcard-front {
-  background: #007bff;
-  color: white;
+    background: #007bff;
 }
 
 .flashcard-back {
-  background: #28a745;
-  color: white;
-  transform: rotateY(180deg);
+    background: #28a745;
+    transform: rotateY(180deg);
 }
 
 .flashcard-container:hover .flashcard {
-  transform: rotateY(180deg);
+    transform: rotateY(180deg);
 }
 
 .flashcard h2, .flashcard p {
-  margin: 0;
+    margin: 0;
 }
 
-.flashcard.is-flipped {
-  transform: rotateY(180deg);
-}
-
-/* Quiz style */
-.modal { 
-	display: none; /* Hidden by default */
-}
-
-.navigation-buttons {
-    display: flex;
-    justify-content: center; /* Align items horizontally in the center */
-	position: relative;
-    z-index: 1;
-}
-
-
-#prevButton,
-#nextButton,
-#QuizprevButton,
-#QuiznextButton,
-#QuizFinishButton {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 20px;
-    margin: 8px 50px;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-}
-#prevButton:hover,
-#nextButton:hover,
-#QuizprevButton:hover,
-#QuiznextButton:hover,
-#QuizFinishButton:hover {
-    background-color: #0096ff;
-}
-
-#flashcard-counter,
-#quiz-counter {
-  font-size: 1em;
-  margin-top: 20px;
-  color: #555;
-}
-
-input[type="number"] {
-  width: 50px;
-  padding: 5px;
-  margin: 5px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-input[type="text"] {
-  width: 120px;
-  padding: 5px;
-  margin: 5px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+/* Quiz Styles */
+.modal {
+    display: none;
 }
 
 .quiz-container {
-    display: none; /* Esconde todas as questões do quiz */
-}
-.quiz-container:first-child {
-    display: block; /* Mostra apenas a primeira questão por padrão */
-}
-.quiz-container:not(:first-child) #QuizprevButton {
-    display: inline-block;
-}
-
-.quiz-container {
-    max-width: 600px; /* ajuste conforme necessário */
+    display: none;
+    max-width: 600px;
     background-color: white;
     border-radius: 10px;
     padding: 20px;
-    margin: 20px auto; /* centraliza na página */
+    margin: 20px auto;
     border: 1px solid #ddd;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: left; /* alinha o texto à esquerda */
-    display: flex;
+    text-align: left;
     flex-direction: column;
-    align-items: center; /* alinha os itens ao centro */
+    align-items: center;
     position: relative;
-    z-index: 2;
 }
 
-/* Estilização dos rótulos e input rádio */
+.quiz-container:first-child {
+    display: block;
+}
+
 .quiz-answer label {
-    margin-left: 25px; /* espaço à esquerda para as opções de resposta */
+    margin-left: 25px;
     font-size: 1rem;
     color: #333;
-    margin-bottom: 5px; /* espaço entre as opções de resposta */
+    margin-bottom: 5px;
 }
 
 .quiz-answer input[type="radio"] {
-    margin-right: 10px; /* espaço à direita do botão de rádio */
+    margin-right: 10px;
 }
 
 #quiz-results {
@@ -344,5 +298,482 @@ input[type="text"] {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: none; /* Esconde até que os resultados sejam calculados */
+    display: none;
 }
+
+/* Tab Component */
+.tab-container {
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    margin-top: 20px;
+}
+
+.tab-buttons {
+    display: flex;
+    flex-direction: row; /* Align buttons horizontally */
+    margin-bottom: 10px; /* Space between buttons and content */
+}
+
+.tab-link {
+    padding: 10px 20px;
+    margin-right: 5px; /* Space between buttons */
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    flex: 1; /* Buttons take equal space */
+    text-align: center; /* Center text inside buttons */
+}
+
+.tab-link.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.tab-content {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+form label {
+    font-size: 16px;
+    color: #333;
+}
+
+form input[type="number"], form input[type="text"] {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+form button {
+    padding: 10px 20px;
+    background-color: #ff9900;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #e68a00;
+}
+
+/* Navigation buttons */
+.navigation-buttons {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+#prevButton, #nextButton,
+#QuizprevButton, #QuiznextButton, #QuizFinishButton {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    margin: 8px 50px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#prevButton:hover, #nextButton:hover,
+#QuizprevButton:hover, #QuiznextButton:hover, #QuizFinishButton:hover {
+    background-color: #0096ff;
+}
+
+/* Counter Styles */
+#flashcard-counter, #quiz-counter {
+    font-size: 1em;
+    margin-top: 20px;
+    color: #555;
+}
+
+/* Input Styles */
+input[type="number"], input[type="text"] {
+    width: 50px;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+input[type="text"] {
+    width: 120px;
+}
+
+/* About Page Styles */
+        #about {
+            background-color: #f0f4f8;
+            padding: 40px 20px;
+            text-align: center;
+                        margin-left: 200px; /* Space for the fixed navigation panel */
+            
+        }
+
+        #about h1 {
+            font-size: 2.5rem;
+            color: #004080;
+            margin-bottom: 20px;
+        }
+
+        #about p {
+            font-size: 1.2rem;
+            color: #333;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        #about .section {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #about .section h2 {
+            font-size: 2rem;
+            color: #004080;
+            margin-bottom: 15px;
+        }
+
+        #about .section p {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        #about .section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        /* Team Styles */
+        .team-member {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            text-align: left;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .team-member img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin-right: 20px;
+        }
+
+        .team-member div {
+            max-width: 600px;
+        }
+
+        .team-member h3 {
+            margin: 0;
+            color: #004080;
+            font-size: 1.5rem;
+        }
+
+        .team-member p {
+            margin: 5px 0 0 0;
+            color: #555;
+        }
+
+        /* Footer */
+       /*  .footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            width: 100%;
+        } */
+
+        /* Responsive Design for About Page */
+        @media (max-width: 768px) {
+            #about p {
+                font-size: 1rem;
+            }
+
+            #about .section {
+                margin: 20px 0;
+            }
+
+            #about .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .team-member {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .team-member img {
+                margin: 0 0 10px 0;
+            }
+        }
+        
+/* Contact Page Styles */
+        #contact-page {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .contact-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .contact-header h1 {
+            font-size: 2.5rem;
+            color: #004080;
+        }
+        .contact-header p {
+            font-size: 1.2rem;
+            color: #555;
+        }
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .contact-info p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        .contact-info a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        .contact-info a:hover {
+            color: #0056b3;
+        }
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .contact-form label {
+            font-size: 1.1rem;
+            color: #333;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .contact-form button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .contact-form button:hover {
+            background-color: #0056b3;
+        }
+        
+ /* Challen/* Challenge Page Specific Styles */
+#challenge {
+    flex: 1;
+    padding: 20px;
+    margin-left: 200px; /* Space for the fixed navigation panel */
+}
+
+
+/* Games Section */
+#games {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+#games h2 {
+    font-size: 2rem;
+    color: #000000;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#gameRequestForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#gameRequestForm label {
+    font-size: 1rem;
+    color: #333;
+}
+
+#gameRequestForm input[type="number"], 
+#gameRequestForm input[type="text"] {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+#gameRequestForm button {
+    background-color: #ff9900;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: center;
+}
+
+#gameRequestForm button:hover {
+    background-color: #e68a00;
+}
+
+
+
+/* Game.html */
+/* Stack cards in the container */
+        .game-container {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    margin: 0 auto;
+}
+
+
+        /* Poker card styles */
+      .card {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    position: absolute;
+    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+    opacity: 0;
+}
+
+
+        /* Initial stacking effect for cards behind the main card */
+       .card:nth-child(1) {
+    z-index: 3;
+    transform: translateY(0px) scale(1);
+    opacity: 1;
+}
+.card:nth-child(2) {
+    z-index: 2;
+    transform: translateY(10px) scale(0.98);
+    opacity: 0.8;
+}
+.card:nth-child(3) {
+    z-index: 1;
+    transform: translateY(20px) scale(0.96);
+    opacity: 0.6;
+}
+
+
+        /* Card question and options */
+      .card-question {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.card-options {
+    list-style-type: none;
+    padding: 0;
+}
+.card-options li {
+    margin: 10px 0;
+}
+.card button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.card button:hover {
+    background-color: #0056b3;
+}
+
+        /* Hide other cards initially, except the top ones */
+        .card.move-out {
+            transform: translateX(100%); /* Move the card out to the right */
+            opacity: 0;
+        }
+
+        /* Table styles for showing results */
+       #results-table {
+    margin-top: 50px;
+    display: none;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+#results-table th, #results-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#show-answers-btn {
+    position: fixed;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    display: none;
+    z-index: 100;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#show-answers-btn:hover {
+    background-color: #218838;
+}
+
+

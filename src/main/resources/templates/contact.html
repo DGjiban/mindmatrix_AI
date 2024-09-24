@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | MindMatrix</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="content-wrap">
+        <nav>
+            <ul>
+                    <li><a th:href="@{/}">Home</a></li>
+                    <li><a th:href="@{/challenge}">Challenge</a></li>
+					<li><a th:href="@{/about}">About</a></li>
+                    <li><a th:href="@{/contact}">Contact</a></li>
+                </ul>
+        </nav>
+
+        <main id="contact">
+            <div id="contact-page">
+                <div class="contact-header">
+                    <h1>Contact Us</h1>
+                    <p>We’d love to hear from you! Reach out to us with any questions or feedback.</p>
+                </div>
+             
+                <div class="contact-form">
+                    <h2>Send Us a Message</h2>
+                    <form action="/send-contact" method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    
+    <label for="message">Message:</label>
+    <textarea id="message" name="message" rows="5" required></textarea>
+    
+    <button type="submit">Send Message</button>
+</form>
+<br><br><br><br>
+<div class="contact-info">
+                    <p>You can also contact us directly at:</p>
+                    <a href="mailto:technominds@mindmatrix.com">technominds@mindmatrix.com</a>
+                </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 MindMatrix. All rights reserved.</p>
+    </footer>
+</body>
+</html>
