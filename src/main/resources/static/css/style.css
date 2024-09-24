@@ -293,6 +293,7 @@ nav ul li a:hover {
     display: none;
 }
 
+<<<<<<< HEAD
 /* Tab Component */
 .tab-container {
     margin-top: 40px;
@@ -303,6 +304,11 @@ nav ul li a:hover {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+=======
+/* Poker Card Styles */
+
+
+>>>>>>> Richard
 
 .tab-buttons {
     display: flex;

@@ -68,12 +68,34 @@
                         <label for="subject">Subject:</label> 
                         <input type="text" id="subject" name="subject" required>
 
+<<<<<<< HEAD
                         <p><button type="submit">Start Quiz</button></p>
                     </form>
                 </div>
             </div>
         </main>
     </div>
+=======
+						<p>
+							<button type="submit" onclick="storeInputValues()">Start Quiz</button>
+					</form>
+				</section>
+				
+				<section id="games"
+					style="border: 2px solid black; border-radius: 5px;">
+					<h2>Games</h2>
+					<form id="gameRequestForm" action="/games/generate" method="get">
+					    <label for="number">Number of Questions:</label>
+					    <input type="number" id="gameNumber" name="number" min="1" required>
+					    
+					    <label for="subject">Subject:</label>
+					    <input type="text" id="gameSubject" name="subject" required>
+					
+					    <button type="submit">Start Game</button>
+					</form>
+				</section>
+			</div>
+>>>>>>> Richard
 
     <footer class="footer">
         <p>&copy; 2024 MindMatrix. All rights reserved.</p>
