@@ -215,5 +215,88 @@ function updateTimer()
 		document.getElementById("timer").innerHTML = "Times Up!";
 	}
 }
+document.addEventListener("DOMContentLoaded", function () {
+    const cards = document.querySelectorAll('.card');
+    let currentCardIndex = 0;
+    const answers = [];
+    const answerMapping = ['A', 'B', 'C', 'D']; // Mapping for answer options
 
+    // Function to update the card stack positions
+    const updateCardStack = () => {
+        console.log(`Updating card stack. Current index: ${currentCardIndex}`);
+        cards.forEach((card, index) => {
+            const relativeIndex = (index - currentCardIndex + cards.length) % cards.length;
+            card.style.zIndex = cards.length - relativeIndex;
 
+            if (relativeIndex === 0) {
+                card.style.transform = 'translateY(0px) scale(1)';
+                card.style.opacity = 1;
+            } else if (relativeIndex === 1) {
+                card.style.transform = 'translateY(10px) scale(0.98)';
+                card.style.opacity = 0.8;
+            } else if (relativeIndex === 2) {
+                card.style.transform = 'translateY(20px) scale(0.96)';
+                card.style.opacity = 0.6;
+            } else {
+                card.style.opacity = 0; // Hide remaining cards
+            }
+        });
+    };
+
+    // Initially set the correct card positions
+    updateCardStack();
+
+    document.querySelectorAll('.next-button').forEach(button => {
+        button.addEventListener('click', () => {
+            console.log('Next button clicked'); // Debug line
+            const currentCard = cards[currentCardIndex];
+            const quizId = currentCard.getAttribute('data-quiz-id');
+            const selectedAnswer = currentCard.querySelector('input[type="radio"]:checked');
+
+            if (selectedAnswer) {
+                answers.push({
+                    quizId: quizId,
+                    selectedAnswer: selectedAnswer.value
+                });
+            }
+
+            currentCardIndex++;
+
+            if (currentCardIndex < cards.length) {
+                updateCardStack();
+            } else {
+                document.getElementById('show-answers-btn').style.display = 'block';
+            }
+        });
+    });
+
+    document.getElementById('show-answers-btn').addEventListener('click', function () {
+        fetch('/quizzes/verify', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(answers)
+        })
+        .then(response => response.json())
+        .then(result => {
+            const resultsBody = document.getElementById('results-body');
+            resultsBody.innerHTML = ''; // Clear any previous results
+
+            result.answers.forEach(answer => {
+                const selectedAnswer = answerMapping[answer.selectedAnswer]; // Convert numeric value to alphabet
+                const correctAnswer = answer.correctAnswer.replace('Correct answer: ', ''); // Clean up correct answer text
+
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${answer.question}</td><td>${selectedAnswer}</td><td>${correctAnswer}</td>`;
+                resultsBody.appendChild(row);
+            });
+
+            // Show the table
+            document.getElementById('results-table').style.display = 'table';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});
