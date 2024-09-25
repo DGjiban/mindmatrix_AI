@@ -36,6 +36,11 @@ public class WebController {
 		return "index";
 	}
 	
+	@GetMapping("/login")
+    public String showLoginPage() {
+        return "login";  // Returns the login.html page
+    }
+	
 	@GetMapping("/flashcards/generate")
     public String generateFlashcards(@RequestParam("prompt") String subject, 
                                      @RequestParam("number") int number, Model model) {
@@ -102,6 +107,14 @@ public class WebController {
 
 	    return ResponseEntity.ok(response);
 	}
+	
+	 @GetMapping("/about")
+	    public String aboutPage() {
+	        return "about"; // Refers to src/main/resources/templates/about.html
+	    }
+	
+
+
 
 	
 	 @GetMapping("/about")
@@ -109,6 +122,7 @@ public class WebController {
 	        return "about"; // Refers to src/main/resources/templates/about.html
 	    }
 	
+
 
 	@GetMapping("/contact")
 		public String contactPage() {
