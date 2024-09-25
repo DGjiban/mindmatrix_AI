@@ -112,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function() {
 	showQuiz(currentQuizIndex);
 });
 
-
 document.addEventListener("DOMContentLoaded", function() {
 	document.getElementById('QuizFinishButton').addEventListener('click', function() {
 		loadShareThisScript();
@@ -160,7 +159,6 @@ document.addEventListener("DOMContentLoaded", function() {
 	});
 	});
 });
-
 
 //Function to load ShareThis script
 function loadShareThisScript(){
