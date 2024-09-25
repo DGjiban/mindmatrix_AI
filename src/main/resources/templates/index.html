@@ -1,96 +1,115 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MindMatrix</title>
-<link rel="stylesheet" href="/css/style.css">
-<script src="/js/script.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMatrix</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/script.js" defer></script>
 
-<script type="text/javascript" src="https://cdn.weglot.com/weglot.min.js"></script>
-<script>
-    Weglot.initialize({
-        api_key: 'wg_da9e1bc06ffb50ab190ecf58a9b02ad10'
-    });  
-</script>  <!-- Language Translation API Weglot complete here-->
+    <script type="text/javascript" src="https://cdn.weglot.com/weglot.min.js"></script>
+    <script>
+        Weglot.initialize({
+            api_key: 'wg_da9e1bc06ffb50ab190ecf58a9b02ad10'
+        });  
+    </script>
+    <!-- Language Translation API Weglot complete here-->
 
 </head>
 <body>
-	<div class="content-wrap">
-		<div id="startup">
-			<h1 id="logo">MindMatrix</h1>
-		</div>
+    <div class="content-wrap">
+        <div id="startup">
+            <h1 id="logo">MindMatrix</h1>
+        </div>
 
-		<main id="main-content">
-			<nav>
-				<ul>
-					<li><a th:href="@{/}">Home</a></li>
-					<li><a href="#services">Services</a></li>
-					<li><a href="#about">About</a></li>
-					<li><a href="#contact">Contact</a></li>
-					
-					<!-- Login link -->
+        <main id="main-content">
+            <nav>
+                <ul>
+                    <li><a th:href="@{/}">Home</a></li>
+                    <li><a th:href="@{/challenge}">Challenge</a></li>
+					<li><a th:href="@{/about}">About</a></li>
+                    <li><a th:href="@{/contact}">Contact</a></li>
 					<li><a th:href="@{/login}">Login</a></li> 
-				</ul>
-			</nav>
-			<section id="home" class="hero">
-				<h1 th:text="${message}">Welcome to MindMatrix</h1>
-				<p>Your journey into the world of knowledge begins here.</p>
-			</section>
+                </ul>
+            </nav>
+            <section id="home" class="hero">
+                <h1 th:text="${message}">Welcome to MindMatrix</h1>
+                <p>Your journey into the world of knowledge begins here.</p>
+            </section>
 
-			<div class="bottom-sections-container">
-				<section id="flashcards"
-					style="border: 2px solid black; border-radius: 5px;">
-					<h2>Flashcards</h2>
-					<form id="program-form" action="/flashcards/generate" method="get">
-						<label for="search">Number of Flashcards:</label> <input
-							type="number" id="number" name="number" min="1" required>
+            <!-- Tab navigation for Flashcards and Quizzes -->
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-link active" onclick="openTab(event, 'flashcards')">Flashcards</button>
+                    <button class="tab-link" onclick="openTab(event, 'quizzes')">Quizzes</button>
+                </div>
 
-						<label for="search">Subject:</label> <input
-							type="text" id="prompt" name="prompt" required>
+                <div id="flashcards" class="tab-content active">
+                    <h2>Flashcards</h2>
+                    <form id="flashcard-form" action="/flashcards/generate" method="get">
+                        <label for="number">Number of Flashcards:</label> 
+                        <input type="number" id="number" name="number" min="1" required>
+                        
+                        <label for="prompt">Subject:</label> 
+                        <input type="text" id="prompt" name="prompt" required>
 
-						<p>
-							<button type="submit">Generate Flashcard</button>
-					</form>
-				</section>
+                        <p><button type="submit">Generate Flashcards</button></p>
+                    </form>
+                </div>
 
-				<section id="quizzes"
-					style="border: 2px solid black; border-radius: 5px;">
-					<h2>Quizzes</h2>
-					<form id="quizRequestForm" action="/quizzes/generate" method="get">
-						<label for="number">Quiz time:</label> <input type="number"
-							id="quizTimer" name="quizTimer" min="1" required> <label
-							for="number">Number of Questions:</label> <input type="number"
-							id="quizNumber" name="number" min="1" required> <label
-							for="subject">Subject:</label> <input type="text" id="subject"
-							name="subject" required>
+                <div id="quizzes" class="tab-content">
+                    <h2>Quizzes</h2>
+                    <form id="quiz-form" action="/quizzes/generate" method="get">
+                        <label for="quizTimer">Quiz time (minutes):</label> 
+                        <input type="number" id="quizTimer" name="quizTimer" min="1" required>
+                        
+                        <label for="quizNumber">Number of Questions:</label> 
+                        <input type="number" id="quizNumber" name="number" min="1" required>
+                        
+                        <label for="subject">Subject:</label> 
+                        <input type="text" id="subject" name="subject" required>
 
-						<p>
-							<button type="submit" onclick="storeInputValues()">Start Quiz</button>
-					</form>
+                        <p><button type="submit">Start Quiz</button></p>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+						</form>
 				</section>
 				
-				<section id="games"
-					style="border: 2px solid black; border-radius: 5px;">
-					<h2>Games</h2>
-					<form id="gameRequestForm" action="/games/generate" method="get">
-					    <label for="number">Number of Questions:</label>
-					    <input type="number" id="gameNumber" name="number" min="1" required>
-					    
-					    <label for="subject">Subject:</label>
-					    <input type="text" id="gameSubject" name="subject" required>
-					
-					    <button type="submit">Start Game</button>
-					</form>
-				</section>
+		
 			</div>
 
-		</main>
-	</div>
 
-	<footer class="footer">
-		<p>&copy; 2024 MindMatrix. All rights reserved.</p>
-	</footer>
+    <footer class="footer">
+        <p>&copy; 2024 MindMatrix. All rights reserved.</p>
+    </footer>
 
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+
+            // Hide all tab content
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Remove active class from all tab links
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab and add active class to clicked tab
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // By default, display the first tab
+        document.getElementById("flashcards").style.display = "block";
+    </script>
 </body>
 </html>

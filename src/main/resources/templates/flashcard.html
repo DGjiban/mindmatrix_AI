@@ -6,17 +6,6 @@
 <title>Flashcards</title>
 <link rel="stylesheet" href="/css/style.css">
 <script src="/js/script.js" defer></script>
-
-<!-- Language Translation API Weglot start here-->
-
-<script type="text/javascript" src="https://cdn.weglot.com/weglot.min.js"></script>
-<script>
-    Weglot.initialize({
-        api_key: 'wg_da9e1bc06ffb50ab190ecf58a9b02ad10'
-    });
-</script>
-<!-- Language Translation API Weglot complete here-->
-
 </head>
 <body>
 	<div class="content-wrap">
@@ -28,9 +17,9 @@
 			<nav>
 				<ul>
 					<li><a th:href="@{/}">Home</a></li>
-					<li><a href="#services">Services</a></li>
-					<li><a href="#about">About</a></li>
-					<li><a href="#contact">Contact</a></li>
+                    <li><a th:href="@{/challenge}">Challenge</a></li>
+					<li><a th:href="@{/about}">About</a></li>
+                    <li><a th:href="@{/contact}">Contact</a></li>
 				</ul>
 			</nav>
 			<section id="home" class="hero">

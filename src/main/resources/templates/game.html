@@ -4,17 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MindMatrix - Game</title>
-
+<link rel="stylesheet" href="/css/style.css">
+    <script src="/js/script.js" defer></script>
     <style>
-        /* Center the content */
-        .content-wrap {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            text-align: center;
-            padding: 20px;
-        }
 
         /* Stack cards in the container */
         .game-container {
@@ -79,6 +71,8 @@
 
         .card button {
             background-color: #007bff;
+                        justify-content: center;
+            
             color: white;
             border: none;
             padding: 10px 20px;
@@ -138,8 +132,20 @@
         </div>
 
         <main id="main-content">
-            <section id="game">
+			<nav>
+				<ul>
+					<li><a th:href="@{/}">Home</a></li>
+                    <li><a th:href="@{/challenge}">Challenge</a></li>
+					<li><a th:href="@{/about}">About</a></li>
+                    <li><a th:href="@{/contact}">Contact</a></li>
+				</ul>
+			</nav>
+			<section id="home" class="hero">
+				<h1 th:text="${welcome}"></h1>
+				<p>Your journey into the world of knowledge begins here.</p>
+			</section>
                 <!-- Container to display the stacked cards -->
+                <p><p><p><p><p>
                 <div class="game-container">
                     <!-- Cards will be displayed here -->
                     <form id="game-form">
