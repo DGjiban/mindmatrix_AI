@@ -114,9 +114,21 @@ public class WebController {
 	    }
 	
 
+
+
+	
+	 @GetMapping("/about")
+	    public String aboutPage() {
+	        return "about"; // Refers to src/main/resources/templates/about.html
+	    }
+	
+
+
 	@GetMapping("/contact")
 		public String contactPage() {
 			return "contact"; // Refers to src/main/resources/templates/about.html
 		}
 	
 }
+
+
