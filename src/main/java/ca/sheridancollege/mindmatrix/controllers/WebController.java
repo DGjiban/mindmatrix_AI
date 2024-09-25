@@ -36,6 +36,11 @@ public class WebController {
 		return "index";
 	}
 	
+	@GetMapping("/login")
+    public String showLoginPage() {
+        return "login";  // Returns the login.html page
+    }
+	
 	@GetMapping("/flashcards/generate")
     public String generateFlashcards(@RequestParam("prompt") String subject, 
                                      @RequestParam("number") int number, Model model) {
@@ -93,6 +98,8 @@ public class WebController {
 
 	    return ResponseEntity.ok(response);
 	}
+	
+	
 
 
 }
