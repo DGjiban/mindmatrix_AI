@@ -71,29 +71,35 @@
 
         // Function to handle user login
         async function loginUser() {
-            const email = document.getElementById("login-email").value;
-            const password = document.getElementById("login-password").value;
-
-            try {
-                const response = await fetch('/auth/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams({ email: email, password: password })
-                });
-
-                const result = await response.text();
-                if (response.ok) {
-                    alert('Login successful! Token: ' + result);
-                } else {
-                    alert('Login failed: ' + result);
-                }
-            } catch (error) {
-                console.error('Error during login:', error);
-                alert('An error occurred during login.');
-            }
-        }
+		    const email = document.getElementById("login-email").value;
+		    const password = document.getElementById("login-password").value;
+		
+		    try {
+		        const response = await fetch('/auth/login', {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/x-www-form-urlencoded',
+		            },
+		            body: new URLSearchParams({ email: email, password: password })
+		        });
+		
+		        const result = await response.text();
+		        if (response.ok) {
+		            // Login successful
+		            alert('Login successful! Token: ' + result);
+		
+		            // Assuming result contains the token
+		            localStorage.setItem('authToken', result);  // Store in localStorage for session persistence
+		            window.location.href = '/';  // Redirect to homepage or another protected page
+		        } else {
+		            // Login failed
+		            alert('Login failed: ' + result);
+		        }
+		    } catch (error) {
+		        console.error('Error during login:', error);
+		        alert('An error occurred during login.');
+		    }
+		}
 
         // Function to handle user sign-up
         async function signUpUser() {
