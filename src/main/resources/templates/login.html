@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Sign Up</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/login.js" defer></script>
+</head>
+<body>
+    <div class="login-container">
+        <header>
+            <h1>Login or Sign Up</h1>
+        </header>
+
+        <div id="toggle-buttons">
+            <button id="login-btn" class="active" onclick="showLoginForm()">Login</button>
+            <button id="signup-btn" onclick="showSignUpForm()">Sign Up</button>
+        </div>
+
+        <section id="login-section" class="visible">
+            <form id="loginForm" onsubmit="event.preventDefault(); loginUser();">
+                <div>
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" name="email" required>
+                </div>
+                <div>
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" name="password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </section>
+
+        <section id="signup-section" style="display: none;">
+            <form id="signupForm" onsubmit="event.preventDefault(); signUpUser();">
+                <div>
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" name="email" required>
+                </div>
+                <div>
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" name="password" required>
+                </div>
+                <button type="submit">Sign Up</button>
+            </form>
+        </section>
+
+        <footer>
+            <p>&copy; 2024 MindMatrix. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
