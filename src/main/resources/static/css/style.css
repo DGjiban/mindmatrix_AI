@@ -777,3 +777,99 @@ input[type="text"] {
 }
 
 
+/* Login / Sign-Up Form Styles */
+.login-container {
+    max-width: 400px;
+    margin: 100px auto;  /* Center the form on the page */
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-container h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login-container label {
+    font-size: 1rem;
+    color: #333;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+}
+
+.login-container input:focus {
+    background-color: #fff;
+    border-color: #007bff;
+    outline: none;
+}
+
+.login-container button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-container button:hover {
+    background-color: #0056b3;
+}
+
+/* Toggle Buttons for Login / Sign-Up */
+#toggle-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+#toggle-buttons button {
+    background-color: transparent;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    outline: none;
+    transition: color 0.3s ease;
+}
+
+#toggle-buttons button.active {
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+}
+
+#toggle-buttons button:hover {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+}
+
+/* Footer for Login / Sign-Up */
+.login-container footer {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    color: #888;
+}
