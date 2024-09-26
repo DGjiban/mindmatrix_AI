@@ -797,7 +797,8 @@ input[type="text"] {
 .login-container form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    align-items: center; /* Center the form elements, including buttons */
+    gap: 20px; /* Adds space between the form elements */
 }
 
 .login-container label {
@@ -832,6 +833,8 @@ input[type="text"] {
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 100%; /* Make the button full width */
+    max-width: 200px; /* Or specify a maximum width */
 }
 
 .login-container button:hover {
