@@ -1,26 +1,41 @@
 window.onload = function() {
-	const startup = document.getElementById('startup');
-	const mainContent = document.getElementById('main-content');
+    const startup = document.getElementById('startup');
+    const mainContent = document.getElementById('main-content');
 
-	function onScroll() {
-		
-		startup.style.opacity = 0;
-		startup.style.visibility = 'hidden';
-		// Set startup to absolute position after the transition to remove it from the flow
-		setTimeout(() => {
-			startup.style.position = 'absolute';
-		}, 500); // Match this delay with the transition duration
+    function onScroll() {
+        startup.style.opacity = 0;
+        startup.style.visibility = 'hidden';
+        setTimeout(() => {
+            startup.style.position = 'absolute';
+        }, 500); 
 
-		// Fade in the main content
-		mainContent.style.opacity = 1;
-		mainContent.style.visibility = 'visible';
+        mainContent.style.opacity = 1;
+        mainContent.style.visibility = 'visible';
 
-		// Remove the scroll event listener
-		window.removeEventListener('scroll', onScroll);
-	}
+        window.removeEventListener('scroll', onScroll);
+    }
 
-	window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll);
 };
+
+// Function to check if the user is logged in
+function checkLoginBeforeChallenge() {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        alert('You need to log in to access the Challenge page.');
+        window.location.href = '/login';
+    } else {
+        window.location.href = '/challenge';
+    }
+}
+
+// Add click event listener to Challenge tab
+document.getElementById('challenge-link').addEventListener('click', function(event) {
+    event.preventDefault();
+    checkLoginBeforeChallenge();
+});
+    
+    
 
 // Flash JS
 document.addEventListener("DOMContentLoaded", function() {
@@ -69,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	showFlashcard(currentIndex);
 });
 
+//Quiz function
 document.addEventListener("DOMContentLoaded", function() {
 	const quizContainers = document.querySelectorAll('.quiz-container');
 	let currentQuizIndex = 0;
@@ -111,7 +127,6 @@ document.addEventListener("DOMContentLoaded", function() {
 	// start the quiz
 	showQuiz(currentQuizIndex);
 });
-
 
 document.addEventListener("DOMContentLoaded", function() {
 	document.getElementById('QuizFinishButton').addEventListener('click', function() {
@@ -160,7 +175,6 @@ document.addEventListener("DOMContentLoaded", function() {
 	});
 	});
 });
-
 
 //Function to load ShareThis script
 function loadShareThisScript(){
@@ -302,3 +316,5 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+
