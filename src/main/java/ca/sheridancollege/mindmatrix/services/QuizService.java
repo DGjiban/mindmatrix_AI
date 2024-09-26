@@ -1,13 +1,20 @@
 package ca.sheridancollege.mindmatrix.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.hibernate.sql.exec.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.WriteResult;
 
 import ca.sheridancollege.mindmatrix.beans.Quiz;
 import ca.sheridancollege.mindmatrix.gpt.GptRequest;
@@ -29,14 +36,44 @@ public class QuizService {
     @Autowired
     private RestTemplate template;
     
+    @Autowired
+    private Firestore db;
+
+    public void saveQuiz(Quiz quiz) {
+   
+        quizRepository.save(quiz);
+
+        saveQuizToFirestore(quiz);
+    }
+    
+    public void saveQuizToFirestore(Quiz quiz) {
+        try {
+            Map<String, Object> quizData = new HashMap<>();
+            quizData.put("subject", quiz.getSubject());
+            quizData.put("question", quiz.getQuestion());
+            quizData.put("answers", quiz.getAnswers());
+            quizData.put("correctAnswerText", quiz.getCorrectAnswerText());
+
+            DocumentReference docRef = db.collection("quizzes").document(quiz.getQuestion());
+            WriteResult result = docRef.set(quizData).get();
+        } catch (InterruptedException | ExecutionException e) {
+            System.err.println("Error saving quiz to Firestore: " + e.getMessage());
+        } catch (java.util.concurrent.ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    
+    
     public List<Quiz> getOrCreateQuizzes(String subject, int number) {
-        List<Quiz> quizzes = new ArrayList<Quiz>(); //quizRepository.findBySubject(subject);
+        List<Quiz> quizzes = new ArrayList<Quiz>();
                 
         // If no quizzes are found for the subject, generate new ones.
         if (quizzes.isEmpty()) {
             quizzes = generateQuizzes(subject, number);
             // Save each generated quiz to the database.
-            quizzes.forEach(quizRepository::save);
+            quizzes.forEach(this::saveQuiz);
         } else if (quizzes.size() > number) {
             // If more quizzes exist than requested, trim the list.
             quizzes = quizzes.subList(0, number);
@@ -77,7 +114,6 @@ public class QuizService {
     
     private Quiz parseQuizFromResponse(String response, String subject) {
        
-    	//System.out.println("Full response from AI: " + response);
     	Quiz quiz = new Quiz();
         String[] lines = response.split("\n");
         String question = null;
@@ -86,7 +122,6 @@ public class QuizService {
 
         for (String line : lines) {
             
-        	//System.out.println("Processing line: " + line);
 
             if (line.startsWith("Q: ") || line.startsWith("Question: ")) {
             	
@@ -102,9 +137,6 @@ public class QuizService {
             }
         }
  
-       // System.out.println("*Question: " + question);
-       // System.out.println("*Answers: " + answers);
-       // System.out.println(correctAnswer);
 
         if (question != null && !answers.isEmpty() && correctAnswer != null) {
             quiz.setSubject(subject);
@@ -123,4 +155,20 @@ public class QuizService {
         return quizRepository.findById(id).orElse(null);
     }
 
+    public List<Quiz> getAllQuizzes() throws InterruptedException, ExecutionException, java.util.concurrent.ExecutionException {
+        List<Quiz> quizzes = new ArrayList<>();
+        
+        var quizDocs = db.collection("quizzes").get().get().getDocuments();
+
+        for (var doc : quizDocs) {
+            Quiz quiz = new Quiz();
+            quiz.setSubject(doc.getString("subject"));
+            quiz.setQuestion(doc.getString("question"));
+            quiz.setAnswers((List<String>) doc.get("answers"));
+            quiz.setCorrectAnswerText(doc.getString("correctAnswerText"));
+            quizzes.add(quiz);
+        }
+
+        return quizzes;
+    }
 }
