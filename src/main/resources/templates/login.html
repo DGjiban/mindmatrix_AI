@@ -5,130 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login / Sign Up</title>
     <link rel="stylesheet" href="/css/style.css">
-    <script src="/js/script.js" defer></script>
+    <script src="/js/login.js" defer></script>
 </head>
 <body>
-    <header>
-        <h1>Login or Sign Up</h1>
-    </header>
+    <div class="login-container">
+        <header>
+            <h1>Login or Sign Up</h1>
+        </header>
 
-    <main>
-        <!-- Toggle between login and sign-up -->
         <div id="toggle-buttons">
-            <button id="login-btn" onclick="showLoginForm()">Login</button>
+            <button id="login-btn" class="active" onclick="showLoginForm()">Login</button>
             <button id="signup-btn" onclick="showSignUpForm()">Sign Up</button>
         </div>
 
-        <!-- Login Form -->
-        <section id="login-section" style="display: none;">
-            <h2>Login</h2>
+        <section id="login-section" class="visible">
             <form id="loginForm" onsubmit="event.preventDefault(); loginUser();">
                 <div>
-                    <label for="login-email">Email:</label>
+                    <label for="login-email">Email</label>
                     <input type="email" id="login-email" name="email" required>
                 </div>
                 <div>
-                    <label for="login-password">Password:</label>
+                    <label for="login-password">Password</label>
                     <input type="password" id="login-password" name="password" required>
                 </div>
                 <button type="submit">Login</button>
             </form>
         </section>
 
-        <!-- Sign-Up Form -->
         <section id="signup-section" style="display: none;">
-            <h2>Sign Up</h2>
             <form id="signupForm" onsubmit="event.preventDefault(); signUpUser();">
                 <div>
-                    <label for="signup-email">Email:</label>
+                    <label for="signup-email">Email</label>
                     <input type="email" id="signup-email" name="email" required>
                 </div>
                 <div>
-                    <label for="signup-password">Password:</label>
+                    <label for="signup-password">Password</label>
                     <input type="password" id="signup-password" name="password" required>
                 </div>
                 <button type="submit">Sign Up</button>
             </form>
         </section>
-    </main>
 
-    <footer class="footer">
-        <p>&copy; 2024 MindMatrix. All rights reserved.</p>
-    </footer>
-
-    <script>
-        // Show login form and hide sign-up form
-        function showLoginForm() {
-            document.getElementById("login-section").style.display = "block";
-            document.getElementById("signup-section").style.display = "none";
-        }
-
-        // Show sign-up form and hide login form
-        function showSignUpForm() {
-            document.getElementById("login-section").style.display = "none";
-            document.getElementById("signup-section").style.display = "block";
-        }
-
-        // Function to handle user login
-        async function loginUser() {
-		    const email = document.getElementById("login-email").value;
-		    const password = document.getElementById("login-password").value;
-		
-		    try {
-		        const response = await fetch('/auth/login', {
-		            method: 'POST',
-		            headers: {
-		                'Content-Type': 'application/x-www-form-urlencoded',
-		            },
-		            body: new URLSearchParams({ email: email, password: password })
-		        });
-		
-		        const result = await response.text();
-		        if (response.ok) {
-		            // Login successful
-		            alert('Login successful! Token: ' + result);
-		
-		            // Assuming result contains the token
-		            localStorage.setItem('authToken', result);  // Store in localStorage for session persistence
-		            window.location.href = '/';  // Redirect to homepage or another protected page
-		        } else {
-		            // Login failed
-		            alert('Login failed: ' + result);
-		        }
-		    } catch (error) {
-		        console.error('Error during login:', error);
-		        alert('An error occurred during login.');
-		    }
-		}
-
-        // Function to handle user sign-up
-        async function signUpUser() {
-            const email = document.getElementById("signup-email").value;
-            const password = document.getElementById("signup-password").value;
-
-            try {
-                const response = await fetch('/auth/signup', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams({ email: email, password: password })
-                });
-
-                const result = await response.text();
-                if (response.ok) {
-                    alert('Sign-up successful! User ID: ' + result);
-                } else {
-                    alert('Sign-up failed: ' + result);
-                }
-            } catch (error) {
-                console.error('Error during sign-up:', error);
-                alert('An error occurred during sign-up.');
-            }
-        }
-
-        // Initialize the page with login form visible by default
-        window.onload = showLoginForm;
-    </script>
+        <footer>
+            <p>&copy; 2024 MindMatrix. All rights reserved.</p>
+        </footer>
+    </div>
 </body>
 </html>
