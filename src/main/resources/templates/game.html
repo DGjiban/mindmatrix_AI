@@ -133,13 +133,13 @@
 
         <main id="main-content">
 			<nav>
-				<ul>
+	            <ul>
 					<li><a th:href="@{/}">Home</a></li>
-                    <li><a th:href="@{/challenge}">Challenge</a></li>
+	                <li><a href="#" id="challenge-link">Challenge</a></li>
 					<li><a th:href="@{/about}">About</a></li>
-                    <li><a th:href="@{/contact}">Contact</a></li>
+	                <li><a th:href="@{/contact}">Contact</a></li>
 				</ul>
-			</nav>
+	        </nav>
 			<section id="home" class="hero">
 				<h1 th:text="${welcome}"></h1>
 				<p>Your journey into the world of knowledge begins here.</p>

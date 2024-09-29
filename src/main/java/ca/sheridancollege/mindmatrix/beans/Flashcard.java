@@ -21,15 +21,16 @@ public class Flashcard {
     private Long id;
 	
 	@NonNull
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT", unique = true)
     private String subject;
 	
 	@NonNull
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT", unique = true)
     private String question;
 
     @NonNull
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT", unique = true)
     private String answer;
 	
 }
+

@@ -1,320 +1,340 @@
-window.onload = function() {
+// Function to initialize the startup animation
+function initStartupAnimation() {
     const startup = document.getElementById('startup');
     const mainContent = document.getElementById('main-content');
+
+    // Ensure both elements exist
+    if (!startup || !mainContent) {
+        console.error('Startup or main content element missing.');
+        return;
+    }
+
+    // Ensure main content is initially hidden
+    mainContent.style.opacity = 0;
+    mainContent.style.visibility = 'hidden';
 
     function onScroll() {
         startup.style.opacity = 0;
         startup.style.visibility = 'hidden';
+        
         setTimeout(() => {
-            startup.style.position = 'absolute';
-        }, 500); 
+            startup.style.position = 'absolute'; // hide startup after animation
+        }, 500); // Adjust time to match your CSS transition if needed
 
         mainContent.style.opacity = 1;
         mainContent.style.visibility = 'visible';
 
+        // Remove the scroll event listener once the animation is done
         window.removeEventListener('scroll', onScroll);
     }
 
+    // Attach scroll listener
     window.addEventListener('scroll', onScroll);
-};
+}
+
+// Initialize startup animation when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', initStartupAnimation);
+
 
 // Function to check if the user is logged in
 function checkLoginBeforeChallenge() {
     const token = localStorage.getItem('authToken');
+
+    // Debugging log to verify the token is being checked
+    console.log('Checking login status. Token:', token);
+
     if (!token) {
         alert('You need to log in to access the Challenge page.');
-        window.location.href = '/login';
+        window.location.href = '/login'; // Redirect to login if no token
     } else {
-        window.location.href = '/challenge';
+        window.location.href = '/challenge'; // Redirect to challenge page if token exists
     }
 }
 
-// Add click event listener to Challenge tab
-document.getElementById('challenge-link').addEventListener('click', function(event) {
-    event.preventDefault();
-    checkLoginBeforeChallenge();
-});
+// Add click event listener to Challenge tab only if it exists
+document.addEventListener("DOMContentLoaded", function() {
+    const challengeLink = document.getElementById('challenge-link');
     
-    
-
-// Flash JS
-document.addEventListener("DOMContentLoaded", function() {
-	const flashcards = document.querySelectorAll('.flashcard-container');
-	let currentIndex = 0;
-	const counterElement = document.getElementById('flashcard-counter');
-	const totalFlashcards = flashcards.length;
-
-	// Update the flashcard counter
-	function updateFlashcardCounter() {
-		counterElement.textContent = `${currentIndex + 1} of ${totalFlashcards}`;
-	}
-
-	// Show the first flashcard initially, hide all others
-	function showFlashcard(index) {
-		// Hide all flashcards
-		flashcards.forEach((flashcard, i) => {
-			flashcard.style.display = 'none';
-		});
-		// Show the current flashcard
-		flashcards[index].style.display = 'block';
-		// Update the flashcard counter
-		updateFlashcardCounter();
-	}
-
-	document.querySelectorAll('.flashcard-container').forEach(container => {
-		container.addEventListener('click', function() {
-			const flashcard = this.querySelector('.flashcard');
-			flashcard.classList.toggle('is-flipped');
-		});
-	});
-
-	// Next button click event
-	document.getElementById('nextButton').addEventListener('click', function() {
-		currentIndex = (currentIndex + 1) % totalFlashcards; // Wrap around to the first flashcard
-		showFlashcard(currentIndex);
-	});
-
-	// Previous button click event
-	document.getElementById('prevButton').addEventListener('click', function() {
-		currentIndex = (currentIndex - 1 + totalFlashcards) % totalFlashcards; // Wrap around to the last flashcard
-		showFlashcard(currentIndex);
-	});
-
-	// Initialize the first flashcard and counter
-	showFlashcard(currentIndex);
-});
-
-//Quiz function
-document.addEventListener("DOMContentLoaded", function() {
-	const quizContainers = document.querySelectorAll('.quiz-container');
-	let currentQuizIndex = 0;
-	const totalQuizzes = quizContainers.length;
-	const counterElement = document.getElementById('quiz-counter');
-
-	// update counter
-	function updateQuizCounter() {
-		counterElement.textContent = `${currentQuizIndex + 1} of ${totalQuizzes}`;
-	}
-
-	// show the current quiz
-	function showQuiz(index) {
-		// hide the questions
-		quizContainers.forEach((container, i) => {
-			container.style.display = 'none';
-		});
-		// show the current question
-		quizContainers[index].style.display = 'block';
-		// call the update counter function
-		updateQuizCounter();
-	}
-
-	// Prev button
-	document.getElementById('QuizprevButton').addEventListener('click', function() {
-		if (currentQuizIndex > 0) {
-			currentQuizIndex--;
-			showQuiz(currentQuizIndex);
-		}
-	});
-
-	// Next button
-	document.getElementById('QuiznextButton').addEventListener('click', function() {
-		if (currentQuizIndex < totalQuizzes - 1) {
-			currentQuizIndex++;
-			showQuiz(currentQuizIndex);
-		}
-	});
-
-	// start the quiz
-	showQuiz(currentQuizIndex);
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-	document.getElementById('QuizFinishButton').addEventListener('click', function() {
-		loadShareThisScript();
-		
-		document.getElementById('shareLinks').style.display = 'block';
-		
-		const answers = [];
-
-		document.querySelectorAll('.quiz-container').forEach(container => {
-			const quizId = container.getAttribute('data-quiz-id');
-			const selectedInput = container.querySelector('input[type="radio"]:checked');
-
-			if (selectedInput) {
-				
-				const labelText = container.querySelector(`label[for="${selectedInput.id}"]`).innerText;
-
-				answers.push({
-					quizId: quizId,
-					selectedAnswer: labelText
-				});
-			}
-		});
-
-		fetch('/quizzes/verify', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(answers)
-		})
-			.then(response => response.json())
-			.then(data => {
-				document.getElementById('quiz-results').innerHTML = `You answered correctly ${data.correctAnswers} out of ${data.totalQuestions} questions.`;
-				document.getElementById('quiz-results').style.display = 'block';
-			})
-			.catch(error => console.error('Error:', error));
-	document.querySelectorAll('.show-answer-button').forEach(button => {
-		button.addEventListener('click', function() {
-			
-			const quizContainer = this.closest('.quiz-container');
-			
-			const correctAnswer = quizContainer.querySelector('.correct-answer');
-			correctAnswer.style.display = 'block';
-		});
-	});
-	});
-});
-
-//Function to load ShareThis script
-function loadShareThisScript(){
-	const script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = 'https://platform-api.sharethis.com/js/sharethis.js#property=6601a93bfb0d8000121105be&product=inline-share-buttons&source=platform';
-		script.async = true;
-		document.head.appendChild(script);
-	}
-
-
-//Timer
-function storeInputValues() {
-
-const quizTimerValue = document.getElementById('quizTimer').value;
-
-localStorage.setItem('quizTimer', quizTimerValue);
-
-//start timer
-		let timer = quizTimerValue;
-		
-          const interval = setInterval(() => {
-                       
-               if (timer <= 0) {						
-				clearInterval(interval);
-					
-				window.location.href = 'quiz.html';
- 				 				
- 			}	 localStorage.setItem('timer', timer);
- 				 
-             }, 1000);  
-      }
-   
-     const quizTimerValue = localStorage.getItem('timer');
-	 document.getElementById('quizTimer').textContent = quizTimerValue;
-	 
-const s = quizTimerValue;
-let time = s * 60;
-const timerEl = document.getElementById('timer');
-
-const a = setInterval(updateTimer, 1000);
-
-function updateTimer()
-{
-	const minutes = Math.floor(time / 60);
-	let seconds = time % 60;
-	timerEl.innerHTML = `${minutes}:${seconds}`;
-	time--;
-	
-	if(time < 0)
-	{
-
-		clearTimeout(a);
-		document.getElementById("timer").innerHTML = "Times Up!";
-	}
-}
-document.addEventListener("DOMContentLoaded", function () {
-    const cards = document.querySelectorAll('.card');
-    let currentCardIndex = 0;
-    const answers = [];
-    const answerMapping = ['A', 'B', 'C', 'D']; // Mapping for answer options
-
-    // Function to update the card stack positions
-    const updateCardStack = () => {
-        console.log(`Updating card stack. Current index: ${currentCardIndex}`);
-        cards.forEach((card, index) => {
-            const relativeIndex = (index - currentCardIndex + cards.length) % cards.length;
-            card.style.zIndex = cards.length - relativeIndex;
-
-            if (relativeIndex === 0) {
-                card.style.transform = 'translateY(0px) scale(1)';
-                card.style.opacity = 1;
-            } else if (relativeIndex === 1) {
-                card.style.transform = 'translateY(10px) scale(0.98)';
-                card.style.opacity = 0.8;
-            } else if (relativeIndex === 2) {
-                card.style.transform = 'translateY(20px) scale(0.96)';
-                card.style.opacity = 0.6;
-            } else {
-                card.style.opacity = 0; // Hide remaining cards
-            }
+    // Ensure the challenge link exists
+    if (challengeLink) {
+        challengeLink.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default anchor behavior
+            checkLoginBeforeChallenge(); // Call login check function
         });
-    };
+    } else {
+        console.error('Challenge link not found.');
+    }
+});
 
-    // Initially set the correct card positions
-    updateCardStack();
+// Function to initialize the flashcard functionality
+function initFlashcards() {
+    const flashcards = document.querySelectorAll('.flashcard-container');
+    if (flashcards.length === 0) {
+        console.log("No flashcards found.");
+        return; // Exit if no flashcards exist on the page
+    }
 
-    document.querySelectorAll('.next-button').forEach(button => {
-        button.addEventListener('click', () => {
-            console.log('Next button clicked'); // Debug line
-            const currentCard = cards[currentCardIndex];
-            const quizId = currentCard.getAttribute('data-quiz-id');
-            const selectedAnswer = currentCard.querySelector('input[type="radio"]:checked');
+    let currentIndex = 0;
+    const totalFlashcards = flashcards.length;
+    const counterElement = document.getElementById('flashcard-counter');
 
-            if (selectedAnswer) {
-                answers.push({
-                    quizId: quizId,
-                    selectedAnswer: selectedAnswer.value
-                });
-            }
+    // Function to update the flashcard counter
+    function updateFlashcardCounter() {
+        if (counterElement) {
+            counterElement.textContent = `${currentIndex + 1} of ${totalFlashcards}`;
+        }
+    }
 
-            currentCardIndex++;
+    // Function to show a specific flashcard
+    function showFlashcard(index) {
+        // Ensure the index is within bounds
+        if (index < 0 || index >= totalFlashcards) {
+            console.error('Invalid flashcard index:', index);
+            return;
+        }
 
-            if (currentCardIndex < cards.length) {
-                updateCardStack();
-            } else {
-                document.getElementById('show-answers-btn').style.display = 'block';
+        // Hide all flashcards and show the current one
+        flashcards.forEach((flashcard) => flashcard.style.display = 'none');
+        flashcards[index].style.display = 'block';
+
+        // Update the counter
+        updateFlashcardCounter();
+    }
+
+    // Event listener for flipping the flashcard
+    flashcards.forEach(container => {
+        container.addEventListener('click', function() {
+            const flashcard = this.querySelector('.flashcard');
+            if (flashcard) {
+                flashcard.classList.toggle('is-flipped');
             }
         });
     });
 
-    document.getElementById('show-answers-btn').addEventListener('click', function () {
+    // Event listener for the "Next" button
+    const nextButton = document.getElementById('nextButton');
+    if (nextButton) {
+        nextButton.addEventListener('click', function() {
+            currentIndex = (currentIndex + 1) % totalFlashcards; // Cycle through flashcards
+            showFlashcard(currentIndex);
+        });
+    }
+
+    // Event listener for the "Previous" button
+    const prevButton = document.getElementById('prevButton');
+    if (prevButton) {
+        prevButton.addEventListener('click', function() {
+            currentIndex = (currentIndex - 1 + totalFlashcards) % totalFlashcards; // Cycle backwards
+            showFlashcard(currentIndex);
+        });
+    }
+
+    // Initialize the first flashcard
+    showFlashcard(currentIndex);
+}
+
+// Initialize flashcard functionality when DOM is ready
+document.addEventListener('DOMContentLoaded', initFlashcards);
+
+
+// Function to initialize the quiz functionality
+function initQuiz() {
+    const quizContainers = document.querySelectorAll('.quiz-container');
+    if (quizContainers.length === 0) {
+        console.log("No quizzes found.");
+        return; // Exit if no quizzes exist on the page
+    }
+
+    let currentQuizIndex = 0;
+    const totalQuizzes = quizContainers.length;
+    const counterElement = document.getElementById('quiz-counter');
+
+    // Function to update the quiz counter
+    function updateQuizCounter() {
+        if (counterElement) {
+            counterElement.textContent = `${currentQuizIndex + 1} of ${totalQuizzes}`;
+        }
+    }
+
+    // Function to show a specific quiz question
+    function showQuiz(index) {
+        if (index < 0 || index >= totalQuizzes) {
+            console.error('Invalid quiz index:', index);
+            return;
+        }
+
+        // Hide all quizzes and show the current one
+        quizContainers.forEach((quiz) => quiz.style.display = 'none');
+        quizContainers[index].style.display = 'block';
+
+        // Update the quiz counter
+        updateQuizCounter();
+    }
+
+    // Event listener for the "Next" button
+    const nextQuizButton = document.getElementById('QuiznextButton');
+    if (nextQuizButton) {
+        nextQuizButton.addEventListener('click', function() {
+            if (currentQuizIndex < totalQuizzes - 1) {
+                currentQuizIndex++;
+                showQuiz(currentQuizIndex);
+            }
+        });
+    }
+
+    // Event listener for the "Previous" button
+    const prevQuizButton = document.getElementById('QuizprevButton');
+    if (prevQuizButton) {
+        prevQuizButton.addEventListener('click', function() {
+            if (currentQuizIndex > 0) {
+                currentQuizIndex--;
+                showQuiz(currentQuizIndex);
+            }
+        });
+    }
+
+    // Event listener for the "Finish" button
+    const finishQuizButton = document.getElementById('QuizFinishButton');
+    if (finishQuizButton) {
+        finishQuizButton.addEventListener('click', function() {
+            // Collect the answers when the quiz is finished
+            const answers = collectQuizAnswers();
+            displayQuizResults(answers);
+            displayShareLinks(); // Show share buttons
+        });
+    }
+
+    // Function to collect the selected answers
+    function collectQuizAnswers() {
+        const answers = [];
+
+        quizContainers.forEach((quiz) => {
+            const quizId = quiz.getAttribute('data-quiz-id');
+            const selectedInput = quiz.querySelector('input[type="radio"]:checked');
+
+            if (selectedInput) {
+                const labelText = quiz.querySelector(`label[for="${selectedInput.id}"]`).innerText;
+                answers.push({
+                    quizId: quizId,
+                    selectedAnswer: labelText
+                });
+            }
+        });
+
+        return answers;
+    }
+
+    // Function to display the quiz results
+    function displayQuizResults(answers) {
         fetch('/quizzes/verify', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(answers)
         })
         .then(response => response.json())
-        .then(result => {
-            const resultsBody = document.getElementById('results-body');
-            resultsBody.innerHTML = ''; // Clear any previous results
-
-            result.answers.forEach(answer => {
-                const selectedAnswer = answerMapping[answer.selectedAnswer]; // Convert numeric value to alphabet
-                const correctAnswer = answer.correctAnswer.replace('Correct answer: ', ''); // Clean up correct answer text
-
-                const row = document.createElement('tr');
-                row.innerHTML = `<td>${answer.question}</td><td>${selectedAnswer}</td><td>${correctAnswer}</td>`;
-                resultsBody.appendChild(row);
-            });
-
-            // Show the table
-            document.getElementById('results-table').style.display = 'table';
+        .then(data => {
+            // Display the results based on the server response
+            const resultContainer = document.getElementById('quiz-results');
+            resultContainer.innerHTML = `You answered correctly ${data.correctCount} out of ${data.total} questions.`;
+            resultContainer.style.display = 'block';
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Error fetching quiz results:', error);
+        });
+    }
+    
+    
+
+    // Function to show the share links after finishing the quiz
+    function displayShareLinks() {
+        const shareLinks = document.getElementById('shareLinks');
+        if (shareLinks) {
+            shareLinks.style.display = 'block';
+        }
+    }
+
+    // Initialize the first quiz question
+    showQuiz(currentQuizIndex);
+}
+
+// Function to extract query parameters from URL
+function getQueryParams(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+// Timer functionality using the user-selected time
+function initQuizTimer() {
+    const timerElement = document.getElementById('timer');
+    const quizTimerElement = document.getElementById('quizTimer');
+    
+    // Get the selected time from query parameters (in minutes)
+    let timeLeft = parseInt(getQueryParams('quizTimer')) * 60; // Convert to seconds
+
+    if (isNaN(timeLeft) || timeLeft <= 0) {
+        console.error('Invalid timer value, setting to default 10 minutes.');
+        timeLeft = 600; // Default to 10 minutes if invalid or missing
+    }
+
+    if (!timerElement || !quizTimerElement) {
+        console.log("Timer elements not found.");
+        return;
+    }
+
+    // Function to update the timer display
+    function updateTimer() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+        if (timeLeft > 0) {
+            timeLeft--;
+        } else {
+            clearInterval(timerInterval); // Stop the timer when time runs out
+            document.getElementById("quiz-results").innerHTML = "Time's Up!";
+            autoSubmitQuiz(); // Automatically submit the quiz
+        }
+    }
+
+    // Automatically clicks the "Finish" button when time is up
+    function autoSubmitQuiz() {
+        const finishButton = document.getElementById('QuizFinishButton');
+        if (finishButton) {
+            finishButton.click(); // Simulate a click on the "Finish" button
+        } else {
+            console.error("Finish button not found!");
+        }
+    }
+
+    // Start the timer
+    const timerInterval = setInterval(updateTimer, 1000);
+    updateTimer(); // Run the timer immediately
+}
+
+// Initialize quiz and other functionalities when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    initQuiz();        // Initialize quiz navigation and submission
+    initQuizTimer();   // Initialize the quiz timer
+    initShowAnswers(); // Initialize "Show Answer" button functionality
+});
+
+// Function to initialize the show answer functionality
+function initShowAnswers() {
+    const showAnswerButtons = document.querySelectorAll('.show-answer-button');
+    
+    showAnswerButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Find the closest quiz container
+            const quizContainer = this.closest('.quiz-container');
+            if (quizContainer) {
+                // Find the correct answer element inside that quiz container
+                const correctAnswer = quizContainer.querySelector('.correct-answer');
+                if (correctAnswer) {
+                    correctAnswer.style.display = 'block'; // Show the correct answer
+                }
+            }
         });
     });
-});
+}
 
 
