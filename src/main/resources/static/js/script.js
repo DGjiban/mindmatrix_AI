@@ -272,7 +272,7 @@ function initQuizTimer() {
     let timeLeft = parseInt(getQueryParams('quizTimer')) * 60; // Convert to seconds
 
     if (isNaN(timeLeft) || timeLeft <= 0) {
-        //console.error('Invalid timer value, setting to default 10 minutes.');
+        console.error('Invalid timer value, setting to default 10 minutes.');
         timeLeft = 600; // Default to 10 minutes if invalid or missing
     }
 
@@ -292,7 +292,17 @@ function initQuizTimer() {
         } else {
             clearInterval(timerInterval); // Stop the timer when time runs out
             document.getElementById("quiz-results").innerHTML = "Time's Up!";
-            // Optionally, you can auto-submit the quiz here
+            autoSubmitQuiz(); // Automatically submit the quiz
+        }
+    }
+
+    // Automatically clicks the "Finish" button when time is up
+    function autoSubmitQuiz() {
+        const finishButton = document.getElementById('QuizFinishButton');
+        if (finishButton) {
+            finishButton.click(); // Simulate a click on the "Finish" button
+        } else {
+            console.error("Finish button not found!");
         }
     }
 
