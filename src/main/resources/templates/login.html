@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login / Sign Up</title>
     <link rel="stylesheet" href="/css/style.css">
-    <script src="/js/login.js" defer></script>
+    <script src="/js/script.js" defer></script>
 </head>
 <body>
     <div class="login-container">
@@ -18,6 +18,7 @@
             <button id="signup-btn" onclick="showSignUpForm()">Sign Up</button>
         </div>
 
+        <!-- Login Section -->
         <section id="login-section" class="visible">
             <form id="loginForm" onsubmit="event.preventDefault(); loginUser();">
                 <div>
@@ -32,8 +33,13 @@
             </form>
         </section>
 
+        <!-- Sign Up Section -->
         <section id="signup-section" style="display: none;">
             <form id="signupForm" onsubmit="event.preventDefault(); signUpUser();">
+                <div>
+                    <label for="signup-name">Nickname</label> <!-- New Name Field -->
+                    <input type="text" id="signup-name" name="name" required>
+                </div>
                 <div>
                     <label for="signup-email">Email</label>
                     <input type="email" id="signup-email" name="email" required>
@@ -45,6 +51,11 @@
                 <button type="submit">Sign Up</button>
             </form>
         </section>
+
+        <!-- Button to Browse as Guest -->
+        <div class="guest-button">
+            <button onclick="window.location.href='/'">Browse as Guest</button> <!-- Redirect to home page -->
+        </div>
 
         <footer>
             <p>&copy; 2024 MindMatrix. All rights reserved.</p>

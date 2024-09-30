@@ -32,13 +32,20 @@ async function loginUser() {
             body: new URLSearchParams({ email: email, password: password })
         });
 
-        const result = await response.text();
+        // Check response status and parse JSON
+        const result = await response.json();
+        console.log('Login response:', result);  // Debugging: Check the response structure
+
         if (response.ok) {
-            alert('Login successful! Token: ' + result);
-            localStorage.setItem('authToken', result);  // Store the token
+            // Store both auth token and user's name in localStorage
+            localStorage.setItem('authToken', 'someAuthToken');  // Replace with real token
+            localStorage.setItem('userName', result.name);       // Store the user's name
+            console.log('User name stored in localStorage:', result.name);  // Debugging: Ensure name is stored
+            
+            alert('Login successful! Welcome, ' + result.name);
             window.location.href = '/';  // Redirect to homepage
         } else {
-            alert('Login failed: ' + result);
+            alert('Login failed: ' + result.message);
         }
     } catch (error) {
         console.error('Error during login:', error);
@@ -48,6 +55,7 @@ async function loginUser() {
 
 // Function to handle user sign-up
 async function signUpUser() {
+    const name = document.getElementById("signup-name").value; 
     const email = document.getElementById("signup-email").value;
     const password = document.getElementById("signup-password").value;
 
@@ -57,7 +65,11 @@ async function signUpUser() {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: new URLSearchParams({ email: email, password: password })
+            body: new URLSearchParams({ 
+                name: name,           // Send name (nickname) to the backend
+                email: email, 
+                password: password 
+            })
         });
 
         const result = await response.text();
