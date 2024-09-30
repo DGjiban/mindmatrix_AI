@@ -30,6 +30,10 @@
                     <li><a href="#" id="challenge-link">Challenge</a></li>
 					<li><a th:href="@{/about}">About</a></li>
                     <li><a th:href="@{/contact}">Contact</a></li>
+                    <!-- Display the user's name here if logged in -->
+			        <li id="user-name" style="display: none;"><a>Welcome, <span id="nickname"></span></a></li>
+			
+			        <li><a th:href="@{/login}" id="login-tab">Login</a></li> 
 				</ul>
 			</nav>
 			<section id="home" class="hero">

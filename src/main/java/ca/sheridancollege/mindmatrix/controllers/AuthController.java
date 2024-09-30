@@ -1,5 +1,7 @@
 package ca.sheridancollege.mindmatrix.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,38 +20,57 @@ import ca.sheridancollege.mindmatrix.services.FirebaseFirestoreService;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-	@Autowired
+    
+    @Autowired
     private FirebaseAuthService firebaseAuthService;
-	
-	@Autowired
+
+    @Autowired
     private FirebaseFirestoreService firebaseFirestoreService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signUp(@RequestParam String email, @RequestParam String password) throws InterruptedException, ExecutionException {
-    	try {
-    		
+    public ResponseEntity<String> signUp(
+            @RequestParam String email, 
+            @RequestParam String password, 
+            @RequestParam String name) {  // Accept "name" from the signup form
+        
+        try {
+            // Create the user in Firebase Authentication
             UserRecord userRecord = firebaseAuthService.createUser(email, password);
             
-            firebaseFirestoreService.saveUser(email);
+            // Save the user details (including name) in Firestore
+            firebaseFirestoreService.saveUser(email, name);
             
             return ResponseEntity.ok("User created with ID: " + userRecord.getUid());
         } catch (FirebaseAuthException e) {
             return ResponseEntity.status(400).body("Error creating user: " + e.getMessage());
         } catch (InterruptedException | ExecutionException e) {
-            return ResponseEntity.status(500).body("Error saving user : " + e.getMessage());
+            return ResponseEntity.status(500).body("Error saving user: " + e.getMessage());
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<Map<String, String>> login(@RequestParam String email, @RequestParam String password) {
         try {
             UserRecord user = firebaseAuthService.getUserByEmail(email);
-            // For real-world applications, you would verify the password and return a token
-            return ResponseEntity.ok("Login successful for user: " + user.getEmail());
+
+            // Fetch user data from Firestore
+            String name;
+            try {
+                name = firebaseFirestoreService.getUserNameByEmail(email);
+            } catch (InterruptedException | ExecutionException e) {
+                name = "Unknown User";  // Fallback if something goes wrong
+            }
+
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Login successful");
+            response.put("email", user.getEmail());
+            response.put("name", name);  // Include name in response
+            
+            return ResponseEntity.ok(response);
         } catch (FirebaseAuthException e) {
-            return ResponseEntity.status(400).body("Login failed: " + e.getMessage());
+            return ResponseEntity.status(400).body(null);
         }
     }
-    
-    
+
+
 }

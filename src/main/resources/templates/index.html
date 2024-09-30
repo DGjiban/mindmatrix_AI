@@ -24,16 +24,18 @@
 
         <main id="main-content" style="opacity: 0; visibility: hidden;">
             <nav>
-                <ul>
-                    <li><a th:href="@{/}">Home</a></li>
-                    <li><a href="#" id="challenge-link">Challenge</a></li>
-					<li><a th:href="@{/about}">About</a></li>
-                    <li><a th:href="@{/contact}">Contact</a></li>
-
-					<li><a th:href="@{/login}">Login</a></li> 
-
-                </ul>
-            </nav>
+			    <ul>
+			        <li><a th:href="@{/}">Home</a></li>
+			        <li><a href="#" id="challenge-link">Challenge</a></li>
+			        <li><a th:href="@{/about}">About</a></li>
+			        <li><a th:href="@{/contact}">Contact</a></li>
+			
+			        <!-- Display the user's name here if logged in -->
+			        <li id="user-name" style="display: none;"><a>Welcome, <span id="nickname"></span></a></li>
+			
+			        <li><a th:href="@{/login}" id="login-tab">Login</a></li> 
+			    </ul>
+			</nav>
             <section id="home" class="hero">
                 <h1 th:text="${message}">Welcome to MindMatrix</h1>
                 <p>Your journey into the world of knowledge begins here.</p>
