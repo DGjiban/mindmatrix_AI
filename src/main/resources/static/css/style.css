@@ -876,3 +876,23 @@ input[type="text"] {
     font-size: 0.8rem;
     color: #888;
 }
+
+.guest-button {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.guest-button button {
+    padding: 10px 20px;
+    background-color: #ff9900;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.guest-button button:hover {
+    background-color: #e68a00;
+}

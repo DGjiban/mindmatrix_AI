@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,11 +10,15 @@
     <div class="content-wrap">
         <nav>
             <ul>
-                    <li><a th:href="@{/}">Home</a></li>
-                    <li><a th:href="@{/challenge}">Challenge</a></li>
-					<li><a th:href="@{/about}">About</a></li>
-                    <li><a th:href="@{/contact}">Contact</a></li>
-                </ul>
+				<li><a th:href="@{/}">Home</a></li>
+                <li><a href="#" id="challenge-link">Challenge</a></li>
+				<li><a th:href="@{/about}">About</a></li>
+                <li><a th:href="@{/contact}">Contact</a></li>
+                <!-- Display the user's name here if logged in -->
+			    <li id="user-name" style="display: none;"><a>Welcome, <span id="nickname"></span></a></li>
+			
+			    <li><a th:href="@{/login}" id="login-tab">Login</a></li> 
+			</ul>
         </nav>
 
         <main id="about">

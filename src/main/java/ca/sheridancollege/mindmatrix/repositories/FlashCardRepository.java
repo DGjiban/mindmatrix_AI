@@ -1,17 +1,16 @@
 package ca.sheridancollege.mindmatrix.repositories;
 
 import java.util.List;
-
-import org.springframework.data.repository.CrudRepository;
-
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import ca.sheridancollege.mindmatrix.beans.Flashcard;
-import ca.sheridancollege.mindmatrix.beans.Quiz;
 
-public interface FlashCardRepository extends CrudRepository<Flashcard, Long> {
-	
-	Flashcard findByQuestion(String question);
-	
-	Flashcard findByAnswer(String answer);
-	
-	List<Flashcard> findBySubject(String subject);
+@Repository
+public interface FlashCardRepository extends JpaRepository<Flashcard, Long> {
+    
+    // Change to return a list, as multiple flashcards can have the same question
+    List<Flashcard> findByQuestion(String question);
+
+    // Change to return a list, as multiple flashcards can have the same answer
+    List<Flashcard> findByAnswer(String answer);
 }

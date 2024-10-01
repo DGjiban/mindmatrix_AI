@@ -1,26 +1,168 @@
-window.onload = function() {
+// ============================
+//  Startup Animation
+// ============================
+
+function initStartupAnimation() {
     const startup = document.getElementById('startup');
     const mainContent = document.getElementById('main-content');
+
+    if (!startup || !mainContent) {
+        console.error('Startup or main content element missing.');
+        return;
+    }
+
+    mainContent.style.opacity = 0;
+    mainContent.style.visibility = 'hidden';
 
     function onScroll() {
         startup.style.opacity = 0;
         startup.style.visibility = 'hidden';
         setTimeout(() => {
             startup.style.position = 'absolute';
-        }, 500); 
-
+        }, 500);
         mainContent.style.opacity = 1;
         mainContent.style.visibility = 'visible';
-
         window.removeEventListener('scroll', onScroll);
     }
 
     window.addEventListener('scroll', onScroll);
+}
+
+document.addEventListener('DOMContentLoaded', initStartupAnimation);
+
+// ============================
+//  Login / Sign-Up Logic
+// ============================
+
+// Show login form and hide sign-up form
+function showLoginForm() {
+    document.getElementById("login-section").style.display = "block";
+    document.getElementById("signup-section").style.display = "none";
+    document.getElementById("login-btn").classList.add("active");
+    document.getElementById("signup-btn").classList.remove("active");
+}
+
+// Show sign-up form and hide login form
+function showSignUpForm() {
+    document.getElementById("signup-section").style.display = "block";
+    document.getElementById("login-section").style.display = "none";
+    document.getElementById("signup-btn").classList.add("active");
+    document.getElementById("login-btn").classList.remove("active");
+}
+
+// Handle user login
+async function loginUser() {
+    const email = document.getElementById("login-email").value;
+    const password = document.getElementById("login-password").value;
+
+    try {
+        const response = await fetch('/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({ email: email, password: password })
+        });
+
+        const result = await response.json();
+        console.log('Login response:', result);
+
+        if (response.ok) {
+            localStorage.setItem('authToken', 'someAuthToken');  // Replace with real token
+            localStorage.setItem('userName', result.name);       // Store the user's name
+            console.log('User name stored in localStorage:', result.name);
+            alert('Login successful! Welcome, ' + result.name);
+            window.location.href = '/';  // Redirect to homepage
+        } else {
+            alert('Login failed: ' + result.message);
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+        alert('An error occurred during login.');
+    }
+}
+
+// Handle user sign-up
+async function signUpUser() {
+    const name = document.getElementById("signup-name").value;
+    const email = document.getElementById("signup-email").value;
+    const password = document.getElementById("signup-password").value;
+
+    try {
+        const response = await fetch('/auth/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                name: name,
+                email: email,
+                password: password
+            })
+        });
+
+        const result = await response.text();
+        if (response.ok) {
+            alert('Sign-up successful! User ID: ' + result);
+        } else {
+            alert('Sign-up failed: ' + result);
+        }
+    } catch (error) {
+        console.error('Error during sign-up:', error);
+        alert('An error occurred during sign-up.');
+    }
+}
+
+// Check if user is logged in and display their name and update the Login tab
+function displayUserNameAndLoginStatus() {
+    const userName = localStorage.getItem('userName');
+    const authToken = localStorage.getItem('authToken');
+    const loginTab = document.getElementById('login-tab');  // Login/Logout tab element
+
+    if (authToken && userName) {
+        // User is logged in, display the name and change Login to Logout
+        document.getElementById('user-name').style.display = 'inline';
+        document.getElementById('nickname').textContent = userName;
+
+        // Change Login tab to Logout
+        loginTab.textContent = 'Logout';
+        loginTab.addEventListener('click', function(event) {
+            event.preventDefault();
+            logoutUser();
+        });
+    } else {
+        // User is not logged in, ensure Login tab is displayed as "Login"
+        loginTab.textContent = 'Login';
+        loginTab.href = '/login';  // Make sure the tab points to the login page
+    }
+}
+
+// Function to log out the user
+function logoutUser() {
+    // Clear localStorage (authToken and userName)
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userName');
+
+    // Redirect the user to the login page after logging out
+    alert('You have been logged out.');
+    window.location.href = '/login';
+}
+
+// Call this function when the page loads
+window.onload = function() {
+    displayUserNameAndLoginStatus();  // Display user's name and login/logout status
 };
 
-// Function to check if the user is logged in
+
+// ============================
+//  Flashcards, Quiz & Challenge Logic
+// ============================
+
+// Check if the user is logged in before accessing the challenge
 function checkLoginBeforeChallenge() {
     const token = localStorage.getItem('authToken');
+    console.log('Checking login status. Token:', token);
+
     if (!token) {
         alert('You need to log in to access the Challenge page.');
         window.location.href = '/login';
@@ -29,292 +171,216 @@ function checkLoginBeforeChallenge() {
     }
 }
 
-// Add click event listener to Challenge tab
-document.getElementById('challenge-link').addEventListener('click', function(event) {
-    event.preventDefault();
-    checkLoginBeforeChallenge();
-});
-    
-    
-
-// Flash JS
-document.addEventListener("DOMContentLoaded", function() {
-	const flashcards = document.querySelectorAll('.flashcard-container');
-	let currentIndex = 0;
-	const counterElement = document.getElementById('flashcard-counter');
-	const totalFlashcards = flashcards.length;
-
-	// Update the flashcard counter
-	function updateFlashcardCounter() {
-		counterElement.textContent = `${currentIndex + 1} of ${totalFlashcards}`;
-	}
-
-	// Show the first flashcard initially, hide all others
-	function showFlashcard(index) {
-		// Hide all flashcards
-		flashcards.forEach((flashcard, i) => {
-			flashcard.style.display = 'none';
-		});
-		// Show the current flashcard
-		flashcards[index].style.display = 'block';
-		// Update the flashcard counter
-		updateFlashcardCounter();
-	}
-
-	document.querySelectorAll('.flashcard-container').forEach(container => {
-		container.addEventListener('click', function() {
-			const flashcard = this.querySelector('.flashcard');
-			flashcard.classList.toggle('is-flipped');
-		});
-	});
-
-	// Next button click event
-	document.getElementById('nextButton').addEventListener('click', function() {
-		currentIndex = (currentIndex + 1) % totalFlashcards; // Wrap around to the first flashcard
-		showFlashcard(currentIndex);
-	});
-
-	// Previous button click event
-	document.getElementById('prevButton').addEventListener('click', function() {
-		currentIndex = (currentIndex - 1 + totalFlashcards) % totalFlashcards; // Wrap around to the last flashcard
-		showFlashcard(currentIndex);
-	});
-
-	// Initialize the first flashcard and counter
-	showFlashcard(currentIndex);
-});
-
-//Quiz function
-document.addEventListener("DOMContentLoaded", function() {
-	const quizContainers = document.querySelectorAll('.quiz-container');
-	let currentQuizIndex = 0;
-	const totalQuizzes = quizContainers.length;
-	const counterElement = document.getElementById('quiz-counter');
-
-	// update counter
-	function updateQuizCounter() {
-		counterElement.textContent = `${currentQuizIndex + 1} of ${totalQuizzes}`;
-	}
-
-	// show the current quiz
-	function showQuiz(index) {
-		// hide the questions
-		quizContainers.forEach((container, i) => {
-			container.style.display = 'none';
-		});
-		// show the current question
-		quizContainers[index].style.display = 'block';
-		// call the update counter function
-		updateQuizCounter();
-	}
-
-	// Prev button
-	document.getElementById('QuizprevButton').addEventListener('click', function() {
-		if (currentQuizIndex > 0) {
-			currentQuizIndex--;
-			showQuiz(currentQuizIndex);
-		}
-	});
-
-	// Next button
-	document.getElementById('QuiznextButton').addEventListener('click', function() {
-		if (currentQuizIndex < totalQuizzes - 1) {
-			currentQuizIndex++;
-			showQuiz(currentQuizIndex);
-		}
-	});
-
-	// start the quiz
-	showQuiz(currentQuizIndex);
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-	document.getElementById('QuizFinishButton').addEventListener('click', function() {
-		loadShareThisScript();
-		
-		document.getElementById('shareLinks').style.display = 'block';
-		
-		const answers = [];
-
-		document.querySelectorAll('.quiz-container').forEach(container => {
-			const quizId = container.getAttribute('data-quiz-id');
-			const selectedInput = container.querySelector('input[type="radio"]:checked');
-
-			if (selectedInput) {
-				
-				const labelText = container.querySelector(`label[for="${selectedInput.id}"]`).innerText;
-
-				answers.push({
-					quizId: quizId,
-					selectedAnswer: labelText
-				});
-			}
-		});
-
-		fetch('/quizzes/verify', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(answers)
-		})
-			.then(response => response.json())
-			.then(data => {
-				document.getElementById('quiz-results').innerHTML = `You answered correctly ${data.correctAnswers} out of ${data.totalQuestions} questions.`;
-				document.getElementById('quiz-results').style.display = 'block';
-			})
-			.catch(error => console.error('Error:', error));
-	document.querySelectorAll('.show-answer-button').forEach(button => {
-		button.addEventListener('click', function() {
-			
-			const quizContainer = this.closest('.quiz-container');
-			
-			const correctAnswer = quizContainer.querySelector('.correct-answer');
-			correctAnswer.style.display = 'block';
-		});
-	});
-	});
-});
-
-//Function to load ShareThis script
-function loadShareThisScript(){
-	const script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = 'https://platform-api.sharethis.com/js/sharethis.js#property=6601a93bfb0d8000121105be&product=inline-share-buttons&source=platform';
-		script.async = true;
-		document.head.appendChild(script);
-	}
-
-
-//Timer
-function storeInputValues() {
-
-const quizTimerValue = document.getElementById('quizTimer').value;
-
-localStorage.setItem('quizTimer', quizTimerValue);
-
-//start timer
-		let timer = quizTimerValue;
-		
-          const interval = setInterval(() => {
-                       
-               if (timer <= 0) {						
-				clearInterval(interval);
-					
-				window.location.href = 'quiz.html';
- 				 				
- 			}	 localStorage.setItem('timer', timer);
- 				 
-             }, 1000);  
-      }
-   
-     const quizTimerValue = localStorage.getItem('timer');
-	 document.getElementById('quizTimer').textContent = quizTimerValue;
-	 
-const s = quizTimerValue;
-let time = s * 60;
-const timerEl = document.getElementById('timer');
-
-const a = setInterval(updateTimer, 1000);
-
-function updateTimer()
-{
-	const minutes = Math.floor(time / 60);
-	let seconds = time % 60;
-	timerEl.innerHTML = `${minutes}:${seconds}`;
-	time--;
-	
-	if(time < 0)
-	{
-
-		clearTimeout(a);
-		document.getElementById("timer").innerHTML = "Times Up!";
-	}
-}
 document.addEventListener("DOMContentLoaded", function () {
-    const cards = document.querySelectorAll('.card');
-    let currentCardIndex = 0;
-    const answers = [];
-    const answerMapping = ['A', 'B', 'C', 'D']; // Mapping for answer options
-
-    // Function to update the card stack positions
-    const updateCardStack = () => {
-        console.log(`Updating card stack. Current index: ${currentCardIndex}`);
-        cards.forEach((card, index) => {
-            const relativeIndex = (index - currentCardIndex + cards.length) % cards.length;
-            card.style.zIndex = cards.length - relativeIndex;
-
-            if (relativeIndex === 0) {
-                card.style.transform = 'translateY(0px) scale(1)';
-                card.style.opacity = 1;
-            } else if (relativeIndex === 1) {
-                card.style.transform = 'translateY(10px) scale(0.98)';
-                card.style.opacity = 0.8;
-            } else if (relativeIndex === 2) {
-                card.style.transform = 'translateY(20px) scale(0.96)';
-                card.style.opacity = 0.6;
-            } else {
-                card.style.opacity = 0; // Hide remaining cards
-            }
+    const challengeLink = document.getElementById('challenge-link');
+    if (challengeLink) {
+        challengeLink.addEventListener('click', function (event) {
+            event.preventDefault();
+            checkLoginBeforeChallenge();
         });
-    };
+    }
+});
 
-    // Initially set the correct card positions
-    updateCardStack();
+// Flashcards Logic
+function initFlashcards() {
+    const flashcards = document.querySelectorAll('.flashcard-container');
+    if (flashcards.length === 0) return;
 
-    document.querySelectorAll('.next-button').forEach(button => {
-        button.addEventListener('click', () => {
-            console.log('Next button clicked'); // Debug line
-            const currentCard = cards[currentCardIndex];
-            const quizId = currentCard.getAttribute('data-quiz-id');
-            const selectedAnswer = currentCard.querySelector('input[type="radio"]:checked');
+    let currentIndex = 0;
+    const totalFlashcards = flashcards.length;
+    const counterElement = document.getElementById('flashcard-counter');
 
-            if (selectedAnswer) {
-                answers.push({
-                    quizId: quizId,
-                    selectedAnswer: selectedAnswer.value
-                });
-            }
+    function updateFlashcardCounter() {
+        if (counterElement) counterElement.textContent = `${currentIndex + 1} of ${totalFlashcards}`;
+    }
 
-            currentCardIndex++;
+    function showFlashcard(index) {
+        if (index < 0 || index >= totalFlashcards) return;
 
-            if (currentCardIndex < cards.length) {
-                updateCardStack();
-            } else {
-                document.getElementById('show-answers-btn').style.display = 'block';
-            }
+        flashcards.forEach((flashcard) => flashcard.style.display = 'none');
+        flashcards[index].style.display = 'block';
+
+        updateFlashcardCounter();
+    }
+
+    flashcards.forEach(container => {
+        container.addEventListener('click', function () {
+            const flashcard = this.querySelector('.flashcard');
+            if (flashcard) flashcard.classList.toggle('is-flipped');
         });
     });
 
-    document.getElementById('show-answers-btn').addEventListener('click', function () {
+    document.getElementById('nextButton')?.addEventListener('click', function () {
+        currentIndex = (currentIndex + 1) % totalFlashcards;
+        showFlashcard(currentIndex);
+    });
+
+    document.getElementById('prevButton')?.addEventListener('click', function () {
+        currentIndex = (currentIndex - 1 + totalFlashcards) % totalFlashcards;
+        showFlashcard(currentIndex);
+    });
+
+    showFlashcard(currentIndex);
+}
+
+document.addEventListener('DOMContentLoaded', initFlashcards);
+
+// Quiz Logic
+function initQuiz() {
+    const quizContainers = document.querySelectorAll('.quiz-container');
+    if (quizContainers.length === 0) return;
+
+    let currentQuizIndex = 0;
+    const totalQuizzes = quizContainers.length;
+    const counterElement = document.getElementById('quiz-counter');
+
+    function updateQuizCounter() {
+        if (counterElement) counterElement.textContent = `${currentQuizIndex + 1} of ${totalQuizzes}`;
+    }
+
+    function showQuiz(index) {
+        if (index < 0 || index >= totalQuizzes) return;
+
+        quizContainers.forEach((quiz) => quiz.style.display = 'none');
+        quizContainers[index].style.display = 'block';
+
+        updateQuizCounter();
+    }
+
+    document.getElementById('QuiznextButton')?.addEventListener('click', function () {
+        if (currentQuizIndex < totalQuizzes - 1) {
+            currentQuizIndex++;
+            showQuiz(currentQuizIndex);
+        }
+    });
+
+    document.getElementById('QuizprevButton')?.addEventListener('click', function () {
+        if (currentQuizIndex > 0) {
+            currentQuizIndex--;
+            showQuiz(currentQuizIndex);
+        }
+    });
+
+    document.getElementById('QuizFinishButton')?.addEventListener('click', function () {
+        const answers = collectQuizAnswers();
+        displayQuizResults(answers);
+        displayShareLinks();
+    });
+
+    function collectQuizAnswers() {
+        const answers = [];
+        quizContainers.forEach((quiz) => {
+            const quizId = quiz.getAttribute('data-quiz-id');
+            const selectedInput = quiz.querySelector('input[type="radio"]:checked');
+
+            if (selectedInput) {
+                const labelText = quiz.querySelector(`label[for="${selectedInput.id}"]`).innerText;
+                answers.push({ quizId, selectedAnswer: labelText });
+            }
+        });
+        return answers;
+    }
+
+    function displayQuizResults(answers) {
         fetch('/quizzes/verify', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(answers)
         })
-        .then(response => response.json())
-        .then(result => {
-            const resultsBody = document.getElementById('results-body');
-            resultsBody.innerHTML = ''; // Clear any previous results
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('quiz-results').innerHTML = `You answered correctly ${data.correctCount} out of ${data.total} questions.`;
+                document.getElementById('quiz-results').style.display = 'block';
+            })
+            .catch(error => console.error('Error fetching quiz results:', error));
+    }
 
-            result.answers.forEach(answer => {
-                const selectedAnswer = answerMapping[answer.selectedAnswer]; // Convert numeric value to alphabet
-                const correctAnswer = answer.correctAnswer.replace('Correct answer: ', ''); // Clean up correct answer text
+    function displayShareLinks() {
+        document.getElementById('shareLinks').style.display = 'block';
+    }
 
-                const row = document.createElement('tr');
-                row.innerHTML = `<td>${answer.question}</td><td>${selectedAnswer}</td><td>${correctAnswer}</td>`;
-                resultsBody.appendChild(row);
-            });
+    showQuiz(currentQuizIndex);
+}
 
-            // Show the table
-            document.getElementById('results-table').style.display = 'table';
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    });
+document.addEventListener('DOMContentLoaded', function () {
+    initQuiz();
+    initQuizTimer();
+    initShowAnswers();
 });
 
+// Function to extract query parameters from URL
+function getQueryParams(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
 
+// Timer functionality using the user-selected time
+function initQuizTimer() {
+    const timerElement = document.getElementById('timer');
+
+    // Only proceed if the timer element exists (i.e., we're on the quiz page)
+    if (!timerElement) {
+        console.log("No timer element found on this page. Skipping timer initialization.");
+        return;  // Stop execution if the timer element is missing
+    }
+
+    // Get the selected time from query parameters (in minutes) and convert to seconds
+    const quizTimerParam = getQueryParams('quizTimer');
+    console.log('quizTimer from URL:', quizTimerParam); // Debugging timer value
+
+    let timeLeft = parseInt(quizTimerParam) * 60;
+
+    if (isNaN(timeLeft) || timeLeft <= 0) {
+        console.error('Invalid timer value, setting to default 10 minutes.');
+        timeLeft = 600; // Default to 10 minutes if invalid or missing
+    }
+
+    // Function to update the timer display
+    function updateTimer() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+        if (timeLeft > 0) {
+            timeLeft--;
+        } else {
+            clearInterval(timerInterval); // Stop the timer when time runs out
+            document.getElementById("quiz-results").innerHTML = "Time's Up!";
+            autoSubmitQuiz(); // Automatically submit the quiz
+        }
+    }
+
+    // Automatically click the "Finish" button when time is up
+    function autoSubmitQuiz() {
+        const finishButton = document.getElementById('QuizFinishButton');
+        if (finishButton) {
+            finishButton.click(); // Simulate a click on the "Finish" button
+        } else {
+            console.error("Finish button not found!");
+        }
+    }
+
+    // Start the timer
+    const timerInterval = setInterval(updateTimer, 1000);
+    updateTimer();
+}
+
+
+
+// Show Answer functionality
+function initShowAnswers() {
+    const showAnswerButtons = document.querySelectorAll('.show-answer-button');
+
+    showAnswerButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Find the closest quiz container
+            const quizContainer = this.closest('.quiz-container');
+            const correctAnswer = quizContainer?.querySelector('.correct-answer');
+            if (correctAnswer) {
+                correctAnswer.style.display = 'block'; // Show the correct answer
+            } else {
+                console.error('Correct answer element not found.');
+            }
+        });
+    });
+}
