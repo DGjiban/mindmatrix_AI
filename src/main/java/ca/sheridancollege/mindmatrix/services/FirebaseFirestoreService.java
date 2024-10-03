@@ -20,9 +20,7 @@ public class FirebaseFirestoreService {
         Map<String, Object> userData = new HashMap<>();
         userData.put("email", email);
         userData.put("name", name);
-        userData.put("rank", "");
-        userData.put("status", "");
-        userData.put("title", "");
+        userData.put("points", "");
         userData.put("birth", "");
 
         DocumentReference docRef = db.collection("users").document(email);
