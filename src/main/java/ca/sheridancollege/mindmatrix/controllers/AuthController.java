@@ -55,8 +55,9 @@ public class AuthController {
 
             // Fetch user data from Firestore
             String name;
+            
             try {
-                name = firebaseFirestoreService.getUserNameByEmail(email);
+                name = firebaseFirestoreService.getUserNameByEmail(email).getName();
             } catch (InterruptedException | ExecutionException e) {
                 name = "Unknown User";  // Fallback if something goes wrong
             }
@@ -71,6 +72,5 @@ public class AuthController {
             return ResponseEntity.status(400).body(null);
         }
     }
-
-
+    
 }
