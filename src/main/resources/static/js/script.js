@@ -384,3 +384,88 @@ function initShowAnswers() {
         });
     });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const quizContainers = document.querySelectorAll('.quiz-container');
+    let currentQuizIndex = 0;
+    const totalQuizzes = quizContainers.length;
+    const answers = []; // List to store user answers
+
+    // Function to show the current quiz
+    function showQuiz(index) {
+        if (index < 0 || index >= totalQuizzes) return;
+
+        quizContainers.forEach((quiz) => quiz.style.display = 'none');
+        quizContainers[index].style.display = 'block';
+    }
+
+    // Initialize the quiz by showing the first question
+    showQuiz(currentQuizIndex);
+
+    // Function to verify the answer with the server and show feedback
+    async function verifyAnswer(quizId, selectedAnswer) {
+        const response = await fetch('/quizzes/verifyAnswer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ quizId, selectedAnswer })
+        });
+
+        const result = await response.json();
+        if (result.isCorrect) {
+            alert('Correct answer!');
+        } else {
+            alert('Wrong answer.');
+        }
+
+        // Automatically move to the next quiz
+        moveToNextQuiz();
+    }
+
+    // Function to move to the next quiz
+    function moveToNextQuiz() {
+        if (currentQuizIndex < totalQuizzes - 1) {
+            currentQuizIndex++;
+            showQuiz(currentQuizIndex);
+        } else {
+            console.log("Quiz finished!");
+            // Call function to submit all answers or finalize the game
+        }
+    }
+
+    // Function to handle answer selection and trigger verification
+    function handleAnswerSelection(event) {
+        const quizContainer = event.target.closest('.quiz-container');
+        const quizId = quizContainer.getAttribute('data-quiz-id');
+        const selectedAnswer = event.target.value; // The value of the selected answer
+
+        // Store the selected answer
+        answers.push({
+            quizId: quizId,
+            selectedAnswer: selectedAnswer
+        });
+
+        // Call function to verify the answer with the server
+        verifyAnswer(quizId, selectedAnswer);
+    }
+
+    // Add event listener to all clickable options
+    quizContainers.forEach((quiz) => {
+        quiz.querySelectorAll('.clickable-option').forEach((clickableOption) => {
+            clickableOption.addEventListener('click', function () {
+                // Find the radio input and select it
+                const radioInput = this.querySelector('input[type="radio"]');
+                radioInput.checked = true;
+
+                // Add selected class for visual feedback
+                quiz.querySelectorAll('.clickable-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+
+                // Handle answer selection
+                handleAnswerSelection(radioInput);
+            });
+        });
+    });
+});
+
+
+

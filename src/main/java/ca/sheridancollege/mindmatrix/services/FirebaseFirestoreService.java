@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import ca.sheridancollege.mindmatrix.beans.User;
+
 
 @Service
 public class FirebaseFirestoreService {
@@ -29,15 +31,23 @@ public class FirebaseFirestoreService {
         return "User saved with Firestore at: " + result.getUpdateTime();
     }
     
-    public String getUserNameByEmail(String email) throws InterruptedException, ExecutionException {
+    public User getUserNameByEmail(String email) throws InterruptedException, ExecutionException {
         Firestore db = FirestoreClient.getFirestore();
+       
         DocumentReference docRef = db.collection("users").document(email);
         DocumentSnapshot document = docRef.get().get();
         
         if (document.exists()) {
-            return document.getString("name");
+        User currentUser = new User();
+        currentUser.setEmail(email);
+        currentUser.setName(document.getString("name"));
+        currentUser.setPoints(document.getString("points"));  // Assuming points are stored as a string
+        currentUser.setBirth(document.getString("birth"));
+        	
+        return currentUser;
+        	
         } else {
-            return "User";
+        	 return new User(email, "User", "", "");
         }
     }
 }

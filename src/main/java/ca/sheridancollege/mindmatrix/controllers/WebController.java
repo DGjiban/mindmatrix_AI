@@ -1,10 +1,12 @@
 package ca.sheridancollege.mindmatrix.controllers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.sql.exec.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,10 +15,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import ca.sheridancollege.mindmatrix.beans.Flashcard;
 import ca.sheridancollege.mindmatrix.beans.Quiz;
-import ca.sheridancollege.mindmatrix.beans.QuizResult;
 import ca.sheridancollege.mindmatrix.beans.UserAnswer;
 import ca.sheridancollege.mindmatrix.services.FlashcardService;
 import ca.sheridancollege.mindmatrix.services.QuizService;
@@ -65,15 +67,16 @@ public class WebController {
 	    @GetMapping("/challenge")
 	    public String showChallengePage(Model model) {
 	        model.addAttribute("message", "Challenge Yourself!");
-	        return "challenge"; // The name of your Thymeleaf template file without the extension
+	        return "challenge";
 	    }
 	
-
 	
 	    @GetMapping("/games/generate")
-		public String generateGames(@RequestParam("subject") String subject, 
-		                            @RequestParam("number") int number, Model model) {
-		    List<Quiz> games = quizService.getOrCreateQuizzes(subject, number);
+		public String generateGames(Model model) throws ExecutionException, InterruptedException, java.util.concurrent.ExecutionException {
+	    	List<Quiz> games = quizService.getAllQuizzes();
+	    	
+	    	Collections.shuffle(games);
+	    	
 		    model.addAttribute("games", games);
 		    return "game"; // This should match "game.html"
 		}
@@ -117,6 +120,25 @@ public class WebController {
 		public String contactPage() {
 			return "contact"; // Refers to src/main/resources/templates/about.html
 		}
+	
+	
+	@PostMapping("/quizzes/verifyAnswer")
+	@ResponseBody
+	public Map<String, Object> verifyAnswer(@RequestBody UserAnswer userAnswer) {
+	    Map<String, Object> result = new HashMap<>();
+	    
+	    // Find the quiz by ID
+	    Quiz quiz = quizService.findQuizById(userAnswer.getQuizId());
+	    String correctAnswer = quiz.getCorrectAnswerText().replace("Correct answer: ", "").trim();
+	    
+	    // Check if the selected answer is correct
+	    boolean isCorrect = userAnswer.getSelectedAnswer().equals(correctAnswer);
+	    
+	    // Return the result as a JSON response
+	    result.put("isCorrect", isCorrect);
+	    return result;
+	}
+
 	
 }
 
