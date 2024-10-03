@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.hibernate.sql.exec.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.WriteResult;
 
 import ca.sheridancollege.mindmatrix.beans.Quiz;
@@ -188,6 +190,7 @@ public class QuizService {
         return quizRepository.findById(id).orElse(null);
     }
 
+    	
     public List<Quiz> getAllQuizzes() throws InterruptedException, ExecutionException, java.util.concurrent.ExecutionException {
         List<Quiz> quizzes = new ArrayList<>();
         
