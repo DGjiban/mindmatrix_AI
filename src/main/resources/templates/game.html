@@ -61,13 +61,27 @@
         }
 
         .card-options {
-            list-style-type: none;
-            padding: 0;
-        }
+		    display: flex;
+		    flex-direction: column;
+		    align-items: flex-start;
+		}
 
-        .card-options li {
-            margin: 10px 0;
-        }
+        
+		.card-options li {
+		    display: flex;
+		    align-items: center;
+		    width: 100%;
+		    margin: 10px 0;
+		}
+		
+		.card-options input[type="radio"] {
+		    margin-right: 10px;
+		}
+		
+		.card-options label {
+		    text-align: left;
+		    flex-grow: 1;
+		}
 
         .card button {
             background-color: #007bff;
@@ -149,39 +163,35 @@
 				<p>Your journey into the world of knowledge begins here.</p>
 			</section>
                 <!-- Container to display the stacked cards -->
+                <section>
                 <p><p><p><p><p>
                 <div class="game-container">
                     <!-- Cards will be displayed here -->
                     <form id="game-form">
                         <div th:each="game, iterStat : ${games}" class="card" th:attr="data-quiz-id=${game.id}" th:classappend="${iterStat.index == 0} ? 'active'">
                             <div class="card-question" th:text="${game.question}">Question</div>
-                            <ul class="card-options">
-                                <li th:each="answer, stat : ${game.answers}">
-                                    <input type="radio" th:id="${'answer' + stat.index + '_' + game.id}" th:name="${'quiz' + game.id}" th:value="${stat.index}" required>
-                                    <label th:for="${'answer' + stat.index + '_' + game.id}" th:text="${answer}">Answer Placeholder</label>
-                                </li>
-                            </ul>
+	                            <ul class="card-options">
+								    <li th:each="answer, stat : ${game.answers}">
+								        <input type="radio" th:id="${'answer' + stat.index + '_' + game.id}" th:name="${'quiz' + game.id}" th:value="${stat.index}" required>
+								        <label th:for="${'answer' + stat.index + '_' + game.id}" th:text="${answer}" style="width: 100%;">Answer Placeholder</label>
+								    </li>
+								</ul>
+							
                             <button type="button" class="next-button">Next</button>
+                            
                         </div>
                     </form>
                 </div>
-
-                <!-- Button to show answers after all questions are completed -->
-                <button id="show-answers-btn">Show Correct Answers</button>
-
-                <!-- Results Table -->
-                <table id="results-table">
-                    <thead>
-                        <tr>
-                            <th>Question</th>
-                            <th>Your Answer</th>
-                            <th>Correct Answer</th>
-                        </tr>
-                    </thead>
-                    <tbody id="results-body">
-                        <!-- Rows will be dynamically inserted here -->
-                    </tbody>
-                </table>
+                </section>
+                </br></br>
+                
+		<section id="finish-game-section" style="text-align: center; margin-top: 20px;">
+	        <form action="/challenge" method="get">
+	            <button type="submit">Finish Game</button>
+	        </form>
+	    </section>
+   
+                
         </main>
 
         <footer class="footer">
