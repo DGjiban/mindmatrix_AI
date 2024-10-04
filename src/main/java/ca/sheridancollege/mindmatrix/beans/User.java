@@ -4,15 +4,15 @@ public class User {
 
     private String email;
     private String name;
-    private String points;
     private String birth;
+    private String points;  // Changed to int
 
     // Constructor with parameters
-    public User(String email, String name, String points, String birth) {
+    public User(String email, String name, String birth, String points ) {
         this.email = email;
         this.name = name;
-        this.points = points;
         this.birth = birth;
+        this.points = points;  // Now an int
     }
 
     // Default constructor
@@ -38,10 +38,10 @@ public class User {
     }
 
     public String getPoints() {
-        return points;
+        return points;  // Getter returns int
     }
 
-    public void setPoints(String points) {
+    public void setPoints(String points) {  // Setter accepts int
         this.points = points;
     }
 
@@ -59,8 +59,9 @@ public class User {
         return "User{" +
                 "email='" + email + '\'' +
                 ", name='" + name + '\'' +
+                ", birth=" + birth +  // Now an int
                 ", points='" + points + '\'' +
-                ", birth='" + birth + '\'' +
                 '}';
     }
 }
+

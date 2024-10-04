@@ -171,17 +171,16 @@
         </section>
 
         <main id="challenge">
-            <section id="games">
-                <h2>Gaming Mode</h2>
-                <form id="gameRequestForm" action="/games/generate" method="get">
-                    <label for="number">Number</label>
-                    </br></br>
-                  	<label for="points">Points</label>
-                    <button type="submit">Start Game</button>
-                </form>
-                
-            </section>
-        </main>
+		    <section id="games">
+		        <h2>Gaming Mode</h2>
+		        <form id="gameRequestForm" action="/games/generate" method="get">
+		            <label for="number">Number</label>
+		            <br>
+		            <label for="points">Your Points: <span id="user-points">Loading...</span></label> <!-- Display points here -->
+		            <button type="submit">Start Game</button>
+		        </form>
+		    </section>
+		</main>
 
     <footer class="footer">
         <p>&copy; 2024 MindMatrix. All rights reserved.</p>

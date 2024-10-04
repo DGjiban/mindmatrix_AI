@@ -896,3 +896,99 @@ input[type="text"] {
 .guest-button button:hover {
     background-color: #e68a00;
 }
+
+/* Stack cards in the container */
+        .game-container {
+            position: relative;
+            width: 300px;  /* Width of the card */
+            height: 400px; /* Height of the card */
+            margin: 0 auto;
+        }
+
+        /* Poker card styles */
+        .card {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            position: absolute;  /* Allows cards to overlap */
+            transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+            opacity: 0;  /* Initially hidden */
+        }
+
+        /* Initial stacking effect for cards behind the main card */
+        .card:nth-child(1) {
+            z-index: 3;
+            transform: translateY(0px) scale(1);
+            opacity: 1;
+        }
+
+        .card:nth-child(2) {
+            z-index: 2;
+            transform: translateY(10px) scale(0.98);
+            opacity: 0.8;
+        }
+
+        .card:nth-child(3) {
+            z-index: 1;
+            transform: translateY(20px) scale(0.96);
+            opacity: 0.6;
+        }
+
+        /* Card question and options */
+        .card-question {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .card-options {
+		    display: flex;
+		    flex-direction: column;
+		    align-items: flex-start;
+		}
+
+        
+		.card-options li {
+		    display: flex;
+		    align-items: center;
+		    width: 100%;
+		    margin: 10px 0;
+		}
+		
+		.card-options input[type="radio"] {
+		    margin-right: 10px;
+		}
+		
+		.card-options label {
+		    text-align: left;
+		    flex-grow: 1;
+		}
+
+        .card button {
+            background-color: #007bff;
+                        justify-content: center;
+            
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .card button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Hide other cards initially, except the top ones */
+        .card.move-out {
+            transform: translateX(100%); /* Move the card out to the right */
+            opacity: 0;
+        }

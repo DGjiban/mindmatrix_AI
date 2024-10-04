@@ -28,8 +28,6 @@ function initStartupAnimation() {
     window.addEventListener('scroll', onScroll);
 }
 
-document.addEventListener('DOMContentLoaded', initStartupAnimation);
-
 // ============================
 //  Login / Sign-Up Logic
 // ============================
@@ -65,13 +63,17 @@ async function loginUser() {
         });
 
         const result = await response.json();
-        console.log('Login response:', result);
+        console.log('Login response:', result);  // Log full response for debugging
 
         if (response.ok) {
+            console.log('Points from backend:', result.points);  // Log points specifically
+
             localStorage.setItem('authToken', 'someAuthToken');  // Replace with real token
             localStorage.setItem('userName', result.name);       // Store the user's name
-            console.log('User name stored in localStorage:', result.name);
-            alert('Login successful! Welcome, ' + result.name);
+            localStorage.setItem('userPoints', result.points);   // Store the user's points
+            console.log('User name and points stored in localStorage:', result.name, result.points);
+            
+            alert('Login successful! Welcome, ' + result.name + '. Points: ' + result.points);
             window.location.href = '/';  // Redirect to homepage
         } else {
             alert('Login failed: ' + result.message);
@@ -82,11 +84,32 @@ async function loginUser() {
     }
 }
 
+// Display user points
+function displayUserPoints() {
+    const userPoints = localStorage.getItem('userPoints');  // Fetch points from localStorage
+    const pointsElement = document.getElementById('user-points');  // The element to display points
+
+    console.log('Retrieved userPoints from localStorage:', userPoints);  // Debug log for points
+
+    if (pointsElement) {
+        if (userPoints) {
+            console.log('Setting userPoints in HTML:', userPoints);  // Log the points being set
+            pointsElement.textContent = userPoints;  // Display points if they exist
+        } else {
+            console.log('No userPoints found, setting default 0');  // Log if no points found
+            pointsElement.textContent = '0';  // Default to 0 if points are not available
+        }
+    } else {
+        console.error('Element with id "user-points" not found.');  // Log error if element is missing
+    }
+}
+
 // Handle user sign-up
 async function signUpUser() {
     const name = document.getElementById("signup-name").value;
     const email = document.getElementById("signup-email").value;
     const password = document.getElementById("signup-password").value;
+    const birth = document.getElementById("signup-birth").value;  // Get the birthdate from the form
 
     try {
         const response = await fetch('/auth/signup', {
@@ -97,7 +120,8 @@ async function signUpUser() {
             body: new URLSearchParams({
                 name: name,
                 email: email,
-                password: password
+                password: password,
+                birth: birth  // Add the birthdate to the POST request
             })
         });
 
@@ -113,7 +137,7 @@ async function signUpUser() {
     }
 }
 
-// Check if user is logged in and display their name and update the Login tab
+// Display user's name and login/logout status
 function displayUserNameAndLoginStatus() {
     const userName = localStorage.getItem('userName');
     const authToken = localStorage.getItem('authToken');
@@ -137,7 +161,7 @@ function displayUserNameAndLoginStatus() {
     }
 }
 
-// Function to log out the user
+// Log out the user
 function logoutUser() {
     // Clear localStorage (authToken and userName)
     localStorage.removeItem('authToken');
@@ -147,12 +171,6 @@ function logoutUser() {
     alert('You have been logged out.');
     window.location.href = '/login';
 }
-
-// Call this function when the page loads
-window.onload = function() {
-    displayUserNameAndLoginStatus();  // Display user's name and login/logout status
-};
-
 
 // ============================
 //  Flashcards, Quiz & Challenge Logic
@@ -170,16 +188,6 @@ function checkLoginBeforeChallenge() {
         window.location.href = '/challenge';
     }
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    const challengeLink = document.getElementById('challenge-link');
-    if (challengeLink) {
-        challengeLink.addEventListener('click', function (event) {
-            event.preventDefault();
-            checkLoginBeforeChallenge();
-        });
-    }
-});
 
 // Flashcards Logic
 function initFlashcards() {
@@ -365,8 +373,6 @@ function initQuizTimer() {
     updateTimer();
 }
 
-
-
 // Show Answer functionality
 function initShowAnswers() {
     const showAnswerButtons = document.querySelectorAll('.show-answer-button');
@@ -466,6 +472,109 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+// ============================
+//  Document Ready Initialization
+// ============================
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded');
+
+    // Initialize startup animation
+    initStartupAnimation();
+
+    // Display user name and login status
+    displayUserNameAndLoginStatus();
+
+    // Check if we're on the challenge page, and if so, display user points
+    if (document.getElementById('user-points')) {
+        displayUserPoints();
+    }
+
+    // Setup event listeners for challenge access
+    const challengeLink = document.getElementById('challenge-link');
+    if (challengeLink) {
+        challengeLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            checkLoginBeforeChallenge();
+        });
+    }
+
+    // Initialize flashcards if needed
+    initFlashcards();
+
+    // Initialize quiz if needed
+    initQuiz();
+    initQuizTimer();
+    initShowAnswers();
+});
+
+// ============================
+//  Game Card Answer Check
+// ============================
+document.addEventListener("DOMContentLoaded", function () {
+    const cards = document.querySelectorAll('.card');
+    let currentCardIndex = 0;
+    const answers = [];
+    
+    // Function to update the card stack positions
+    const updateCardStack = () => {
+        cards.forEach((card, index) => {
+            const relativeIndex = (index - currentCardIndex + cards.length) % cards.length;
+            card.style.zIndex = cards.length - relativeIndex;
+
+            if (relativeIndex === 0) {
+                card.style.transform = 'translateY(0px) scale(1)';
+                card.style.opacity = 1;
+            } else {
+                card.style.opacity = 0; // Hide remaining cards
+            }
+        });
+    };
+
+    // Initially set the correct card positions
+    updateCardStack();
+
+    document.querySelectorAll('.next-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const currentCard = cards[currentCardIndex];
+            const quizQuestion = currentCard.getAttribute('data-quiz-id');  // Use quiz question as the ID
+            const selectedAnswer = currentCard.querySelector('input[type="radio"]:checked');
+
+            if (selectedAnswer) {
+                answers.push({
+                    quizQuestion: quizQuestion,  // Send quiz question for comparison
+                    selectedAnswer: selectedAnswer.value
+                });
+
+                // Move to the next card
+                currentCardIndex++;
+                if (currentCardIndex < cards.length) {
+                    updateCardStack();
+                } else {
+                    console.log("All questions answered. Sending answers to the server.");
+                    sendAnswersToServer(answers);
+                }
+            }
+        });
+    });
+
+    function sendAnswersToServer(answers) {
+        fetch('/quizzes/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(answers)
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log('Verification results:', result);
+            // Display the results or feedback here
+        })
+        .catch(error => {
+            console.error('Error verifying answers:', error);
+        });
+    }
+});
+
 
 
 
