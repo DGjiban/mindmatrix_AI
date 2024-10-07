@@ -69,12 +69,28 @@ public class FirebaseFirestoreService {
         DocumentSnapshot document = docRef.get().get();
 
         if (document.exists()) {
-            Long points = document.getLong("points");  // Retrieve points as Long
-            return points != null ? points.intValue() : 0;  // Safely handle null points, return 0 if missing
+            // Fetch the points field as an Object, which could be a String
+            String pointsString = document.getString("points");
+
+            if (pointsString != null) {
+                try {
+                    // Convert the points from String to Integer
+                    return Integer.parseInt(pointsString);
+                } catch (NumberFormatException e) {
+                    // Log the error and return a default value (e.g., 0) if parsing fails
+                    e.printStackTrace();
+                    return 0;
+                }
+            } else {
+                // Return 0 if points field is null
+                return 0;
+            }
         } else {
-            return 0;  // Return 0 points if user doesn't exist
+            // Return 0 if the document does not exist
+            return 0;
         }
     }
+
 
     // Optionally, add a method to update points
     public String updateUserPoints(String email, int points) throws InterruptedException, ExecutionException {
@@ -87,4 +103,20 @@ public class FirebaseFirestoreService {
         ApiFuture<WriteResult> writeResult = docRef.update(updates);
         return "User points updated at: " + writeResult.get().getUpdateTime();
     }
+    
+ // Method to fetch the total number of questions from the "questions" collection
+    public int getTotalQuestions() throws InterruptedException, ExecutionException {
+        Firestore db = FirestoreClient.getFirestore();
+
+        // Access the "questions" collection
+        CollectionReference questionsCollection = db.collection("quizzes");
+
+        // Get all documents in the collection
+        ApiFuture<QuerySnapshot> querySnapshot = questionsCollection.get();
+
+        // Return the total number of documents (questions)
+        return querySnapshot.get().size();
+    }
+    
+    
 }

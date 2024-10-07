@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ca.sheridancollege.mindmatrix.beans.Flashcard;
 import ca.sheridancollege.mindmatrix.beans.Quiz;
 import ca.sheridancollege.mindmatrix.beans.UserAnswer;
+import ca.sheridancollege.mindmatrix.services.FirebaseFirestoreService;
 import ca.sheridancollege.mindmatrix.services.FlashcardService;
 import ca.sheridancollege.mindmatrix.services.QuizService;
 
@@ -31,6 +32,10 @@ public class WebController {
 	
 	@Autowired
     private QuizService quizService;
+	
+	@Autowired
+    private FirebaseFirestoreService firestoreService;
+
 	
 	@GetMapping("/")
 	public String index(Model model) {
@@ -64,11 +69,21 @@ public class WebController {
     }
 	
 
-	    @GetMapping("/challenge")
-	    public String showChallengePage(Model model) {
-	        model.addAttribute("message", "Challenge Yourself!");
-	        return "challenge";
+	@GetMapping("/challenge")
+	public String showChallengePage(Model model) throws java.util.concurrent.ExecutionException {
+	    try {
+	        // Fetch the total number of questions
+	        int questionCount = firestoreService.getTotalQuestions();
+	        model.addAttribute("questionCount", questionCount);
+
+	    } catch (ExecutionException | InterruptedException e) {
+	        e.printStackTrace();
+	        model.addAttribute("questionCount", "Error");
 	    }
+	    model.addAttribute("message", "Challenge yourself!");
+	    return "challenge";  // Thymeleaf template name
+	}
+
 	
 	
 	    @GetMapping("/games/generate")
@@ -126,18 +141,33 @@ public class WebController {
 	@ResponseBody
 	public Map<String, Object> verifyAnswer(@RequestBody UserAnswer userAnswer) {
 	    Map<String, Object> result = new HashMap<>();
-	    
-	    // Find the quiz by ID
-	    Quiz quiz = quizService.findQuizById(userAnswer.getQuizId());
-	    String correctAnswer = quiz.getCorrectAnswerText().replace("Correct answer: ", "").trim();
-	    
-	    // Check if the selected answer is correct
-	    boolean isCorrect = userAnswer.getSelectedAnswer().equals(correctAnswer);
-	    
-	    // Return the result as a JSON response
-	    result.put("isCorrect", isCorrect);
+
+	    try {
+	        // Fetch correct answer from Firestore
+	        String correctAnswer = quizService.getCorrectAnswerFromFirestore(userAnswer.getQuizId());
+
+	        if (correctAnswer != null) {
+	            // Compare the selected answer with the correct answer
+	            boolean isCorrect = userAnswer.getSelectedAnswer().equalsIgnoreCase(correctAnswer.trim());
+
+	            // Return the result
+	            result.put("isCorrect", isCorrect);
+	            result.put("correctAnswer", correctAnswer);
+	        } else {
+	            result.put("isCorrect", false);
+	            result.put("message", "No correct answer found for the quiz question.");
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        result.put("isCorrect", false);
+	        result.put("message", "Error fetching quiz from Firestore.");
+	    }
+
 	    return result;
 	}
+
+
 
 	
 }

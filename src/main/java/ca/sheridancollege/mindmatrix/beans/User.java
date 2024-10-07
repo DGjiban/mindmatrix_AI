@@ -5,7 +5,7 @@ public class User {
     private String email;
     private String name;
     private String birth;
-    private String points;  // Changed to int
+    private String points;
 
     // Constructor with parameters
     public User(String email, String name, String birth, String points ) {

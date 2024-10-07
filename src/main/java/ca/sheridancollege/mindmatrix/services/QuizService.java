@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import org.hibernate.sql.exec.ExecutionException;
@@ -11,11 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteResult;
 
 import ca.sheridancollege.mindmatrix.beans.Quiz;
@@ -41,30 +46,54 @@ public class QuizService {
     @Autowired
     private Firestore db;
 
-    public void saveQuiz(Quiz quiz) {
+    public void saveQuiz(Quiz quiz) throws java.util.concurrent.ExecutionException {
    
         quizRepository.save(quiz);
 
         saveQuizToFirestore(quiz);
     }
     
-    public void saveQuizToFirestore(Quiz quiz) {
+    public void saveQuizToFirestore(Quiz quiz) throws java.util.concurrent.ExecutionException {
         try {
+            // Create a map of the quiz data
             Map<String, Object> quizData = new HashMap<>();
             quizData.put("subject", quiz.getSubject());
             quizData.put("question", quiz.getQuestion());
             quizData.put("answers", quiz.getAnswers());
             quizData.put("correctAnswerText", quiz.getCorrectAnswerText());
 
-            DocumentReference docRef = db.collection("quizzes").document(quiz.getQuestion());
-            WriteResult result = docRef.set(quizData).get();
+            // Use .add() to let Firestore generate an auto-ID for the document
+            ApiFuture<DocumentReference> docRefQuiz = db.collection("quizzes").add(quizData);
+
+            // Get the generated document ID
+            DocumentReference documentReference = docRefQuiz.get();
+            String generatedId = documentReference.getId();
+
+            // Log the generated document ID
+            System.out.println("Quiz saved with generated ID: " + generatedId);
         } catch (InterruptedException | ExecutionException e) {
             System.err.println("Error saving quiz to Firestore: " + e.getMessage());
-        } catch (java.util.concurrent.ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }    
+        }
+    }
+
+
+    // Method to fetch quiz by question from Firestore
+    public String getCorrectAnswerFromFirestore(Long quizId) throws InterruptedException, ExecutionException, java.util.concurrent.ExecutionException {
+        // Convert quizId (Long) to String, assuming quizId is the document key
+        DocumentReference docRef = db.collection("quizzes").document(String.valueOf(quizId));
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+
+        // Block on response to get document
+        DocumentSnapshot document = future.get();
+        if (document.exists()) {
+            return document.getString("correctAnswerText");
+        } else {
+            System.out.println("No such quiz found in Firestore for quiz ID: " + quizId);
+            return null;
+        }
+    }
+
+
     
     public List<Quiz> getOrCreateQuizzes(String subject, int number) {
         List<Quiz> quizzes = new ArrayList<Quiz>();
@@ -73,7 +102,14 @@ public class QuizService {
         if (quizzes.isEmpty()) {
             quizzes = generateQuizzes(subject, number);
             // Save each generated quiz to the database.
-            quizzes.forEach(this::saveQuiz);
+            quizzes.forEach(t -> {
+				try {
+					saveQuiz(t);
+				} catch (java.util.concurrent.ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
         } else if (quizzes.size() > number) {
             // If more quizzes exist than requested, trim the list.
             quizzes = quizzes.subList(0, number);
@@ -187,8 +223,10 @@ public class QuizService {
     }
     
     public Quiz findQuizById(Long id) {
-        return quizRepository.findById(id).orElse(null);
+        Assert.notNull(id, "The given id must not be null");
+        return quizRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Quiz not found for id: " + id));
     }
+
 
     	
     public List<Quiz> getAllQuizzes() throws InterruptedException, ExecutionException, java.util.concurrent.ExecutionException {
@@ -206,5 +244,25 @@ public class QuizService {
         }
 
         return quizzes;
+    }
+    
+ // Method to retrieve and log all document IDs (quiz questions) from Firestore
+    public List<String> getAllQuizDocumentIds() throws InterruptedException, ExecutionException, java.util.concurrent.ExecutionException {
+        List<String> documentIds = new ArrayList<>();
+
+        // Get all documents from the 'quizzes' collection
+        ApiFuture<QuerySnapshot> future = db.collection("quizzes").get();
+
+        // Get the query snapshot
+        QuerySnapshot documents = future.get();
+
+        // Loop through the documents and log their IDs (the question text)
+        for (DocumentSnapshot document : documents.getDocuments()) {
+            String documentId = document.getId();  // This is the quiz question (document ID)
+            System.out.println("Quiz Question (Document ID): " + documentId);
+            documentIds.add(documentId);
+        }
+
+        return documentIds;
     }
 }

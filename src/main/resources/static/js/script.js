@@ -28,6 +28,36 @@ function initStartupAnimation() {
     window.addEventListener('scroll', onScroll);
 }
 
+// index tab function
+document.addEventListener('DOMContentLoaded', function () {
+    // By default, display the first tab (flashcards)
+    document.getElementById("flashcards").style.display = "block";
+
+    // Tab navigation logic
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+
+        // Hide all tab content
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        // Remove active class from all tab links
+        tablinks = document.getElementsByClassName("tab-link");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        // Show the current tab and add active class to clicked tab
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    // Attach the openTab function to the global scope if needed
+    window.openTab = openTab;
+});
+
 // ============================
 //  Login / Sign-Up Logic
 // ============================
@@ -68,11 +98,14 @@ async function loginUser() {
         if (response.ok) {
             console.log('Points from backend:', result.points);  // Log points specifically
 
-            localStorage.setItem('authToken', 'someAuthToken');  // Replace with real token
+            // Store essential user data in localStorage
+            localStorage.setItem('authToken', 'someAuthToken');  // Replace with a real token if needed
             localStorage.setItem('userName', result.name);       // Store the user's name
             localStorage.setItem('userPoints', result.points);   // Store the user's points
-            console.log('User name and points stored in localStorage:', result.name, result.points);
-            
+            localStorage.setItem('userEmail', result.email);     // Store the user's email for later use
+
+            console.log('User email, name, and points stored in localStorage:', result.email, result.name, result.points);
+
             alert('Login successful! Welcome, ' + result.name + '. Points: ' + result.points);
             window.location.href = '/';  // Redirect to homepage
         } else {
@@ -84,12 +117,14 @@ async function loginUser() {
     }
 }
 
-// Display user points
+// Function to fetch and display user points
 function displayUserPoints() {
     const userPoints = localStorage.getItem('userPoints');  // Fetch points from localStorage
     const pointsElement = document.getElementById('user-points');  // The element to display points
 
-    console.log('Retrieved userPoints from localStorage:', userPoints);  // Debug log for points
+    // Debug log for points and DOM element
+    console.log('Retrieved userPoints from localStorage:', userPoints);
+    console.log('Points element found in DOM:', pointsElement);
 
     if (pointsElement) {
         if (userPoints) {
@@ -103,6 +138,9 @@ function displayUserPoints() {
         console.error('Element with id "user-points" not found.');  // Log error if element is missing
     }
 }
+document.addEventListener('DOMContentLoaded', function() {
+    displayUserPoints();  // Call this function after the page has fully loaded
+});
 
 // Handle user sign-up
 async function signUpUser() {
@@ -163,11 +201,13 @@ function displayUserNameAndLoginStatus() {
 
 // Log out the user
 function logoutUser() {
-    // Clear localStorage (authToken and userName)
+    // Clear localStorage
     localStorage.removeItem('authToken');
     localStorage.removeItem('userName');
+    localStorage.removeItem('userPoints');
+    localStorage.removeItem('userEmail');  // Remove email from localStorage
 
-    // Redirect the user to the login page after logging out
+    // Redirect to login page
     alert('You have been logged out.');
     window.location.href = '/login';
 }
@@ -515,7 +555,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const cards = document.querySelectorAll('.card');
     let currentCardIndex = 0;
     const answers = [];
-    
+
     // Function to update the card stack positions
     const updateCardStack = () => {
         cards.forEach((card, index) => {
@@ -537,26 +577,54 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll('.next-button').forEach(button => {
         button.addEventListener('click', () => {
             const currentCard = cards[currentCardIndex];
-            const quizQuestion = currentCard.getAttribute('data-quiz-id');  // Use quiz question as the ID
+            const quizId = currentCard.getAttribute('data-quiz-id');
             const selectedAnswer = currentCard.querySelector('input[type="radio"]:checked');
 
             if (selectedAnswer) {
-                answers.push({
-                    quizQuestion: quizQuestion,  // Send quiz question for comparison
+                const userAnswer = {
+                    quizId: quizId,
                     selectedAnswer: selectedAnswer.value
+                };
+
+                // Send answer to server to check if it's correct
+                verifyAnswer(userAnswer, function(isCorrect) {
+                    if (isCorrect) {
+                        alert("Correct Answer!");
+                    } else {
+                        alert("Incorrect Answer!");
+                    }
+
+                    // Move to the next card after showing feedback
+                    currentCardIndex++;
+                    if (currentCardIndex < cards.length) {
+                        updateCardStack();
+                    } else {
+                        console.log("All questions answered. Sending final answers to the server.");
+                        sendAnswersToServer(answers);
+                    }
                 });
 
-                // Move to the next card
-                currentCardIndex++;
-                if (currentCardIndex < cards.length) {
-                    updateCardStack();
-                } else {
-                    console.log("All questions answered. Sending answers to the server.");
-                    sendAnswersToServer(answers);
-                }
+                // Store the answer for later processing
+                answers.push(userAnswer);
             }
         });
     });
+
+    function verifyAnswer(userAnswer, callback) {
+        fetch('/quizzes/verifyAnswer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userAnswer)
+        })
+        .then(response => response.json())
+        .then(result => {
+            // Use the callback to send the result back
+            callback(result.isCorrect);
+        })
+        .catch(error => {
+            console.error('Error verifying answer:', error);
+        });
+    }
 
     function sendAnswersToServer(answers) {
         fetch('/quizzes/verify', {
@@ -567,14 +635,9 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.json())
         .then(result => {
             console.log('Verification results:', result);
-            // Display the results or feedback here
         })
         .catch(error => {
             console.error('Error verifying answers:', error);
         });
     }
 });
-
-
-
-

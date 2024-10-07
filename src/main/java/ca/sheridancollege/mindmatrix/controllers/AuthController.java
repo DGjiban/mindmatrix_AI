@@ -12,12 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.api.Authentication;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 
 import ca.sheridancollege.mindmatrix.beans.User;
 import ca.sheridancollege.mindmatrix.services.FirebaseAuthService;
 import ca.sheridancollege.mindmatrix.services.FirebaseFirestoreService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/auth")
@@ -75,16 +79,21 @@ public class AuthController {
     }
 
 
-
     // New method to fetch the current user's points
     @GetMapping("/points")
-    public ResponseEntity<Integer> getUserPoints(@RequestParam String email) {
+    public ResponseEntity<Map<String, String>> getUserPoints(@RequestParam String email) {
         try {
+            // Fetch points as an integer
             int points = firebaseFirestoreService.getUserPointsByEmail(email);
-            return ResponseEntity.ok(points);
+            
+            Map<String, String> response = new HashMap<>();
+            response.put("points", String.valueOf(points)); // Send points as a string
+            
+            return ResponseEntity.ok(response);
         } catch (InterruptedException | ExecutionException e) {
-            return ResponseEntity.status(500).body(0);  // Return 0 points if there's an error
+            return ResponseEntity.status(500).body(null);  // Handle error
         }
     }
+
 }
 
