@@ -555,7 +555,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const cards = document.querySelectorAll('.card');
     let currentCardIndex = 0;
     const answers = [];
-
+    
     // Function to update the card stack positions
     const updateCardStack = () => {
         cards.forEach((card, index) => {
@@ -570,6 +570,16 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     };
+
+    // Fetch all quizzes and store them in localStorage
+	fetch('/quizzes/fetchAll')
+	    .then(response => response.json())
+	    .then(data => {
+	        // Convert ID to string before storing in localStorage
+	        data.forEach(quiz => quiz.id = String(quiz.id));  // Ensure id is stored as a string
+	        localStorage.setItem('quizzes', JSON.stringify(data));
+	    })
+	    .catch(error => console.error('Error fetching quizzes:', error));
 
     // Initially set the correct card positions
     updateCardStack();
@@ -586,8 +596,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     selectedAnswer: selectedAnswer.value
                 };
 
-                // Send answer to server to check if it's correct
-                verifyAnswer(userAnswer, function(isCorrect) {
+                // Verify the answer locally
+                verifyAnswerLocally(userAnswer, function(isCorrect) {
                     if (isCorrect) {
                         alert("Correct Answer!");
                     } else {
@@ -599,8 +609,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (currentCardIndex < cards.length) {
                         updateCardStack();
                     } else {
-                        console.log("All questions answered. Sending final answers to the server.");
-                        sendAnswersToServer(answers);
+                        console.log("All questions answered.");
                     }
                 });
 
@@ -610,34 +619,20 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    function verifyAnswer(userAnswer, callback) {
-        fetch('/quizzes/verifyAnswer', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(userAnswer)
-        })
-        .then(response => response.json())
-        .then(result => {
-            // Use the callback to send the result back
-            callback(result.isCorrect);
-        })
-        .catch(error => {
-            console.error('Error verifying answer:', error);
-        });
-    }
+    // Local verification function
+    function verifyAnswerLocally(userAnswer, callback) {
+        // Get quizzes from localStorage
+        const quizzes = JSON.parse(localStorage.getItem('quizzes'));
+        const quiz = quizzes.find(q => q.id === userAnswer.quizId);
 
-    function sendAnswersToServer(answers) {
-        fetch('/quizzes/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(answers)
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log('Verification results:', result);
-        })
-        .catch(error => {
-            console.error('Error verifying answers:', error);
-        });
+        if (quiz) {
+            const correctAnswer = quiz.correctAnswerText.trim();
+            const isCorrect = userAnswer.selectedAnswer === correctAnswer;
+            callback(isCorrect);
+        } else {
+            console.error('Quiz not found locally for quizId:', userAnswer.quizId);
+            callback(false);
+        }
     }
 });
+

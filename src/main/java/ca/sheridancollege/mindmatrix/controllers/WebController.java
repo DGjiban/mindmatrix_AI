@@ -126,46 +126,53 @@ public class WebController {
 	    return ResponseEntity.ok(response);
 	}
 	
-	 @GetMapping("/about")
-	    public String aboutPage() {
-	        return "about"; // Refers to src/main/resources/templates/about.html
-	    }
+	@GetMapping("/about")
+	public String aboutPage() {
+		return "about"; // Refers to src/main/resources/templates/about.html
+	}
 
 	@GetMapping("/contact")
-		public String contactPage() {
-			return "contact"; // Refers to src/main/resources/templates/about.html
-		}
-	
-	
-	@PostMapping("/quizzes/verifyAnswer")
-	@ResponseBody
-	public Map<String, Object> verifyAnswer(@RequestBody UserAnswer userAnswer) {
-	    Map<String, Object> result = new HashMap<>();
-
-	    try {
-	        // Fetch correct answer from Firestore
-	        String correctAnswer = quizService.getCorrectAnswerFromFirestore(userAnswer.getQuizId());
-
-	        if (correctAnswer != null) {
-	            // Compare the selected answer with the correct answer
-	            boolean isCorrect = userAnswer.getSelectedAnswer().equalsIgnoreCase(correctAnswer.trim());
-
-	            // Return the result
-	            result.put("isCorrect", isCorrect);
-	            result.put("correctAnswer", correctAnswer);
-	        } else {
-	            result.put("isCorrect", false);
-	            result.put("message", "No correct answer found for the quiz question.");
-	        }
-
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        result.put("isCorrect", false);
-	        result.put("message", "Error fetching quiz from Firestore.");
-	    }
-
-	    return result;
+	public String contactPage() {
+		return "contact"; // Refers to src/main/resources/templates/about.html
 	}
+	
+	@GetMapping("/quizzes/fetchAll")
+	@ResponseBody
+	public List<Quiz> fetchAllQuizzes() throws java.util.concurrent.ExecutionException, InterruptedException {
+	    // Fetch all quizzes from Firestore and return them as JSON
+	    return quizService.getAllQuizzes();
+	}
+	
+	
+//	@PostMapping("/quizzes/verifyAnswer")
+//	@ResponseBody
+//	public Map<String, Object> verifyAnswer(@RequestBody UserAnswer userAnswer) {
+//	    Map<String, Object> result = new HashMap<>();
+//
+//	    try {
+//	        // Fetch correct answer from Firestore
+//	        String correctAnswer = quizService.getCorrectAnswerFromFirestore(userAnswer.getQuizId());
+//
+//	        if (correctAnswer != null) {
+//	            // Compare the selected answer with the correct answer
+//	            boolean isCorrect = userAnswer.getSelectedAnswer().equalsIgnoreCase(correctAnswer.trim());
+//
+//	            // Return the result
+//	            result.put("isCorrect", isCorrect);
+//	            result.put("correctAnswer", correctAnswer);
+//	        } else {
+//	            result.put("isCorrect", false);
+//	            result.put("message", "No correct answer found for the quiz question.");
+//	        }
+//
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	        result.put("isCorrect", false);
+//	        result.put("message", "Error fetching quiz from Firestore.");
+//	    }
+//
+//	    return result;
+//	}
 
 
 

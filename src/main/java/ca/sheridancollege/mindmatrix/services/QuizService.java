@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import org.hibernate.sql.exec.ExecutionException;
@@ -45,6 +47,10 @@ public class QuizService {
     
     @Autowired
     private Firestore db;
+    
+ // Random instance for generating random numbers
+    private final Random random = new Random();
+    
 
     public void saveQuiz(Quiz quiz) throws java.util.concurrent.ExecutionException {
    
@@ -53,6 +59,7 @@ public class QuizService {
         saveQuizToFirestore(quiz);
     }
     
+ // Method to save the quiz to Firestore
     public void saveQuizToFirestore(Quiz quiz) throws java.util.concurrent.ExecutionException {
         try {
             // Create a map of the quiz data
@@ -62,19 +69,33 @@ public class QuizService {
             quizData.put("answers", quiz.getAnswers());
             quizData.put("correctAnswerText", quiz.getCorrectAnswerText());
 
-            // Use .add() to let Firestore generate an auto-ID for the document
-            ApiFuture<DocumentReference> docRefQuiz = db.collection("quizzes").add(quizData);
+            // Generate the base ID from the current timestamp
+            Long timestamp = System.currentTimeMillis();
 
-            // Get the generated document ID
-            DocumentReference documentReference = docRefQuiz.get();
-            String generatedId = documentReference.getId();
+            // Generate 2-3 random digits instead of 4-5
+            int randomDigits = random.nextInt(900) + 100;  // Generates a random 3-digit number
 
-            // Log the generated document ID
-            System.out.println("Quiz saved with generated ID: " + generatedId);
+            // Combine the random digits and timestamp to form the Long ID (16 digits total)
+            String combinedId = randomDigits + String.valueOf(timestamp); // Safe for 16 digits
+
+            // Set the same ID both as document ID and in the quiz data map
+            quizData.put("id", combinedId);  // Store 'id' as a string in the document data
+
+            // Use .set() with the generated Long ID as the document ID
+            ApiFuture<WriteResult> docRefQuiz = db.collection("quizzes").document(combinedId).set(quizData);
+
+            // Wait for the set operation to complete
+            docRefQuiz.get();
+
+            // Log the generated Long ID
+            System.out.println("Quiz saved with unique String ID: " + combinedId);
         } catch (InterruptedException | ExecutionException e) {
             System.err.println("Error saving quiz to Firestore: " + e.getMessage());
         }
     }
+
+
+
 
 
     // Method to fetch quiz by question from Firestore
@@ -232,19 +253,35 @@ public class QuizService {
     public List<Quiz> getAllQuizzes() throws InterruptedException, ExecutionException, java.util.concurrent.ExecutionException {
         List<Quiz> quizzes = new ArrayList<>();
         
+        // Fetch all documents from the "quizzes" collection
         var quizDocs = db.collection("quizzes").get().get().getDocuments();
 
         for (var doc : quizDocs) {
             Quiz quiz = new Quiz();
+            
+            // Set the quiz fields from Firestore document
             quiz.setSubject(doc.getString("subject"));
             quiz.setQuestion(doc.getString("question"));
             quiz.setAnswers((List<String>) doc.get("answers"));
             quiz.setCorrectAnswerText(doc.getString("correctAnswerText"));
+
+            // Convert the document ID (String) back to Long and set it
+            try {
+                Long quizId = Long.parseLong(doc.getId());  // Convert String to Long
+                quiz.setId(quizId);  // Set the Long ID in Quiz object
+            } catch (NumberFormatException e) {
+                System.err.println("Error converting Firestore document ID to Long: " + doc.getId());
+            }
+            
             quizzes.add(quiz);
         }
 
         return quizzes;
     }
+
+
+
+
     
  // Method to retrieve and log all document IDs (quiz questions) from Firestore
     public List<String> getAllQuizDocumentIds() throws InterruptedException, ExecutionException, java.util.concurrent.ExecutionException {
