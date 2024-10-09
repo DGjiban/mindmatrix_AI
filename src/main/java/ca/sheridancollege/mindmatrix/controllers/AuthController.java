@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -94,6 +95,22 @@ public class AuthController {
             return ResponseEntity.status(500).body(null);  // Handle error
         }
     }
+    
+    @PostMapping("/updatePoints")
+    public ResponseEntity<String> updateUserPoints(@RequestBody Map<String, Object> payload) {
+        try {
+            String email = (String) payload.get("email");
+            int points = (Integer) payload.get("points");
+
+            // Update user points in Firestore
+            firebaseFirestoreService.updateUserPoints(email, points);
+
+            return ResponseEntity.ok("Points updated successfully");
+        } catch (InterruptedException | ExecutionException e) {
+            return ResponseEntity.status(500).body("Failed to update points: " + e.getMessage());
+        }
+    }
+
 
 }
 

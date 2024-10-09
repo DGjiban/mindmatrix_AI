@@ -92,6 +92,7 @@ public class FirebaseFirestoreService {
     }
 
 
+
     // Optionally, add a method to update points
     public String updateUserPoints(String email, int points) throws InterruptedException, ExecutionException {
         Firestore db = FirestoreClient.getFirestore();
@@ -103,12 +104,11 @@ public class FirebaseFirestoreService {
         ApiFuture<WriteResult> writeResult = docRef.update(updates);
         return "User points updated at: " + writeResult.get().getUpdateTime();
     }
+
     
  // Method to fetch the total number of questions from the "questions" collection
     public int getTotalQuestions() throws InterruptedException, ExecutionException {
         Firestore db = FirestoreClient.getFirestore();
-
-        // Access the "questions" collection
         CollectionReference questionsCollection = db.collection("quizzes");
 
         // Get all documents in the collection
@@ -117,6 +117,7 @@ public class FirebaseFirestoreService {
         // Return the total number of documents (questions)
         return querySnapshot.get().size();
     }
+
     
     
 }

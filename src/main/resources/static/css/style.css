@@ -1012,27 +1012,63 @@ input[type="text"] {
 /* Popup notification styling */
 .popup {
     position: fixed;
-    top: 15%;  /* Moved slightly higher */
+    top: 15%;
     left: 50%;
     transform: translateX(-50%);
-    padding: 15px 30px;  /* More padding for better readability */
+    padding: 15px 30px;
     font-size: 20px;
     font-weight: bold;
     color: white;
-    background-color: rgba(0, 0, 0, 0.8);  /* Darker background with slight transparency */
+    background-color: rgba(0, 0, 0, 0.8);  /* Default dark background */
     border-radius: 8px;
     z-index: 1000;
     text-align: center;
+    display: none;  /* Hidden by default */
     transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .popup.correct {
-    background-color: #28a745;  /* Green for correct answers */
+    background-color: #28a745;  /* Green for success */
 }
 
 .popup.incorrect {
-    background-color: #dc3545;  /* Red for incorrect answers */
+    background-color: #dc3545;  /* Red for error */
 }
+
+.summary-box {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 30px;
+    font-size: 18px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    z-index: 1000;
+    text-align: center;
+    width: 400px;
+}
+
+.summary-box h2 {
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.summary-close-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.summary-close-button:hover {
+    background-color: #0056b3;
+}
+
 
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {

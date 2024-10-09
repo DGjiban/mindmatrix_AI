@@ -554,8 +554,9 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener("DOMContentLoaded", function () {
     const cards = document.querySelectorAll('.card');
     let currentCardIndex = 0;
+    let correctAnswersCount = 0;  // Variable to track correct answers
     const answers = [];
-    
+
     // Function to update the card stack positions
     const updateCardStack = () => {
         cards.forEach((card, index) => {
@@ -584,6 +585,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Initially set the correct card positions
     updateCardStack();
 
+    // Event listener for the Next button
     document.querySelectorAll('.next-button').forEach(button => {
         button.addEventListener('click', () => {
             const currentCard = cards[currentCardIndex];
@@ -598,7 +600,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Verify the answer locally and show the popup
                 verifyAnswerLocally(userAnswer, function(isCorrect) {
-                    showPopup(isCorrect);  // Show popup with feedback
+                    if (isCorrect) {
+                        correctAnswersCount++;  // Increment correct answers count
+                        showPopup("Correct Answer!", true);  // Show correct popup
+                    } else {
+                        showPopup("Incorrect Answer!", false);  // Show incorrect popup
+                    }
 
                     // Move to the next card after showing feedback
                     currentCardIndex++;
@@ -617,9 +624,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // Event listener for the Finish button
+    document.querySelector('form[action="/challenge"]').addEventListener('submit', function (event) {
+        event.preventDefault();  // Prevent form submission to handle finish logic
+        
+        // Calculate the total points and update localStorage
+        finishGame();
+    });
+
     // Local verification function
     function verifyAnswerLocally(userAnswer, callback) {
-        // Get quizzes from localStorage
         const quizzes = JSON.parse(localStorage.getItem('quizzes'));
         const quiz = quizzes.find(q => q.id === userAnswer.quizId);
 
@@ -632,20 +646,102 @@ document.addEventListener("DOMContentLoaded", function () {
             callback(false);
         }
     }
+    
+    // Function to show a popup message
+    function showPopup(message, isSuccess = true) {
+        const popup = document.getElementById("answer-popup");
 
-    // Function to show the popup with feedback
-    function showPopup(isCorrect) {
-	    const popup = document.getElementById("answer-popup");
-	    popup.textContent = isCorrect ? "Correct Answer!" : "Incorrect Answer!";
-	    popup.classList.remove("correct", "incorrect");
-	    popup.classList.add(isCorrect ? "correct" : "incorrect");
-	    popup.style.display = "block";
+        if (!popup) {
+            console.error("Popup element not found.");
+            return;
+        }
+
+        // Set the message and styles based on success or failure
+        popup.textContent = message;
+        popup.style.display = "block";
+        popup.style.backgroundColor = isSuccess ? "green" : "red";
+        popup.style.color = "white";
+
+        // Hide the popup after 2 seconds
+        setTimeout(() => {
+            popup.style.display = "none";
+        }, 2000);
+    }
+
+
+    // Function to handle finishing the game
+    function finishGame() {
+	    const totalQuestionsAnswered = answers.length;  // Use answers.length to track how many questions were answered
+	    const currentPoints = parseInt(localStorage.getItem('userPoints')) || 0;  // Get current points from localStorage
+	    const sessionPoints = correctAnswersCount;  // Points collected in this session only
+	    const newPoints = currentPoints + sessionPoints;  // Total points after this session
 	
-	    // Hide the popup after 2 seconds
-	    setTimeout(() => {
-	        popup.style.display = "none";
-	    }, 2000);
+	    // Update the points in localStorage
+	    localStorage.setItem('userPoints', newPoints);
+	    console.log("Updated points in localStorage:", newPoints);
+	
+	    // Push updated points to Firebase and database
+	    updatePointsInFirebase(newPoints)
+	        .then(() => {
+	            console.log('Points successfully updated in Firebase and database');
+	            // Show the summary box with correct session info
+	            showSummaryBox(totalQuestionsAnswered, sessionPoints);  // Pass sessionPoints, not newPoints
+	        })
+	        .catch(error => {
+	            console.error('Error updating points in Firebase:', error);
+	            showPopup('Error updating points. Please try again.', false);
+	        });
 	}
+	
+	// Function to display the summary box
+	function showSummaryBox(totalQuestionsAnswered, sessionPoints) {
+	    const summaryBox = document.getElementById("summary-box");
+	    const summaryText = document.getElementById("summary-text");
+	    const closeSummaryButton = document.getElementById("close-summary");
+	
+	    // Update the content of the summary box with the correct session data
+	    summaryText.textContent = `You answered ${totalQuestionsAnswered} questions and collected ${sessionPoints} points in this game.`;
+	
+	    // Show the summary box
+	    summaryBox.style.display = "block";
+	
+	    // Close the summary box and redirect to challenge.html when the button is clicked
+	    closeSummaryButton.addEventListener("click", () => {
+	        summaryBox.style.display = "none";
+	        window.location.href = '/challenge';  // Redirect to challenge.html
+	    });
+	}
+
+
+
+
+
+
+    // Function to update points in Firebase
+    async function updatePointsInFirebase(newPoints) {
+    const email = localStorage.getItem('userEmail');  // Fetch email from localStorage
+
+    try {
+        const response = await fetch('/auth/updatePoints', {  // Update the endpoint here
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email, points: newPoints })  // Send email and updated points
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update points in the database.');
+        }
+
+        console.log('Points updated in Firebase and database');
+    } catch (error) {
+        console.error('Error updating points:', error);
+        throw error;
+    }
+}
+
 });
+
 
 
