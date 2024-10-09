@@ -572,14 +572,14 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     // Fetch all quizzes and store them in localStorage
-	fetch('/quizzes/fetchAll')
-	    .then(response => response.json())
-	    .then(data => {
-	        // Convert ID to string before storing in localStorage
-	        data.forEach(quiz => quiz.id = String(quiz.id));  // Ensure id is stored as a string
-	        localStorage.setItem('quizzes', JSON.stringify(data));
-	    })
-	    .catch(error => console.error('Error fetching quizzes:', error));
+    fetch('/quizzes/fetchAll')
+        .then(response => response.json())
+        .then(data => {
+            // Convert ID to string before storing in localStorage
+            data.forEach(quiz => quiz.id = String(quiz.id));  // Ensure id is stored as a string
+            localStorage.setItem('quizzes', JSON.stringify(data));
+        })
+        .catch(error => console.error('Error fetching quizzes:', error));
 
     // Initially set the correct card positions
     updateCardStack();
@@ -596,13 +596,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     selectedAnswer: selectedAnswer.value
                 };
 
-                // Verify the answer locally
+                // Verify the answer locally and show the popup
                 verifyAnswerLocally(userAnswer, function(isCorrect) {
-                    if (isCorrect) {
-                        alert("Correct Answer!");
-                    } else {
-                        alert("Incorrect Answer!");
-                    }
+                    showPopup(isCorrect);  // Show popup with feedback
 
                     // Move to the next card after showing feedback
                     currentCardIndex++;
@@ -615,6 +611,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Store the answer for later processing
                 answers.push(userAnswer);
+            } else {
+                alert("Please select an answer before proceeding.");
             }
         });
     });
@@ -626,13 +624,28 @@ document.addEventListener("DOMContentLoaded", function () {
         const quiz = quizzes.find(q => q.id === userAnswer.quizId);
 
         if (quiz) {
-            const correctAnswer = quiz.correctAnswerText.trim();
-            const isCorrect = userAnswer.selectedAnswer === correctAnswer;
+            const correctAnswer = quiz.correctAnswerText.trim().split('Correct answer: ')[1];  // Extract the correct answer
+            const isCorrect = quiz.answers[userAnswer.selectedAnswer] === correctAnswer;
             callback(isCorrect);
         } else {
             console.error('Quiz not found locally for quizId:', userAnswer.quizId);
             callback(false);
         }
     }
+
+    // Function to show the popup with feedback
+    function showPopup(isCorrect) {
+	    const popup = document.getElementById("answer-popup");
+	    popup.textContent = isCorrect ? "Correct Answer!" : "Incorrect Answer!";
+	    popup.classList.remove("correct", "incorrect");
+	    popup.classList.add(isCorrect ? "correct" : "incorrect");
+	    popup.style.display = "block";
+	
+	    // Hide the popup after 2 seconds
+	    setTimeout(() => {
+	        popup.style.display = "none";
+	    }, 2000);
+	}
 });
+
 
