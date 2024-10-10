@@ -526,9 +526,8 @@ input[type="text"] {
 }
 
 #about .team-member img {
-    border-radius: 50%;
+    border-radius: 10%;
     width: 100px;
-    height: 100px;
     margin-right: 20px;
 }
 
