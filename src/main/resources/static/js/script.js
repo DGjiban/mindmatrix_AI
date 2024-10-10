@@ -24,11 +24,11 @@ function initStartupAnimation() {
             startup.style.position = 'absolute';  // Move it off the screen after fading out
             mainContent.style.opacity = 1;  // Show main content
             mainContent.style.visibility = 'visible';
-        }, 500);  // 1-second delay to allow the startup screen to fade out smoothly
+        }, 100);  // 0.1-second delay to allow the startup screen to fade out smoothly
     }
 
     // Simulate delay before startup screen fades out
-    setTimeout(hideStartupScreen, 2000);  // Adjust the delay timing (3 seconds here)
+    setTimeout(hideStartupScreen, 2000);  // Adjust the delay timing (2 seconds here)
 }
 
 // Run the function on page load
