@@ -5,21 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us | MindMatrix</title>
     <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/script.js" defer></script>
 </head>
 <body>
     <div class="content-wrap">
         <nav>
-            <ul>
-				<li><a th:href="@{/}">Home</a></li>
-                <li><a href="#" id="challenge-link">Challenge</a></li>
-				<li><a th:href="@{/about}">About</a></li>
-                <li><a th:href="@{/contact}">Contact</a></li>
-                <!-- Display the user's name here if logged in -->
-			    <li id="user-name" style="display: none;"><a>Welcome, <span id="nickname"></span></a></li>
-			
-			    <li><a th:href="@{/login}" id="login-tab">Login</a></li> 
-			</ul>
-        </nav>
+	        <ul>
+	            <li><a th:href="@{/}">Home</a></li>
+	            <li><a href="#" id="challenge-link">Challenge</a></li>
+	            <li><a th:href="@{/about}">About</a></li>
+	            <li><a th:href="@{/contact}">Contact</a></li>
+	            <li><a th:href="@{/rankings}">Global Ranking</a></li>
+	            <li id="user-name" style="display: none;"><a>Welcome, <span id="nickname"></span></a></li>
+	            <li><a th:href="@{/login}" id="login-tab">Login</a></li>
+	        </ul>
+	    </nav>
 
         <main id="about">
             <h1>About MindMatrix</h1>
