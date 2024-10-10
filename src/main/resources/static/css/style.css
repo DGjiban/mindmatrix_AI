@@ -3,7 +3,6 @@
 
 /* Global styles */
 html, body {
-    height: 100%;
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
@@ -18,14 +17,30 @@ body {
     flex-direction: column;
 }
 
+/* Main Content */
 .content-wrap {
-    flex: 1;
-    width: 100%;
-    padding-bottom: 50px; /* Adjust based on the footer height if needed */
+    margin-left: 230px;  /* Leave space for the fixed navigation bar */
+    padding-bottom: 20px;  /* Add padding at the bottom */
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+    flex-direction: column;  /* Ensure flex layout works vertically */
+    min-height: 100vh;  /* Full height for the entire page */
+}
+
+#main-content {
+    flex-grow: 1;  /* Allow the main content to grow and fill the remaining space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 1.5s ease-in-out;
+    width: 100%;  /* Ensure it fills the full width */
+    height: 100%;  /* Ensure it fills the full height */
 }
 
 
-/* Startup screen */
+/* Startup Screen Styles */
 #startup {
     display: flex;
     justify-content: center;
@@ -33,58 +48,72 @@ body {
     height: 100vh;
     background-color: #001f3f;
     color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
     transition: opacity 1s ease-out;
-    overflow: hidden;
 }
 
-#logo {
-    font-size: 3em;
+#startup h1 {
+    font-size: 3rem;
     color: #fff;
-    transform: scale(3);
-    transition: transform 0.5s ease-out;
+    animation: scaleUp 2s ease forwards;
 }
 
-.scrolled #logo {
-    transform: scale(1);
+@keyframes scaleUp {
+    0% {
+        transform: scale(3);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
-/* Main content visibility */
-#main-content {
-    visibility: hidden;
+/* Fade-out effect */
+.scrolled #startup {
     opacity: 0;
-    transition: visibility 0s, opacity 1.5s linear;
-    height: 100%;
-    margin-left: 220px;
-    padding-bottom: 20px;
+    visibility: hidden;
+    transition: opacity 0.5s ease;
 }
 
+/* Make main content visible after startup animation */
 .scrolled #main-content {
-    visibility: visible;
     opacity: 1;
-    overflow: auto;
+    visibility: visible;
 }
 
 /* Hero Section */
 .hero {
     background-color: #004080;
     color: white;
-    padding: 20px;
+    padding: 0px 50px 60px;
     text-align: center;
+    width: 100%;  /* Full width */
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  /* Add a subtle shadow */
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.8rem;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 
-/* Navigation */
+/* Fixed Navigation Bar */
 nav {
     position: fixed;
     top: 0;
     left: 0;
-    height: 100%;
-    width: 200px;
+    width: 200px;  /* Width of the navigation bar */
+    height: 100%;  /* Full height of the viewport */
     background-color: #333;
     padding-top: 20px;
     box-sizing: border-box;
@@ -112,27 +141,54 @@ nav ul li a:hover {
     background-color: #555;
 }
 
-/* Hero Section */
-.hero {
-    background-color: #004080;
-    color: white;
-    padding: 50px;
+/* Adjust tab container for Flashcards and Quizzes */
+.tab-container {
+    flex-grow: 1;  /* Let the tab container grow to fill the vertical space */
+    max-width: 100%;  /* Full width of the parent */
+    width: 100%;  /* Ensure it stretches across the entire content */
+    margin-top: 20px;
+    margin-right: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;  /* Vertical layout */
+    justify-content: center;
+}
+
+.tab-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.tab-link {
+    padding: 15px 30px;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
     text-align: center;
-    margin: 0;
+    transition: background-color 0.3s ease;
+    flex: 1;
 }
 
-.hero h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
+.tab-link.active {
+    background-color: #007bff;
+    color: white;
 }
 
-.hero p {
-    font-size: 1.5rem;
-    max-width: 500px;
-    margin-bottom: 20px;
+.tab-content {
+    display: none;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    flex-grow: 1;  /* Grow to fill remaining space in tab container */
 }
 
-
+.tab-content.active {
+    display: block;
+}
 
 /* Bottom Sections */
 .bottom-sections-container {
@@ -298,45 +354,6 @@ nav ul li a:hover {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: none;
-}
-
-/* Tab Component */
-.tab-container {
-    display: flex;
-    flex-direction: column; /* Align items vertically */
-    margin-top: 20px;
-}
-
-.tab-buttons {
-    display: flex;
-    flex-direction: row; /* Align buttons horizontally */
-    margin-bottom: 10px; /* Space between buttons and content */
-}
-
-.tab-link {
-    padding: 10px 20px;
-    margin-right: 5px; /* Space between buttons */
-    background-color: #f0f0f0;
-    border: none;
-    cursor: pointer;
-    flex: 1; /* Buttons take equal space */
-    text-align: center; /* Center text inside buttons */
-}
-
-.tab-link.active {
-    background-color: #007bff;
-    color: white;
-}
-
-.tab-content {
-    display: none;
-    padding: 20px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-}
-
-.tab-content.active {
-    display: block;
 }
 
 
@@ -602,49 +619,42 @@ input[type="text"] {
             background-color: #0056b3;
         }
         
- /* Challen/* Challenge Page Specific Styles */
+/* Challenge Page Specific Styles */
 #challenge {
-    flex: 1;
     padding: 20px;
-    margin-left: 200px; /* Space for the fixed navigation panel */
+    background-color: #f0f0f0;
 }
 
-
-/* Games Section */
 #games {
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 75px;
     background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 100px auto;
     max-width: 600px;
-    margin: 20px auto;
 }
 
 #games h2 {
     font-size: 2rem;
-    color: #000000;
     margin-bottom: 20px;
     text-align: center;
-}
-
-#gameRequestForm {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
 }
 
 #gameRequestForm label {
     font-size: 1rem;
     color: #333;
+    text-align: center;
 }
 
-#gameRequestForm input[type="number"], 
+#gameRequestForm input[type="number"],
 #gameRequestForm input[type="text"] {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 16px;
+    display: block;
+    margin-bottom: 10px;
+    width: calc(100% - 22px);
 }
 
 #gameRequestForm button {
@@ -656,123 +666,239 @@ input[type="text"] {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    align-self: center;
+    display: block;
+    width: 100%;
+    margin-top: 50px;
 }
 
 #gameRequestForm button:hover {
     background-color: #e68a00;
 }
 
-
-
-/* Game.html */
 /* Stack cards in the container */
-        .game-container {
+
+/* Game container */
+#game-section {
+ 	display: flex;
+ 	justify-content: center;
+ 	height: 100%;
+ 	background-color: #f9f9f9;
+ }
+ 
+.game-container {
     position: relative;
     width: 300px;
-    height: 400px;
-    margin: 0 auto;
+    height: 450px;  /* Increased height for better spacing */
+    margin: 25px auto;
+    perspective: 1000px;  /* Add 3D perspective for the card stack */
+    padding: 15px;
 }
 
-
-        /* Poker card styles */
-      .card {
+/* Card styles */
+.card {
     width: 100%;
     height: 100%;
-    border-radius: 10px;
-    background-color: white;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 15px;  /* Softer rounded corners */
+    background-color: #fff;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 25px;
     text-align: center;
     position: absolute;
-    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
     opacity: 0;
+    backface-visibility: hidden;  /* Improve 3D effect on stacking */
 }
 
-
-        /* Initial stacking effect for cards behind the main card */
-       .card:nth-child(1) {
+/* Improved stacking effect for the top 3 cards */
+.card:nth-child(1) {
     z-index: 3;
     transform: translateY(0px) scale(1);
     opacity: 1;
 }
+
 .card:nth-child(2) {
     z-index: 2;
-    transform: translateY(10px) scale(0.98);
-    opacity: 0.8;
+    transform: translateY(20px) scale(0.98);  /* More subtle stacking */
+    opacity: 0.9;
 }
+
 .card:nth-child(3) {
     z-index: 1;
-    transform: translateY(20px) scale(0.96);
-    opacity: 0.6;
+    transform: translateY(40px) scale(0.96);  /* Slight stacking distance */
+    opacity: 0.8;
 }
 
+/* Add a smooth fade-out animation for moving cards */
+.card.move-out {
+    transform: translateX(100%);
+    opacity: 0;
+}
 
-        /* Card question and options */
-      .card-question {
-    font-size: 20px;
+/* Card question */
+.card-question {
+    font-size: 22px;
     font-weight: bold;
+    color: #333;  /* Darker color for better readability */
     margin-bottom: 20px;
 }
+
+/* Card options list */
 .card-options {
-    list-style-type: none;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 100%;  /* Full width of the card */
+    margin-left: -15px;  /* Reset default margin */
 }
+
+/* Styling for individual options */
 .card-options li {
+    display: flex;
+    align-items: center;
+    width: 100%;
     margin: 10px 0;
+    background-color: #f8f9fa;  /* Light background for better visibility */
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;  /* Smooth hover effect */
 }
+
+.card-options li:hover {
+    background-color: #e2e6ea;  /* Slight darkening on hover */
+}
+
+.card-options input[type="radio"] {
+    margin-right: 10px;
+}
+
+.card-options label {
+    flex-grow: 1;
+    color: #555;  /* Lighter label color */
+}
+
+/* Button styling */
 .card button {
     background-color: #007bff;
     color: white;
     border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card button:hover {
+    background-color: #0056b3;
+    box-shadow: 0px 4px 12px rgba(0, 91, 187, 0.5);  /* Subtle shadow on hover */
+}
+
+/* Popup notification styling */
+.popup {
+    position: fixed;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 30px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.8);  /* Default dark background */
+    border-radius: 8px;
+    z-index: 1000;
+    text-align: center;
+    display: none;  /* Hidden by default */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.popup.correct {
+    background-color: #28a745;  /* Green for success */
+}
+
+.popup.incorrect {
+    background-color: #dc3545;  /* Red for error */
+}
+
+.summary-box {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 30px;
+    font-size: 18px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    z-index: 1000;
+    text-align: center;
+    width: 400px;
+}
+
+.summary-box h2 {
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.summary-close-button {
+    margin-top: 20px;
     padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
     border-radius: 5px;
     cursor: pointer;
 }
-.card button:hover {
+
+.summary-close-button:hover {
     background-color: #0056b3;
 }
 
-        /* Hide other cards initially, except the top ones */
-        .card.move-out {
-            transform: translateX(100%); /* Move the card out to the right */
-            opacity: 0;
-        }
-
-        /* Table styles for showing results */
-       #results-table {
-    margin-top: 50px;
-    display: none;
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-}
-#results-table th, #results-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+/* Finish Game Button Styling */
+#finish-game-section {
+    text-align: center;
+    margin-top: 60px;
+    margin-left: 75px;
 }
 
-#show-answers-btn {
-    position: fixed;
-    top: 50%;
-    left: 20px;
-    transform: translateY(-50%);
-    display: none;
-    z-index: 100;
-    background-color: #28a745;
+#finish-game-section button {
+    background-color: #28a745;  /* Green for Finish button */
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 25px;
+    font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
-#show-answers-btn:hover {
+
+#finish-game-section button:hover {
     background-color: #218838;
+    box-shadow: 0px 4px 12px rgba(40, 167, 69, 0.5);
+}
+
+
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .game-container {
+        width: 100%;
+        height: auto;
+        padding: 20px;
+    }
+
+    .card {
+        width: 100%;
+        height: auto;
+        padding: 20px;
+    }
+
+    .summary-box {
+        width: 90%;
+    }
 }
 
 
@@ -896,247 +1022,130 @@ input[type="text"] {
     background-color: #e68a00;
 }
 
-/* Stack cards in the container */
 
-/* Game container */
-.game-container {
-    position: relative;
-    width: 300px;
-    height: 450px;  /* Increased height for better spacing */
-    margin: 0 auto;
-    perspective: 1000px;  /* Add 3D perspective for the card stack */
-}
 
-/* Card styles */
-.card {
-    width: 100%;
-    height: 100%;
-    border-radius: 15px;  /* Softer rounded corners */
+/* Ranking Page Specific Styles */
+/* #ranking-page {
+    margin-left: 200px; Space for the fixed navigation panel
+    padding: 20px;
+} */
+
+.ranking-content {
+    margin: 20px auto;
+    max-width: 800px;
     background-color: #fff;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar {
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    padding: 25px;
-    text-align: center;
-    position: absolute;
-    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-    opacity: 0;
-    backface-visibility: hidden;  /* Improve 3D effect on stacking */
-}
-
-/* Improved stacking effect for the top 3 cards */
-.card:nth-child(1) {
-    z-index: 3;
-    transform: translateY(0px) scale(1);
-    opacity: 1;
-}
-
-.card:nth-child(2) {
-    z-index: 2;
-    transform: translateY(20px) scale(0.98);  /* More subtle stacking */
-    opacity: 0.9;
-}
-
-.card:nth-child(3) {
-    z-index: 1;
-    transform: translateY(40px) scale(0.96);  /* Slight stacking distance */
-    opacity: 0.8;
-}
-
-/* Add a smooth fade-out animation for moving cards */
-.card.move-out {
-    transform: translateX(100%);
-    opacity: 0;
-}
-
-/* Card question */
-.card-question {
-    font-size: 22px;
-    font-weight: bold;
-    color: #333;  /* Darker color for better readability */
     margin-bottom: 20px;
 }
 
-/* Card options list */
-.card-options {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;  /* Full width of the card */
-}
-
-/* Styling for individual options */
-.card-options li {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    margin: 10px 0;
-    background-color: #f8f9fa;  /* Light background for better visibility */
+.search-bar input {
     padding: 10px;
     border-radius: 5px;
-    transition: background-color 0.3s ease;  /* Smooth hover effect */
-}
-
-.card-options li:hover {
-    background-color: #e2e6ea;  /* Slight darkening on hover */
-}
-
-.card-options input[type="radio"] {
+    border: 1px solid #ccc;
+    width: 70%;
     margin-right: 10px;
 }
 
-.card-options label {
-    flex-grow: 1;
-    color: #555;  /* Lighter label color */
-}
-
-/* Button styling */
-.card button {
+.search-bar button {
     background-color: #007bff;
     color: white;
-    border: none;
-    padding: 12px 25px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card button:hover {
-    background-color: #0056b3;
-    box-shadow: 0px 4px 12px rgba(0, 91, 187, 0.5);  /* Subtle shadow on hover */
-}
-
-/* Popup notification styling */
-.popup {
-    position: fixed;
-    top: 15%;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 15px 30px;
-    font-size: 20px;
-    font-weight: bold;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.8);  /* Default dark background */
-    border-radius: 8px;
-    z-index: 1000;
-    text-align: center;
-    display: none;  /* Hidden by default */
-    transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.popup.correct {
-    background-color: #28a745;  /* Green for success */
-}
-
-.popup.incorrect {
-    background-color: #dc3545;  /* Red for error */
-}
-
-.summary-box {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 30px;
-    font-size: 18px;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    z-index: 1000;
-    text-align: center;
-    width: 400px;
-}
-
-.summary-box h2 {
-    margin-top: 0;
-    font-size: 24px;
-}
-
-.summary-close-button {
-    margin-top: 20px;
     padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
     border-radius: 5px;
+    border: none;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.summary-close-button:hover {
+.search-bar button:hover {
     background-color: #0056b3;
 }
 
+/* Table Styles for Rankings */
+table {
+	max-width: 100%;
+    width: 750px;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1rem;
+}
 
-/* Responsive design for smaller screens */
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background-color: #004080;
+    color: white;
+    font-weight: bold;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+tbody tr:nth-child(odd) td {
+    background-color: #f0f0f0;
+}
+
+/* Search Results Section */
+#search-results {
+    margin-top: 40px;
+}
+
+#search-results h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#search-results-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#search-results-table th, #search-results-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+#search-results-table th {
+    background-color: #007bff;
+    color: white;
+}
+
+#search-results-table td {
+    background-color: #f8f9fa;
+}
+
+/* Media Queries */
 @media (max-width: 768px) {
-    .game-container {
-        width: 100%;
-        height: auto;
-        padding: 20px;
+    #ranking-page {
+        margin-left: 0;
+        padding: 10px;
     }
 
-    .card {
+    .search-bar {
+        flex-direction: column;
+    }
+
+    .search-bar input {
         width: 100%;
-        height: auto;
-        padding: 20px;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .search-bar button {
+        width: 100%;
     }
 }
 
-        
-        
-/* Challenge Page Specific Styles */
-#challenge {
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
-
-        #games {
-            border: 2px solid black;
-            border-radius: 5px;
-            padding: 20px;
-            background-color: #fff;
-            margin: 0 auto;
-            max-width: 600px;
-        }
-
-        #games h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        #gameRequestForm label {
-            font-size: 1rem;
-            color: #333;
-        }
-
-        #gameRequestForm input[type="number"],
-        #gameRequestForm input[type="text"] {
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            display: block;
-            margin-bottom: 10px;
-            width: calc(100% - 22px);
-        }
-
-        #gameRequestForm button {
-            background-color: #ff9900;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: block;
-            width: 100%;
-        }
-
-        #gameRequestForm button:hover {
-            background-color: #e68a00;
-        }

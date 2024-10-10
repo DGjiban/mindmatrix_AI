@@ -8,7 +8,9 @@ import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import ca.sheridancollege.mindmatrix.beans.User;
@@ -94,16 +96,17 @@ public class FirebaseFirestoreService {
 
 
     // Optionally, add a method to update points
-    public String updateUserPoints(String email, int points) throws InterruptedException, ExecutionException {
+    public String updateUserPoints(String email, String points) throws InterruptedException, ExecutionException {
         Firestore db = FirestoreClient.getFirestore();
         DocumentReference docRef = db.collection("users").document(email);
 
         Map<String, Object> updates = new HashMap<>();
-        updates.put("points", points);  // Only update points
+        updates.put("points", points);  // Store points as a string
 
         ApiFuture<WriteResult> writeResult = docRef.update(updates);
         return "User points updated at: " + writeResult.get().getUpdateTime();
     }
+
 
     
  // Method to fetch the total number of questions from the "questions" collection
@@ -118,6 +121,38 @@ public class FirebaseFirestoreService {
         return querySnapshot.get().size();
     }
 
-    
+    public List<User> getRankedUsersByPoints() throws InterruptedException, ExecutionException {
+        Firestore db = FirestoreClient.getFirestore();
+        CollectionReference usersCollection = db.collection("users");
+
+        // Fetch all user documents
+        ApiFuture<QuerySnapshot> querySnapshot = usersCollection.get();
+
+        List<User> users = new ArrayList<>();
+        for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+            User user = document.toObject(User.class);
+
+            // Handle potential null or empty points
+            String pointsString = document.getString("points");
+            int points = 0;  // Default to 0 if points are not valid
+
+            if (pointsString != null && !pointsString.trim().isEmpty()) {
+                try {
+                    points = Integer.parseInt(pointsString);  // Convert to integer if possible
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid points value for user: " + user.getName());
+                }
+            }
+
+            user.setPoints(Integer.toString(points));  // Ensure points are stored back as a string
+            users.add(user);
+        }
+
+        // Sort users by points in descending order
+        users.sort((u1, u2) -> Integer.compare(Integer.parseInt(u2.getPoints()), Integer.parseInt(u1.getPoints())));
+
+        return users;
+    }
+
     
 }

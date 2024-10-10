@@ -6,38 +6,38 @@
     <title>MindMatrix</title>
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/script.js" defer></script>
-
     <script type="text/javascript" src="https://cdn.weglot.com/weglot.min.js"></script>
     <script>
         Weglot.initialize({
             api_key: 'wg_da9e1bc06ffb50ab190ecf58a9b02ad10'
         });  
     </script>
-    <!-- Language Translation API Weglot complete here-->
-
 </head>
 <body>
-    <div class="content-wrap">
-        <div id="startup">
-            <h1 id="logo">MindMatrix</h1>
-        </div>
 
-        <main id="main-content" style="opacity: 0; visibility: hidden;">
-            <nav>
-			    <ul>
-			        <li><a th:href="@{/}">Home</a></li>
-			        <li><a href="#" id="challenge-link">Challenge</a></li>
-			        <li><a th:href="@{/about}">About</a></li>
-			        <li><a th:href="@{/contact}">Contact</a></li>
-			
-			        <!-- Display the user's name here if logged in -->
-			        <li id="user-name" style="display: none;"><a>Welcome, <span id="nickname"></span></a></li>
-			
-			        <li><a th:href="@{/login}" id="login-tab">Login</a></li> 
-			    </ul>
-			</nav>
+    <!-- Startup screen -->
+    <div id="startup">
+        <h1 id="logo">MindMatrix</h1>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a href="#" id="challenge-link">Challenge</a></li>
+            <li><a th:href="@{/about}">About</a></li>
+            <li><a th:href="@{/contact}">Contact</a></li>
+            <li><a th:href="@{/rankings}">Global Ranking</a></li>
+            <li id="user-name" style="display: none;"><a>Welcome, <span id="nickname"></span></a></li>
+            <li><a th:href="@{/login}" id="login-tab">Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="content-wrap">
+        <main id="main-content">
             <section id="home" class="hero">
-                <h1 th:text="${message}">Welcome to MindMatrix</h1>
+                <h1 th:text="${message}"></h1>
                 <p>Your journey into the world of knowledge begins here.</p>
             </section>
 
@@ -51,10 +51,10 @@
                 <div id="flashcards" class="tab-content active">
                     <h2>Flashcards</h2>
                     <form id="flashcard-form" action="/flashcards/generate" method="get">
-                        <label for="number">Number of Flashcards:</label> 
+                        <label for="number">Number of Flashcards:</label>
                         <input type="number" id="number" name="number" min="1" required>
                         
-                        <label for="prompt">Subject:</label> 
+                        <label for="prompt">Subject:</label>
                         <input type="text" id="prompt" name="prompt" required>
 
                         <p><button type="submit">Generate Flashcards</button></p>
@@ -64,13 +64,13 @@
                 <div id="quizzes" class="tab-content">
                     <h2>Quizzes</h2>
                     <form id="quiz-form" action="/quizzes/generate" method="get">
-                        <label for="quizTimer">Quiz time (minutes):</label> 
+                        <label for="quizTimer">Quiz time (minutes):</label>
                         <input type="number" id="quizTimer" name="quizTimer" min="1" required>
                         
-                        <label for="quizNumber">Number of Questions:</label> 
+                        <label for="quizNumber">Number of Questions:</label>
                         <input type="number" id="quizNumber" name="number" min="1" required>
                         
-                        <label for="subject">Subject:</label> 
+                        <label for="subject">Subject:</label>
                         <input type="text" id="subject" name="subject" required>
 
                         <p><button type="submit">Start Quiz</button></p>
@@ -78,8 +78,7 @@
                 </div>
             </div>
         </main>
-      </div>
-
+    </div>
 
     <footer class="footer">
         <p>&copy; 2024 MindMatrix. All rights reserved.</p>

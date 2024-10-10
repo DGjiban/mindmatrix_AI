@@ -11,22 +11,29 @@ function initStartupAnimation() {
         return;
     }
 
+    // Initially hide the main content
     mainContent.style.opacity = 0;
     mainContent.style.visibility = 'hidden';
 
-    function onScroll() {
-        startup.style.opacity = 0;
+    // Function to hide the startup screen and show main content
+    function hideStartupScreen() {
+        startup.style.opacity = 0;  // Fade out the startup screen
         startup.style.visibility = 'hidden';
+
         setTimeout(() => {
-            startup.style.position = 'absolute';
-        }, 500);
-        mainContent.style.opacity = 1;
-        mainContent.style.visibility = 'visible';
-        window.removeEventListener('scroll', onScroll);
+            startup.style.position = 'absolute';  // Move it off the screen after fading out
+            mainContent.style.opacity = 1;  // Show main content
+            mainContent.style.visibility = 'visible';
+        }, 500);  // 1-second delay to allow the startup screen to fade out smoothly
     }
 
-    window.addEventListener('scroll', onScroll);
+    // Simulate delay before startup screen fades out
+    setTimeout(hideStartupScreen, 2000);  // Adjust the delay timing (3 seconds here)
 }
+
+// Run the function on page load
+document.addEventListener("DOMContentLoaded", initStartupAnimation);
+
 
 // index tab function
 document.addEventListener('DOMContentLoaded', function () {
@@ -718,16 +725,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // Function to update points in Firebase
-    async function updatePointsInFirebase(newPoints) {
+async function updatePointsInFirebase(newPoints) {
     const email = localStorage.getItem('userEmail');  // Fetch email from localStorage
 
     try {
+        // Convert the points to a string before sending to Firebase
+        const pointsString = newPoints.toString();  // Convert int to string
+
         const response = await fetch('/auth/updatePoints', {  // Update the endpoint here
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email: email, points: newPoints })  // Send email and updated points
+            body: JSON.stringify({ email: email, points: pointsString })  // Send email and updated points as a string
         });
 
         if (!response.ok) {
@@ -741,7 +751,82 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 }
 
+
 });
+
+// ============================
+//  Ranking Logic
+// ============================
+// Ensure the ranking script only runs on the ranking page
+document.addEventListener('DOMContentLoaded', function () {
+    const rankingPage = document.getElementById('ranking-page');
+
+    // Check if we're on the ranking page
+    if (rankingPage) {
+        loadRankings();  // Load all rankings when the page loads
+
+        // Search button event listener
+        const searchButton = document.getElementById('searchButton');
+        searchButton.addEventListener('click', searchUser);
+    }
+});
+
+// Function to load all rankings
+function loadRankings() {
+    fetch('/rankings/topUsers')
+        .then(response => response.json())
+        .then(data => displayRankings(data))
+        .catch(error => console.error('Error fetching rankings:', error));
+}
+
+// Function to display rankings in the main table
+function displayRankings(users) {
+    const rankingBody = document.getElementById('ranking-body');
+    rankingBody.innerHTML = '';  // Clear the table
+
+    users.forEach((user, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${user.name}</td>
+            <td>${user.points}</td>
+        `;
+        rankingBody.appendChild(row);
+    });
+}
+
+// Function to search for a user by name
+function searchUser() {
+    const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+    const searchBody = document.getElementById('search-body');
+    searchBody.innerHTML = '';  // Clear previous search results
+
+    if (searchTerm === '') {
+        return;  // If search term is empty, do nothing
+    }
+
+    fetch(`/rankings/search?name=${searchTerm}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="3">No users found with name "${searchTerm}"</td>`;
+                searchBody.appendChild(row);
+            } else {
+                // Display search results in the separate table
+                data.forEach((user, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${user.name}</td>
+                        <td>${user.points}</td>
+                    `;
+                    searchBody.appendChild(row);
+                });
+            }
+        })
+        .catch(error => console.error('Error fetching search results:', error));
+}
 
 
 
