@@ -436,188 +436,186 @@ input[type="text"] {
 }
 
 /* About Page Styles */
-        #about {
-            background-color: #f0f4f8;
-            padding: 40px 20px;
-            text-align: center;
-                        margin-left: 200px; /* Space for the fixed navigation panel */
-            
-        }
+#about {
+    background-color: #f0f4f8;
+    padding: 40px 20px;
+    text-align: center;
+    margin-left: 200px; /* Space for fixed navigation */
+}
 
-        #about h1 {
-            font-size: 2.5rem;
-            color: #004080;
-            margin-bottom: 20px;
-        }
+#about h1 {
+    font-size: 2.5rem;
+    color: #004080;
+    margin-bottom: 20px;
+}
 
-        #about p {
-            font-size: 1.2rem;
-            color: #333;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+#about p {
+    font-size: 1.2rem;
+    color: #333;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
 
-        #about .section {
-            margin: 30px 0;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+#about .section {
+    margin: 30px 0;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-        #about .section h2 {
-            font-size: 2rem;
-            color: #004080;
-            margin-bottom: 15px;
-        }
+#about .section h2 {
+    font-size: 2rem;
+    color: #004080;
+    margin-bottom: 15px;
+}
 
-        #about .section p {
-            font-size: 1rem;
-            color: #555;
-            line-height: 1.6;
-        }
+#about .section p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+}
 
-        #about .section img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin-top: 15px;
-        }
+#about .team-member {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
 
-        /* Team Styles */
-        .team-member {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            text-align: left;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+#about .team-member img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+}
 
-        .team-member img {
-            border-radius: 50%;
-            width: 100px;
-            height: 100px;
-            margin-right: 20px;
-        }
+#about .team-member div {
+    max-width: 600px;
+}
 
-        .team-member div {
-            max-width: 600px;
-        }
+#about .team-member h3 {
+    margin: 0;
+    color: #004080;
+    font-size: 1.5rem;
+}
 
-        .team-member h3 {
-            margin: 0;
-            color: #004080;
-            font-size: 1.5rem;
-        }
+#about .team-member p {
+    margin: 5px 0 0 0;
+    color: #555;
+}
 
-        .team-member p {
-            margin: 5px 0 0 0;
-            color: #555;
-        }
+/* Responsive Design for About Page */
+@media (max-width: 768px) {
+    #about {
+        margin-left: 0; /* No margin for smaller screens */
+    }
 
-        /* Footer */
-       /*  .footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 20px 0;
-            width: 100%;
-        } */
+    .team-member {
+        flex-direction: column;
+        text-align: center;
+    }
 
-        /* Responsive Design for About Page */
-        @media (max-width: 768px) {
-            #about p {
-                font-size: 1rem;
-            }
+    .team-member img {
+        margin-bottom: 10px;
+    }
+}
 
-            #about .section {
-                margin: 20px 0;
-            }
-
-            #about .section h2 {
-                font-size: 1.5rem;
-            }
-
-            .team-member {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .team-member img {
-                margin: 0 0 10px 0;
-            }
-        }
-        
 /* Contact Page Styles */
-        #contact-page {
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .contact-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .contact-header h1 {
-            font-size: 2.5rem;
-            color: #004080;
-        }
-        .contact-header p {
-            font-size: 1.2rem;
-            color: #555;
-        }
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        .contact-info p {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-        }
-        .contact-info a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-        .contact-info a:hover {
-            color: #0056b3;
-        }
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .contact-form label {
-            font-size: 1.1rem;
-            color: #333;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .contact-form input, .contact-form textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-        .contact-form button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1.1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .contact-form button:hover {
-            background-color: #0056b3;
-        }
+#contact-page {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.contact-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.contact-header h1 {
+    font-size: 2.5rem;
+    color: #004080;
+}
+
+.contact-header p {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.contact-info p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.contact-info a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.contact-info a:hover {
+    color: #0056b3;
+}
+
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.contact-form label {
+    font-size: 1.1rem;
+    color: #333;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.contact-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.contact-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Design for Contact Page */
+@media (max-width: 768px) {
+    .contact-header h1 {
+        font-size: 2rem;
+    }
+
+    .contact-header p {
+        font-size: 1rem;
+    }
+}
+
         
 /* Challenge Page Specific Styles */
 #challenge {
@@ -1021,14 +1019,6 @@ input[type="text"] {
 .guest-button button:hover {
     background-color: #e68a00;
 }
-
-
-
-/* Ranking Page Specific Styles */
-/* #ranking-page {
-    margin-left: 200px; Space for the fixed navigation panel
-    padding: 20px;
-} */
 
 .ranking-content {
     margin: 20px auto;
