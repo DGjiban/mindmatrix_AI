@@ -16,7 +16,9 @@
                 <li><a th:href="@{/about}">About</a></li>
                 <li><a th:href="@{/contact}">Contact</a></li>
                 <li><a th:href="@{/rankings}">Global Ranking</a></li>
-                <li id="user-name" style="display: none;"><a>Welcome, <span id="nickname"></span></a></li>
+                <li id="user-name" style="display: none;">
+				    <a th:href="@{/profile}">Welcome, <span id="nickname"></span></a>
+				</li>
                 <li><a th:href="@{/login}" id="login-tab">Login</a></li>
             </ul>
         </nav>
