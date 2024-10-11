@@ -759,6 +759,7 @@ async function updatePointsInFirebase(newPoints) {
 //  Ranking Logic
 // ============================
 // Ensure the ranking script only runs on the ranking page
+// Ensure the ranking script only runs on the ranking page
 document.addEventListener('DOMContentLoaded', function () {
     const rankingPage = document.getElementById('ranking-page');
 
@@ -780,20 +781,54 @@ function loadRankings() {
         .catch(error => console.error('Error fetching rankings:', error));
 }
 
-// Function to display rankings in the main table
+// Function to adjust font size for long names
+function adjustFontSizeForLongNames(element, maxLength) {
+    const nameLength = element.textContent.length;
+    if (nameLength > maxLength) {
+        element.style.fontSize = `${Math.max(12, 20 - (nameLength - maxLength))}px`; // Adjust font size dynamically
+    }
+}
+
+// Function to display rankings on the podium and in the main table
 function displayRankings(users) {
     const rankingBody = document.getElementById('ranking-body');
     rankingBody.innerHTML = '';  // Clear the table
 
-    users.forEach((user, index) => {
+    // Fill podium for the top 3 users
+    if (users.length >= 3) {
+        // Gold (1st place)
+        const firstPlaceName = document.getElementById('first-place');
+        const firstPlacePoints = document.getElementById('first-points');
+        firstPlaceName.textContent = users[0].name;
+        firstPlacePoints.textContent = users[0].points + ' points';
+        adjustFontSizeForLongNames(firstPlaceName, 8);
+
+        // Silver (2nd place)
+        const secondPlaceName = document.getElementById('second-place');
+        const secondPlacePoints = document.getElementById('second-points');
+        secondPlaceName.textContent = users[1].name;
+        secondPlacePoints.textContent = users[1].points + ' points';
+        adjustFontSizeForLongNames(secondPlaceName, 8);
+
+        // Bronze (3rd place)
+        const thirdPlaceName = document.getElementById('third-place');
+        const thirdPlacePoints = document.getElementById('third-points');
+        thirdPlaceName.textContent = users[2].name;
+        thirdPlacePoints.textContent = users[2].points + ' points';
+        adjustFontSizeForLongNames(thirdPlaceName,8);
+    }
+
+    // Display users ranked 4th to 10th in the table
+    for (let i = 3; i < users.length && i < 10; i++) {
+        const user = users[i];
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${index + 1}</td>
+            <td>${i + 1}</td>
             <td>${user.name}</td>
             <td>${user.points}</td>
         `;
         rankingBody.appendChild(row);
-    });
+    }
 }
 
 // Function to search for a user by name

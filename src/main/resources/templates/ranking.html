@@ -31,10 +31,26 @@
             </section>
 
             <div class="ranking-content">
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Search by name">
-                    <button id="searchButton">Search</button>
-                </div>
+            		<div class="podium-container">
+				    <div class="podium-item silver">
+				        <div class="podium-rank 2nd">2nd</div>
+				        <div class="user-name" id="second-place">User 2</div>
+				        <div class="user-points" id="second-points">0 points</div> <!-- Points added here -->
+				    </div>
+				    <div class="podium-item gold">
+				        <div class="podium-rank first">1st</div>
+				        <div class="user-name" id="first-place">User 1</div>
+				        <div class="user-points" id="first-points">0 points</div> <!-- Points added here -->
+				    </div>
+				    <div class="podium-item bronze">
+				        <div class="podium-rank 3rd">3rd</div>
+				        <div class="user-name" id="third-place">User 3</div>
+				        <div class="user-points" id="third-points">0 points</div> <!-- Points added here -->
+				    </div>
+				</div>
+
+
+                
 
                 <table id="ranking-table">
                     <thead>
@@ -49,6 +65,10 @@
                     </tbody>
                 </table>
                 <hr>
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search by name">
+                    <button id="searchButton">Search</button>
+                </div>
                 <div id="search-results">
                     <h2>Search Results</h2>
                     <table id="search-results-table">

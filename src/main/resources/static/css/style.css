@@ -1060,6 +1060,96 @@ input[type="text"] {
     background-color: #e68a00;
 }
 
+/* Grid Styles */
+.podium-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    justify-content: center; /* Center the items horizontally */
+    align-items: end; /* Align the podium items to the bottom */
+    margin: 20px 0;
+    width: 60%; /* Reduce width to bring podium items closer */
+    margin-left: auto;
+    margin-right: auto; /* Center the container itself */
+}
+
+.podium-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100px;
+    background-color: #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.podium-item:hover {
+    transform: translateY(-10px);
+}
+
+.podium-item.gold {
+    background-color: gold;
+    height: 180px; /* Highest podium for 1st place */
+}
+
+.podium-item.silver {
+    background-color: silver;
+    height: 140px; /* Second tallest for 2nd place */
+}
+
+.podium-item.bronze {
+    background-color: #cd7f32; /* Bronze color */
+    height: 100px; /* Shortest for 3rd place */
+}
+
+.podium-rank {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.user-name {
+    font-size: 1.2em;
+    color: white;
+}
+
+.user-points {
+ 	font-size: 1em;
+ 	color: white;
+ }
+
+/* Animation for podium */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-15px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+.podium-item.gold {
+    animation: bounce 2s infinite;
+}
+
+.podium-item.silver {
+    animation: bounce 2s 0.2s infinite;
+}
+
+.podium-item.bronze {
+    animation: bounce 2s 0.4s infinite;
+}
+
+
+
+/* Ranking Page Styles */
 .ranking-content {
     margin: 20px auto;
     max-width: 800px;
@@ -1181,65 +1271,77 @@ tbody tr:nth-child(odd) td {
 
 /* Profile Page Styles */
 .profile-section {
-    text-align: center;
-    padding: 40px 20px;
-    background-color: #f0f4f8;
+    padding: 0px 50px;
+    background-color: #004080;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
 }
-
 /* Profile Card */
 .profile-card {
-    background-color: #fff;
+    display: grid;
+    grid-template-rows: auto auto; /* Rows for content and button */
+    grid-gap: 20px;
+    align-items: center;
+    border: 1px solid #ddd;
     border-radius: 10px;
+    padding: 20px 50px;
+    margin: 0px 20px 20px;
+    background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    width: 100%;
-    max-width: 500px;
-    margin: 20px auto;
-    text-align: left;
 }
 
-.profile-card .user-details {
-    list-style: none;
+.profile-details {
+ 	padding: 0px 100px 0px 0px;
+ 	margin: 0;
+ 	grid-column: 1/  2;
+  	grid-row: 1;
+ }
+ 
+ .rank-icon-wrapper {
+    grid-column: 2/  2;
+  	grid-row: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit {
+	grid-column: 1 / span 2;
+  	grid-row: 2;
+	}
+
+
+.user-details {
+    list-style-type: none;
     padding: 0;
-    margin: 0 0 20px 0;
-    font-size: 1.1rem;
+    margin: 0;
+}
+
+.user-details li {
+    margin-bottom: 10px;
+    font-size: 16px;
     color: #333;
 }
 
-.profile-card .user-details li {
-    margin-bottom: 15px;
+.rank-icon {
+    width: 100px;
+    height: 100px;
 }
 
-.profile-card .user-details strong {
-    color: #004080;
-}
-
-/* Edit Profile Button */
 .btn-edit {
     background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
+    color: white;
     border: none;
+    padding: 10px 20px;
+    font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1.1rem;
     transition: background-color 0.3s ease;
-    display: inline-block;
-    margin-top: 20px;
+    width: 100%; /* Full width */
 }
 
 .btn-edit:hover {
     background-color: #0056b3;
-}
-
-/* Style for the rank icons */
-.rank-icon {
-    margin-left: 10px;
-    width: 24px;  /* Adjust the width as needed */
-    height: 24px;  /* Adjust the height as needed */
-    vertical-align: middle;  /* Align the icon with the text */
 }
