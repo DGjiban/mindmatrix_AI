@@ -38,6 +38,7 @@
                                  th:attr="data-quiz-id=${game.id}"                               
                                  th:classappend="${iterStat.index == 0} ? 'active'">
                                 <div class="card-question" th:text="${game.question}">Question</div>
+                                		<!-- <p th:text="${game.subject}"></p> -->
                                     <ul class="card-options">
                                         <li th:each="answer, stat : ${game.answers}">
                                             <input type="radio" 
