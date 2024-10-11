@@ -153,6 +153,41 @@ public class FirebaseFirestoreService {
 
         return users;
     }
+    
+    
+    public int getUserRankByEmail(String email) throws InterruptedException, ExecutionException {
+        Firestore db = FirestoreClient.getFirestore();
+        CollectionReference usersCollection = db.collection("users");
+
+        // Fetch all users and their points
+        ApiFuture<QuerySnapshot> querySnapshot = usersCollection.get();
+        List<User> users = new ArrayList<>();
+
+        for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+            User user = document.toObject(User.class);
+            if (user.getPoints() != null) {
+                try {
+                    user.setPoints(String.valueOf(Integer.parseInt(user.getPoints())));
+                } catch (NumberFormatException e) {
+                    user.setPoints("0");
+                }
+                users.add(user);
+            }
+        }
+
+        // Sort users by points in descending order
+        users.sort((u1, u2) -> Integer.compare(Integer.parseInt(u2.getPoints()), Integer.parseInt(u1.getPoints())));
+
+        // Find the rank of the user with the given email
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getEmail().equals(email)) {
+                return i + 1;  // Return rank (1-based index)
+            }
+        }
+
+        return -1;  // Return -1 if the user is not found
+    }
+
 
     
 }

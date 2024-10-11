@@ -206,6 +206,7 @@ function displayUserNameAndLoginStatus() {
     }
 }
 
+
 // Log out the user
 function logoutUser() {
     // Clear localStorage
@@ -827,6 +828,26 @@ function searchUser() {
         })
         .catch(error => console.error('Error fetching search results:', error));
 }
+
+// ============================
+//  User Profile Display Logic
+// ============================
+
+document.addEventListener('DOMContentLoaded', function() {
+    const userNameElement = document.getElementById('user-name');
+    const nicknameElement = document.getElementById('nickname');
+    const email = localStorage.getItem('userEmail');
+    const name = localStorage.getItem('userName');
+
+    if (email && name) {
+        // Set the user's name in the navigation
+        userNameElement.style.display = 'inline';
+        nicknameElement.textContent = name;
+
+        // Ensure the profile link passes the email as a query parameter
+        userNameElement.querySelector('a').setAttribute('href', `/profile?email=${email}`);
+    }
+});
 
 
 

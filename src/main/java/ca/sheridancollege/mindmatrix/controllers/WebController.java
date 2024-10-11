@@ -175,8 +175,27 @@ public class WebController {
 	                                       .collect(Collectors.toList());
 	    return filteredUsers;  // Return filtered users as JSON (list)
 	}
-
 	
+	@GetMapping("/profile")
+	public String userInfo(Model model, @RequestParam("email") String email) throws InterruptedException, ExecutionException, java.util.concurrent.ExecutionException {
+	    // Fetch user info from Firestore
+	    User user = firestoreService.getUserNameByEmail(email);
+
+	    // Fetch user rank
+	    int userRank = firestoreService.getUserRankByEmail(email);
+
+	    // Add user details to the model
+	    model.addAttribute("nickname", user.getName());
+	    model.addAttribute("email", user.getEmail());
+	    model.addAttribute("points", user.getPoints());
+	    model.addAttribute("birth", user.getBirth());
+	    model.addAttribute("rank", userRank);  // Add user rank to the model
+
+	    // Forward to the profile page (profile.html)
+	    return "profile";
+	}
+
+
 	
 //	@PostMapping("/quizzes/verifyAnswer")
 //	@ResponseBody
