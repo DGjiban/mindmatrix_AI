@@ -100,9 +100,9 @@ public class AuthController {
     public ResponseEntity<String> updateUserPoints(@RequestBody Map<String, Object> payload) {
         try {
             String email = (String) payload.get("email");
-            int points = (Integer) payload.get("points");
+            String points = (String) payload.get("points");  // Points are now a string
 
-            // Update user points in Firestore
+            // Update user points in Firestore (modify the Firestore service to accept points as a String)
             firebaseFirestoreService.updateUserPoints(email, points);
 
             return ResponseEntity.ok("Points updated successfully");
@@ -110,6 +110,7 @@ public class AuthController {
             return ResponseEntity.status(500).body("Failed to update points: " + e.getMessage());
         }
     }
+
 
 
 }

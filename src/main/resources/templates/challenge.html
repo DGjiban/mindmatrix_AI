@@ -9,38 +9,40 @@
 </head>
 <body>
     <div class="content-wrap">
+        <!-- Fixed Navigation -->
         <nav>
             <ul>
-				<li><a th:href="@{/}">Home</a></li>
+                <li><a th:href="@{/}">Home</a></li>
                 <li><a href="#" id="challenge-link">Challenge</a></li>
-				<li><a th:href="@{/about}">About</a></li>
+                <li><a th:href="@{/about}">About</a></li>
                 <li><a th:href="@{/contact}">Contact</a></li>
-                <!-- Display the user's name here if logged in -->
-			    <li id="user-name" style="display: none;"><a>Welcome, <span id="nickname"></span></a></li>
-			
-			    <li><a th:href="@{/login}" id="login-tab">Login</a></li> 
-			</ul>
+                <li><a th:href="@{/rankings}">Global Ranking</a></li>
+                <li id="user-name" style="display: none;">
+				    <a th:href="@{/profile}">Welcome, <span id="nickname"></span></a>
+				</li>
+                <li><a th:href="@{/login}" id="login-tab">Login</a></li>
+            </ul>
         </nav>
-        
-        <section id="home" class="hero">
-        		<h1 th:text="${message}">Challenge Yourself</h1>
-            <p>Your journey into the world of knowledge begins here.</p>
-        </section>
-            
-    		<div id="challenge">
-			<section id="games">
-				<h2>Gaming Mode</h2>
-				<form id="gameRequestForm" action="/games/generate" method="get">
-					<!-- Display number of questions -->
-					<label for="number">Number of Questions: <span th:text="${questionCount}">Loading...</span></label>
-					<br>
-					<!-- Display user points -->
-					<label for="points">Your Points: <span id="user-points">Loading...</span></label>
-					<button type="submit">Start Game</button>
-				</form>
-			</section>
-		</div>
-    	</div>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <section id="home" class="hero">
+                <h1 th:text="${message}">Challenge Yourself</h1>
+                <p>Your journey into the world of knowledge begins here.</p>
+            </section>
+
+            <!-- Challenge Section -->
+                <section id="games">
+                    <h2>Gaming Mode</h2>
+                    <form id="gameRequestForm" action="/games/generate" method="get">
+                        <label for="number">Number of Questions: <span th:text="${questionCount}">Loading...</span></label>
+                        <br>
+                        <label for="points">Your Points: <span id="user-points">Loading...</span></label>
+                        <button type="submit">Start Game</button>
+                    </form>
+                </section>
+        </main>
+    </div>
 
     <footer class="footer">
         <p>&copy; 2024 MindMatrix. All rights reserved.</p>

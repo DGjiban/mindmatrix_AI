@@ -4,84 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MindMatrix - Game</title>
-<link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <script src="/js/script.js" defer></script>
 </head>
-<body>
-    <div class="content-wrap">
-        <div id="startup">
-            <h1 id="logo">MindMatrix - Game</h1>
-        </div>
 
+<body>
+    <nav>
+        <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a href="#" id="challenge-link">Challenge</a></li>
+            <li><a th:href="@{/about}">About</a></li>
+            <li><a th:href="@{/contact}">Contact</a></li>
+            <!-- Display the user's name here if logged in -->
+            <li id="user-name" style="display: none;">
+			    <a th:href="@{/profile}">Welcome, <span id="nickname"></span></a>
+			</li>
+        
+            <li><a th:href="@{/login}" id="login-tab">Login</a></li> 
+        </ul>
+    </nav>
+    <div class="content-wrap">
+        
         <main id="main-content">
-			<nav>
-	            <ul>
-					<li><a th:href="@{/}">Home</a></li>
-	                <li><a href="#" id="challenge-link">Challenge</a></li>
-					<li><a th:href="@{/about}">About</a></li>
-	                <li><a th:href="@{/contact}">Contact</a></li>
-	                <!-- Display the user's name here if logged in -->
-				    <li id="user-name" style="display: none;"><a>Welcome, <span id="nickname"></span></a></li>
-				
-				    <li><a th:href="@{/login}" id="login-tab">Login</a></li> 
-				</ul>
-	        </nav>
-			<section id="home" class="hero">
-				<h1 th:text="${welcome}"></h1>
-				<p>Your journey into the world of knowledge begins here.</p>
-			</section>
-                <!-- Container to display the stacked cards -->
-                <section>
-                <p><p><p><p><p>
+            <section id="home" class="hero">
+                <h1 th:text="${game}"></h1>
+                <p>Your journey into the world of knowledge begins here.</p>
+            </section>
+            <!-- Container to display the stacked cards -->
+            <section id="game-section">
                 <div class="game-container">
                     <!-- Cards will be displayed here -->
                     <form id="game-form">
                         <div th:each="game, iterStat : ${games}" 
-                        		 class="card" 
-                        		 th:attr="data-quiz-id=${game.id}" 								 
-                        		 th:classappend="${iterStat.index == 0} ? 'active'">
-    							<div class="card-question" th:text="${game.question}">Question</div>
-    								<ul class="card-options">
-        								<li th:each="answer, stat : ${game.answers}">
-            								<input type="radio" 
-            								   	   th:id="${'answer' + stat.index + '_' + game.id}" 
-            								       th:name="${'quiz' + game.id}" 
-            								       th:value="${stat.index}" required>
-            								<label th:for="${'answer' + stat.index + '_' + game.id}" 
-            								       th:text="${answer}" 
-            								   	   style="width: 100%;">Answer Placeholder</label>
-        								</li>
-    								</ul>
-    								<button type="button" class="next-button">Next</button>
-							</div>
+                                 class="card" 
+                                 th:attr="data-quiz-id=${game.id}"                               
+                                 th:classappend="${iterStat.index == 0} ? 'active'">
+                                <div class="card-question" th:text="${game.question}">Question</div>
+                                		<!-- <p th:text="${game.subject}"></p> -->
+                                    <ul class="card-options">
+                                        <li th:each="answer, stat : ${game.answers}">
+                                            <input type="radio" 
+                                                   th:id="${'answer' + stat.index + '_' + game.id}" 
+                                                   th:name="${'quiz' + game.id}" 
+                                                   th:value="${stat.index}" required>
+                                            <label th:for="${'answer' + stat.index + '_' + game.id}" 
+                                                   th:text="${answer}" 
+                                                   style="width: 100%;">Answer Placeholder</label>
+                                        </li>
+                                    </ul>
+                                    <button type="button" class="next-button">Next</button>
+                            </div>
                     </form>
                 </div>
-                </section>
-                <br><br>
-                <!-- Popup Notification Div -->
-    				<div id="answer-popup" class="popup" style="display: none;"></div>
-    				
-    				<div id="summary-box" class="summary-box" style="display: none;">
-				    <h2>Game Summary</h2>
-				    <p id="summary-text"></p>
-				    <button id="close-summary" class="summary-close-button">Close</button>
-				</div>
-    				
-                
-			<section id="finish-game-section" style="text-align: center; margin-top: 20px;">
-		        <form action="/challenge" method="get">
-		            <button type="submit">Finish Game</button>
-		        </form>
-		    </section>
-   
-                
+            </section>
+            <section id="finish-game-section">
+                <form action="/challenge" method="get">
+                    <button type="submit">Finish Game</button>
+                </form>
+            </section>
+            <!-- Popup Notification Div -->
+            <div id="answer-popup" class="popup" style="display: none;"></div>
+            
+            <div id="summary-box" class="summary-box" style="display: none;">
+                <h2>Game Summary</h2>
+                <p id="summary-text"></p>
+                <button id="close-summary" class="summary-close-button">Close</button>
+            </div>
         </main>
-
-        <footer class="footer">
-            <p>&copy; 2024 MindMatrix. All rights reserved.</p>
-        </footer>
     </div>
 
-    
+    <footer class="footer">
+        <p>&copy; 2024 MindMatrix. All rights reserved.</p>
+    </footer>
 </body>
 </html>

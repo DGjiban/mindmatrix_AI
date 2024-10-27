@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.hibernate.sql.exec.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import ca.sheridancollege.mindmatrix.beans.Flashcard;
 import ca.sheridancollege.mindmatrix.beans.Quiz;
+import ca.sheridancollege.mindmatrix.beans.User;
 import ca.sheridancollege.mindmatrix.beans.UserAnswer;
 import ca.sheridancollege.mindmatrix.services.FirebaseFirestoreService;
 import ca.sheridancollege.mindmatrix.services.FlashcardService;
@@ -88,12 +90,13 @@ public class WebController {
 	
 	    @GetMapping("/games/generate")
 		public String generateGames(Model model) throws ExecutionException, InterruptedException, java.util.concurrent.ExecutionException {
-	    	List<Quiz> games = quizService.getAllQuizzes();
-	    	
-	    	Collections.shuffle(games);
-	    	
-		    model.addAttribute("games", games);
-		    return "game"; // This should match "game.html"
+		    	List<Quiz> games = quizService.getAllQuizzes();
+		    	
+		    	Collections.shuffle(games);
+		    	
+			model.addAttribute("games", games);
+			model.addAttribute("game", "Welcome to MindMatrix - Game");
+			return "game"; // This should match "game.html"
 		}
 	
 	
@@ -143,6 +146,56 @@ public class WebController {
 	    return quizService.getAllQuizzes();
 	}
 	
+	@GetMapping("/rankings")
+    public String getRankingsPage(Model model) throws InterruptedException, ExecutionException, java.util.concurrent.ExecutionException {
+        // Fetch users from Firestore
+        List<User> rankedUsers = firestoreService.getRankedUsersByPoints(); // Get ranked users
+
+        // Add the ranked users to the model
+        model.addAttribute("users", rankedUsers);
+        model.addAttribute("rank", "Welcome to MindMatrix - Rankings");
+
+        return "ranking"; // Returns the ranking.html template
+    }
+	
+	@GetMapping("/rankings/topUsers")
+	@ResponseBody
+	public List<User> getTopUsers() throws InterruptedException, ExecutionException, java.util.concurrent.ExecutionException {
+	    List<User> rankedUsers = firestoreService.getRankedUsersByPoints();  // Fetch ranked users
+	    return rankedUsers;  // Return as JSON (list of users)
+	}
+
+	
+	@GetMapping("/rankings/search")
+	@ResponseBody
+	public List<User> searchUsersByName(@RequestParam("name") String name) throws InterruptedException, ExecutionException, java.util.concurrent.ExecutionException {
+	    List<User> allUsers = firestoreService.getRankedUsersByPoints();  // Fetch all users
+	    List<User> filteredUsers = allUsers.stream()
+	                                       .filter(user -> user.getName().toLowerCase().contains(name.toLowerCase()))  // Filter by name
+	                                       .collect(Collectors.toList());
+	    return filteredUsers;  // Return filtered users as JSON (list)
+	}
+	
+	@GetMapping("/profile")
+	public String userInfo(Model model, @RequestParam("email") String email) throws InterruptedException, ExecutionException, java.util.concurrent.ExecutionException {
+	    // Fetch user info from Firestore
+	    User user = firestoreService.getUserNameByEmail(email);
+
+	    // Fetch user rank
+	    int userRank = firestoreService.getUserRankByEmail(email);
+
+	    // Add user details to the model
+	    model.addAttribute("nickname", user.getName());
+	    model.addAttribute("email", user.getEmail());
+	    model.addAttribute("points", user.getPoints());
+	    model.addAttribute("birth", user.getBirth());
+	    model.addAttribute("rank", userRank);  // Add user rank to the model
+
+	    // Forward to the profile page (profile.html)
+	    return "profile";
+	}
+
+
 	
 //	@PostMapping("/quizzes/verifyAnswer")
 //	@ResponseBody

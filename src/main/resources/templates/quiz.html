@@ -1,101 +1,76 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MindMatrix</title>
-<link rel="stylesheet" href="/css/style.css">
-<script src="/js/script.js" defer></script>
-
-<!-- Language Translation API Weglot start here-->
-<script type="text/javascript" src="https://cdn.weglot.com/weglot.min.js"></script>
-<script>
-    Weglot.initialize({
-        api_key: 'wg_da9e1bc06ffb50ab190ecf58a9b02ad10'
-    });
-</script><!-- Language Translation API Weglot complete here-->
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz | MindMatrix</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/script.js" defer></script>
 </head>
 <body>
-	<div class="content-wrap">
-		<div id="startup">
-			<h1 id="logo">MindMatrix</h1>
-		</div>
-	</div>
+    <div class="content-wrap">
+        <!-- Fixed Navigation -->
+        <nav>
+            <ul>
+                <li><a th:href="@{/}">Home</a></li>
+                <li><a href="#" id="challenge-link">Challenge</a></li>
+                <li><a th:href="@{/about}">About</a></li>
+                <li><a th:href="@{/contact}">Contact</a></li>
+                <li><a th:href="@{/rankings}">Global Ranking</a></li>
+                <li id="user-name" style="display: none;">
+				    <a th:href="@{/profile}">Welcome, <span id="nickname"></span></a>
+				</li>
+                <li><a th:href="@{/login}" id="login-tab">Login</a></li>
+            </ul>
+        </nav>
 
-		<main id="main-content">
-			<nav>
-				<ul>
-					<li><a th:href="@{/}">Home</a></li>
-                    <li><a href="#" id="challenge-link">Challenge</a></li>
-					<li><a th:href="@{/about}">About</a></li>
-                    <li><a th:href="@{/contact}">Contact</a></li>
-                    <!-- Display the user's name here if logged in -->
-			        <li id="user-name" style="display: none;"><a>Welcome, <span id="nickname"></span></a></li>
-			
-			        <li><a th:href="@{/login}" id="login-tab">Login</a></li> 
-				</ul>
-			</nav>
-			<section id="home" class="hero">
-				<p>Your journey into the world of knowledge begins here.</p>
-			</section>
+        <!-- Main Content -->
+        <main id="main-content">
+            <section id="home" class="hero">
+                <h1>Quiz Time!</h1>
+                <p>Test your knowledge and have fun!</p>
+            </section>
 
-			<section id="quizzes">
-				<div id="quiz-results"></div>
-				<!-- Dynamically display quizzes -->
-				<div th:if="${quizzes != null}">
-					<div th:each="quiz : ${quizzes}" class="quiz-container"
-						th:attr="data-quiz-id=${quiz.id}">
-						<div class="quiz-question">
-							<h3 th:text="${quiz.question}">Quiz Question Placeholder</h3>
-						</div>
+            <!-- Quiz Content -->
+            <div class="tab-container">
+                <section id="quizzes">
+                    <div id="quiz-results"></div>
 
-						<div th:each="answer, stat : ${quiz.answers}" class="quiz-answer">
-							<input type="radio"
-								th:id="${'answer' + stat.index + '_' + quiz.id}"
-								th:name="${'quiz' + quiz.id}" th:value="${stat.index}">
-							<label th:for="${'answer' + stat.index + '_' + quiz.id}"
-								th:text="${answer}">Answer Placeholder</label>
-						</div>
-						<p>
-						<p>
+                    <!-- Dynamically display quizzes -->
+                    <div th:if="${quizzes != null}">
+                        <div th:each="quiz : ${quizzes}" class="quiz-container" th:attr="data-quiz-id=${quiz.id}">
+                            <div class="quiz-question">
+                                <h3 th:text="${quiz.question}">Quiz Question Placeholder</h3>
+                            </div>
+                            <div th:each="answer, stat : ${quiz.answers}" class="quiz-answer">
+                                <input type="radio" th:id="${'answer' + stat.index + '_' + quiz.id}" th:name="${'quiz' + quiz.id}" th:value="${stat.index}">
+                                <label th:for="${'answer' + stat.index + '_' + quiz.id}" th:text="${answer}">Answer Placeholder</label>
+                            </div>
+                            <div class="show-answer-container">
+                                <button class="show-answer-button">Show Correct Answer</button>
+                                <p class="correct-answer" style="display: none;" th:text="${quiz.correctAnswerText}"></p>
+                            </div>
+                        </div>
+                    </div>
 
-							<!-- Button to reveal the correct answer -->
-						<div class="show-answer-container">
-							<button class="show-answer-button">Show Correct Answer</button>
-							<p class="correct-answer" style="display: none;"
-								th:text="${quiz.correctAnswerText}"></p>
-						</div>
-					</div>
-				</div>
-				<div class="navigation-buttons">
-					<button id="QuizprevButton">Back</button>
-					<button id="QuiznextButton">Next</button>
-					<button id="QuizFinishButton">Finish</button>
-					<p id="quiz-counter">1 of X</p>
-				</div>
-			</section>
-	
-	<!-- TIMER -->
-		
-	 <p>Quiz time: <span id="quizTimer"> </span> Minutes</p>
-	 
-	<div id="timer">
-		 <P>10:00</P>
-	</div>
-	<!-- TIMER -->
-	 
-	</main>
+                    <!-- Navigation Buttons -->
+                    <div class="navigation-buttons">
+                        <button id="QuizprevButton">Back</button>
+                        <button id="QuiznextButton">Next</button>
+                        <button id="QuizFinishButton">Finish</button>
+                        <p id="quiz-counter">1 of X</p>
+                    </div>
+                </section>
+            </div>
 
-	<footer class="footer">
-		
-		<!-- Add this HTML for share links -->
-		<div id="shareLinks" style="display: none;">
-			<p>Share This:</p>
-			<div class="sharethis-inline-share-buttons"></div>
-		</div>
-		
-		<p>&copy; 2024 MindMatrix. All rights reserved.</p>
-	</footer>
+            <!-- Timer -->
+            <p>Quiz time: <span id="quizTimer"> </span> Minutes</p>
+            <div id="timer"><p>10:00</p></div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 MindMatrix. All rights reserved.</p>
+    </footer>
 </body>
 </html>
