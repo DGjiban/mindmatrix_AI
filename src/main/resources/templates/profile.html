@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information | MindMatrix</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a href="#" id="challenge-link">Challenge</a></li>
+            <li><a th:href="@{/about}">About</a></li>
+            <li><a th:href="@{/contact}">Contact</a></li>
+            <li><a th:href="@{/rankings}">Global Ranking</a></li>
+            <li id="user-name" style="display: none;">
+            		<a href="/profile">Welcome, <span id="nickname"></span></a>
+            </li>
+            <li><a th:href="@{/login}" id="login-tab">Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main content wrapper -->
+    <div class="content-wrap">
+        <main id="main-content">
+            <section id="user-info" class="hero">
+                <h1>User Profile</h1>
+                <p>Welcome, <span id="nickname" th:text="${nickname}"></span>! Here is your personal information:</p>
+            </section>
+            <section class="profile-section">
+                <!-- User Info Card -->
+                <div class="profile-card">
+				    <div class="profile-details">
+				        <ul class="user-details">
+				            <li><strong>Name:</strong> <span th:text="${nickname}"></span></li>
+				            <li><strong>Email:</strong> <span th:text="${email}"></span></li>
+				            <li><strong>Birthdate:</strong> <span th:text="${birth}"></span></li>
+				            <li><strong>Points:</strong> <span th:text="${points}"></span></li>
+				            <li><strong>Rank:</strong> <span th:text="${rank}"></span></li>
+				        </ul>
+				    </div>
+				
+				        <!-- Right Side: Rank Icon -->
+				        <div class="rank-icon-wrapper">
+				            <img th:if="${rank == 1}" src="/icons/gold.svg" alt="Gold Medal" class="rank-icon"/>
+				            <img th:if="${rank == 2}" src="/icons/silver.svg" alt="Silver Medal" class="rank-icon"/>
+				            <img th:if="${rank == 3}" src="/icons/bronze.svg" alt="Bronze Medal" class="rank-icon"/>
+				            <img th:if="${rank > 3}" src="/icons/generic.svg" alt="Rank Icon" class="rank-icon"/>
+				        </div>
+				        <div class="edit">
+				        		<button id="edit-profile" class="btn-edit">Edit Profile</button>
+				        </div>
+				    
+				</div>
+			</section>
+
+            
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 MindMatrix. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

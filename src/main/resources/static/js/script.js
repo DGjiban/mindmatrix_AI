@@ -11,24 +11,59 @@ function initStartupAnimation() {
         return;
     }
 
+    // Initially hide the main content
     mainContent.style.opacity = 0;
     mainContent.style.visibility = 'hidden';
 
-    function onScroll() {
-        startup.style.opacity = 0;
+    // Function to hide the startup screen and show main content
+    function hideStartupScreen() {
+        startup.style.opacity = 0;  // Fade out the startup screen
         startup.style.visibility = 'hidden';
+
         setTimeout(() => {
-            startup.style.position = 'absolute';
-        }, 500);
-        mainContent.style.opacity = 1;
-        mainContent.style.visibility = 'visible';
-        window.removeEventListener('scroll', onScroll);
+            startup.style.position = 'absolute';  // Move it off the screen after fading out
+            mainContent.style.opacity = 1;  // Show main content
+            mainContent.style.visibility = 'visible';
+        }, 100);  // 0.1-second delay to allow the startup screen to fade out smoothly
     }
 
-    window.addEventListener('scroll', onScroll);
+    // Simulate delay before startup screen fades out
+    setTimeout(hideStartupScreen, 2000);  // Adjust the delay timing (2 seconds here)
 }
 
-document.addEventListener('DOMContentLoaded', initStartupAnimation);
+// Run the function on page load
+document.addEventListener("DOMContentLoaded", initStartupAnimation);
+
+
+// index tab function
+document.addEventListener('DOMContentLoaded', function () {
+    // By default, display the first tab (flashcards)
+    document.getElementById("flashcards").style.display = "block";
+
+    // Tab navigation logic
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+
+        // Hide all tab content
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        // Remove active class from all tab links
+        tablinks = document.getElementsByClassName("tab-link");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        // Show the current tab and add active class to clicked tab
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    // Attach the openTab function to the global scope if needed
+    window.openTab = openTab;
+});
 
 // ============================
 //  Login / Sign-Up Logic
@@ -65,13 +100,20 @@ async function loginUser() {
         });
 
         const result = await response.json();
-        console.log('Login response:', result);
+        console.log('Login response:', result);  // Log full response for debugging
 
         if (response.ok) {
-            localStorage.setItem('authToken', 'someAuthToken');  // Replace with real token
+            console.log('Points from backend:', result.points);  // Log points specifically
+
+            // Store essential user data in localStorage
+            localStorage.setItem('authToken', 'someAuthToken');  // Replace with a real token if needed
             localStorage.setItem('userName', result.name);       // Store the user's name
-            console.log('User name stored in localStorage:', result.name);
-            alert('Login successful! Welcome, ' + result.name);
+            localStorage.setItem('userPoints', result.points);   // Store the user's points
+            localStorage.setItem('userEmail', result.email);     // Store the user's email for later use
+
+            console.log('User email, name, and points stored in localStorage:', result.email, result.name, result.points);
+
+            alert('Login successful! Welcome, ' + result.name + '. Points: ' + result.points);
             window.location.href = '/';  // Redirect to homepage
         } else {
             alert('Login failed: ' + result.message);
@@ -82,11 +124,37 @@ async function loginUser() {
     }
 }
 
+// Function to fetch and display user points
+function displayUserPoints() {
+    const userPoints = localStorage.getItem('userPoints');  // Fetch points from localStorage
+    const pointsElement = document.getElementById('user-points');  // The element to display points
+
+    // Debug log for points and DOM element
+    console.log('Retrieved userPoints from localStorage:', userPoints);
+    console.log('Points element found in DOM:', pointsElement);
+
+    if (pointsElement) {
+        if (userPoints) {
+            console.log('Setting userPoints in HTML:', userPoints);  // Log the points being set
+            pointsElement.textContent = userPoints;  // Display points if they exist
+        } else {
+            console.log('No userPoints found, setting default 0');  // Log if no points found
+            pointsElement.textContent = '0';  // Default to 0 if points are not available
+        }
+    } else {
+        console.error('Element with id "user-points" not found.');  // Log error if element is missing
+    }
+}
+document.addEventListener('DOMContentLoaded', function() {
+    displayUserPoints();  // Call this function after the page has fully loaded
+});
+
 // Handle user sign-up
 async function signUpUser() {
     const name = document.getElementById("signup-name").value;
     const email = document.getElementById("signup-email").value;
     const password = document.getElementById("signup-password").value;
+    const birth = document.getElementById("signup-birth").value;  // Get the birthdate from the form
 
     try {
         const response = await fetch('/auth/signup', {
@@ -97,7 +165,8 @@ async function signUpUser() {
             body: new URLSearchParams({
                 name: name,
                 email: email,
-                password: password
+                password: password,
+                birth: birth  // Add the birthdate to the POST request
             })
         });
 
@@ -113,7 +182,7 @@ async function signUpUser() {
     }
 }
 
-// Check if user is logged in and display their name and update the Login tab
+// Display user's name and login/logout status
 function displayUserNameAndLoginStatus() {
     const userName = localStorage.getItem('userName');
     const authToken = localStorage.getItem('authToken');
@@ -137,22 +206,19 @@ function displayUserNameAndLoginStatus() {
     }
 }
 
-// Function to log out the user
+
+// Log out the user
 function logoutUser() {
-    // Clear localStorage (authToken and userName)
+    // Clear localStorage
     localStorage.removeItem('authToken');
     localStorage.removeItem('userName');
+    localStorage.removeItem('userPoints');
+    localStorage.removeItem('userEmail');  // Remove email from localStorage
 
-    // Redirect the user to the login page after logging out
+    // Redirect to login page
     alert('You have been logged out.');
     window.location.href = '/login';
 }
-
-// Call this function when the page loads
-window.onload = function() {
-    displayUserNameAndLoginStatus();  // Display user's name and login/logout status
-};
-
 
 // ============================
 //  Flashcards, Quiz & Challenge Logic
@@ -170,16 +236,6 @@ function checkLoginBeforeChallenge() {
         window.location.href = '/challenge';
     }
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    const challengeLink = document.getElementById('challenge-link');
-    if (challengeLink) {
-        challengeLink.addEventListener('click', function (event) {
-            event.preventDefault();
-            checkLoginBeforeChallenge();
-        });
-    }
-});
 
 // Flashcards Logic
 function initFlashcards() {
@@ -365,8 +421,6 @@ function initQuizTimer() {
     updateTimer();
 }
 
-
-
 // Show Answer functionality
 function initShowAnswers() {
     const showAnswerButtons = document.querySelectorAll('.show-answer-button');
@@ -465,6 +519,369 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     });
+});
+
+// ============================
+//  Document Ready Initialization
+// ============================
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded');
+
+    // Initialize startup animation
+    initStartupAnimation();
+
+    // Display user name and login status
+    displayUserNameAndLoginStatus();
+
+    // Check if we're on the challenge page, and if so, display user points
+    if (document.getElementById('user-points')) {
+        displayUserPoints();
+    }
+
+    // Setup event listeners for challenge access
+    const challengeLink = document.getElementById('challenge-link');
+    if (challengeLink) {
+        challengeLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            checkLoginBeforeChallenge();
+        });
+    }
+
+    // Initialize flashcards if needed
+    initFlashcards();
+
+    // Initialize quiz if needed
+    initQuiz();
+    initQuizTimer();
+    initShowAnswers();
+});
+
+// ============================
+//  Game Card Answer Check
+// ============================
+document.addEventListener("DOMContentLoaded", function () {
+    const cards = document.querySelectorAll('.card');
+    let currentCardIndex = 0;
+    let correctAnswersCount = 0;  // Variable to track correct answers
+    const answers = [];
+
+    // Function to update the card stack positions
+    const updateCardStack = () => {
+        cards.forEach((card, index) => {
+            const relativeIndex = (index - currentCardIndex + cards.length) % cards.length;
+            card.style.zIndex = cards.length - relativeIndex;
+
+            if (relativeIndex === 0) {
+                card.style.transform = 'translateY(0px) scale(1)';
+                card.style.opacity = 1;
+            } else {
+                card.style.opacity = 0; // Hide remaining cards
+            }
+        });
+    };
+
+    // Fetch all quizzes and store them in localStorage
+    fetch('/quizzes/fetchAll')
+        .then(response => response.json())
+        .then(data => {
+            // Convert ID to string before storing in localStorage
+            data.forEach(quiz => quiz.id = String(quiz.id));  // Ensure id is stored as a string
+            localStorage.setItem('quizzes', JSON.stringify(data));
+        })
+        .catch(error => console.error('Error fetching quizzes:', error));
+
+    // Initially set the correct card positions
+    updateCardStack();
+
+    // Event listener for the Next button
+    document.querySelectorAll('.next-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const currentCard = cards[currentCardIndex];
+            const quizId = currentCard.getAttribute('data-quiz-id');
+            const selectedAnswer = currentCard.querySelector('input[type="radio"]:checked');
+
+            if (selectedAnswer) {
+                const userAnswer = {
+                    quizId: quizId,
+                    selectedAnswer: selectedAnswer.value
+                };
+
+                // Verify the answer locally and show the popup
+                verifyAnswerLocally(userAnswer, function(isCorrect) {
+                    if (isCorrect) {
+                        correctAnswersCount++;  // Increment correct answers count
+                        showPopup("Correct Answer!", true);  // Show correct popup
+                    } else {
+                        showPopup("Incorrect Answer!", false);  // Show incorrect popup
+                    }
+
+                    // Move to the next card after showing feedback
+                    currentCardIndex++;
+                    if (currentCardIndex < cards.length) {
+                        updateCardStack();
+                    } else {
+                        console.log("All questions answered.");
+                    }
+                });
+
+                // Store the answer for later processing
+                answers.push(userAnswer);
+            } else {
+                alert("Please select an answer before proceeding.");
+            }
+        });
+    });
+
+    // Event listener for the Finish button
+    document.querySelector('form[action="/challenge"]').addEventListener('submit', function (event) {
+        event.preventDefault();  // Prevent form submission to handle finish logic
+        
+        // Calculate the total points and update localStorage
+        finishGame();
+    });
+
+    // Local verification function
+    function verifyAnswerLocally(userAnswer, callback) {
+        const quizzes = JSON.parse(localStorage.getItem('quizzes'));
+        const quiz = quizzes.find(q => q.id === userAnswer.quizId);
+
+        if (quiz) {
+            const correctAnswer = quiz.correctAnswerText.trim().split('Correct answer: ')[1];  // Extract the correct answer
+            const isCorrect = quiz.answers[userAnswer.selectedAnswer] === correctAnswer;
+            callback(isCorrect);
+        } else {
+            console.error('Quiz not found locally for quizId:', userAnswer.quizId);
+            callback(false);
+        }
+    }
+    
+    // Function to show a popup message
+    function showPopup(message, isSuccess = true) {
+        const popup = document.getElementById("answer-popup");
+
+        if (!popup) {
+            console.error("Popup element not found.");
+            return;
+        }
+
+        // Set the message and styles based on success or failure
+        popup.textContent = message;
+        popup.style.display = "block";
+        popup.style.backgroundColor = isSuccess ? "green" : "red";
+        popup.style.color = "white";
+
+        // Hide the popup after 2 seconds
+        setTimeout(() => {
+            popup.style.display = "none";
+        }, 2000);
+    }
+
+
+    // Function to handle finishing the game
+    function finishGame() {
+	    const totalQuestionsAnswered = answers.length;  // Use answers.length to track how many questions were answered
+	    const currentPoints = parseInt(localStorage.getItem('userPoints')) || 0;  // Get current points from localStorage
+	    const sessionPoints = correctAnswersCount;  // Points collected in this session only
+	    const newPoints = currentPoints + sessionPoints;  // Total points after this session
+	
+	    // Update the points in localStorage
+	    localStorage.setItem('userPoints', newPoints);
+	    console.log("Updated points in localStorage:", newPoints);
+	
+	    // Push updated points to Firebase and database
+	    updatePointsInFirebase(newPoints)
+	        .then(() => {
+	            console.log('Points successfully updated in Firebase and database');
+	            // Show the summary box with correct session info
+	            showSummaryBox(totalQuestionsAnswered, sessionPoints);  // Pass sessionPoints, not newPoints
+	        })
+	        .catch(error => {
+	            console.error('Error updating points in Firebase:', error);
+	            showPopup('Error updating points. Please try again.', false);
+	        });
+	}
+	
+	// Function to display the summary box
+	function showSummaryBox(totalQuestionsAnswered, sessionPoints) {
+	    const summaryBox = document.getElementById("summary-box");
+	    const summaryText = document.getElementById("summary-text");
+	    const closeSummaryButton = document.getElementById("close-summary");
+	
+	    // Update the content of the summary box with the correct session data
+	    summaryText.textContent = `You answered ${totalQuestionsAnswered} questions and collected ${sessionPoints} points in this game.`;
+	
+	    // Show the summary box
+	    summaryBox.style.display = "block";
+	
+	    // Close the summary box and redirect to challenge.html when the button is clicked
+	    closeSummaryButton.addEventListener("click", () => {
+	        summaryBox.style.display = "none";
+	        window.location.href = '/challenge';  // Redirect to challenge.html
+	    });
+	}
+
+
+
+
+
+
+    // Function to update points in Firebase
+async function updatePointsInFirebase(newPoints) {
+    const email = localStorage.getItem('userEmail');  // Fetch email from localStorage
+
+    try {
+        // Convert the points to a string before sending to Firebase
+        const pointsString = newPoints.toString();  // Convert int to string
+
+        const response = await fetch('/auth/updatePoints', {  // Update the endpoint here
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email, points: pointsString })  // Send email and updated points as a string
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update points in the database.');
+        }
+
+        console.log('Points updated in Firebase and database');
+    } catch (error) {
+        console.error('Error updating points:', error);
+        throw error;
+    }
+}
+
+
+});
+
+// ============================
+//  Ranking Logic
+// ============================
+// Ensure the ranking script only runs on the ranking page
+// Ensure the ranking script only runs on the ranking page
+document.addEventListener('DOMContentLoaded', function () {
+    const rankingPage = document.getElementById('ranking-page');
+
+    // Check if we're on the ranking page
+    if (rankingPage) {
+        loadRankings();  // Load all rankings when the page loads
+
+        // Search button event listener
+        const searchButton = document.getElementById('searchButton');
+        searchButton.addEventListener('click', searchUser);
+    }
+});
+
+// Function to load all rankings
+function loadRankings() {
+    fetch('/rankings/topUsers')
+        .then(response => response.json())
+        .then(data => displayRankings(data))
+        .catch(error => console.error('Error fetching rankings:', error));
+}
+
+// Function to adjust font size for long names
+function adjustFontSizeForLongNames(element, maxLength) {
+    const nameLength = element.textContent.length;
+    if (nameLength > maxLength) {
+        element.style.fontSize = `${Math.max(12, 20 - (nameLength - maxLength))}px`; // Adjust font size dynamically
+    }
+}
+
+// Function to display rankings on the podium and in the main table
+function displayRankings(users) {
+    const rankingBody = document.getElementById('ranking-body');
+    rankingBody.innerHTML = '';  // Clear the table
+
+    // Fill podium for the top 3 users
+    if (users.length >= 3) {
+        // Gold (1st place)
+        const firstPlaceName = document.getElementById('first-place');
+        const firstPlacePoints = document.getElementById('first-points');
+        firstPlaceName.textContent = users[0].name;
+        firstPlacePoints.textContent = users[0].points + ' points';
+        adjustFontSizeForLongNames(firstPlaceName, 8);
+
+        // Silver (2nd place)
+        const secondPlaceName = document.getElementById('second-place');
+        const secondPlacePoints = document.getElementById('second-points');
+        secondPlaceName.textContent = users[1].name;
+        secondPlacePoints.textContent = users[1].points + ' points';
+        adjustFontSizeForLongNames(secondPlaceName, 8);
+
+        // Bronze (3rd place)
+        const thirdPlaceName = document.getElementById('third-place');
+        const thirdPlacePoints = document.getElementById('third-points');
+        thirdPlaceName.textContent = users[2].name;
+        thirdPlacePoints.textContent = users[2].points + ' points';
+        adjustFontSizeForLongNames(thirdPlaceName,8);
+    }
+
+    // Display users ranked 4th to 10th in the table
+    for (let i = 3; i < users.length && i < 10; i++) {
+        const user = users[i];
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${i + 1}</td>
+            <td>${user.name}</td>
+            <td>${user.points}</td>
+        `;
+        rankingBody.appendChild(row);
+    }
+}
+
+// Function to search for a user by name
+function searchUser() {
+    const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+    const searchBody = document.getElementById('search-body');
+    searchBody.innerHTML = '';  // Clear previous search results
+
+    if (searchTerm === '') {
+        return;  // If search term is empty, do nothing
+    }
+
+    fetch(`/rankings/search?name=${searchTerm}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="3">No users found with name "${searchTerm}"</td>`;
+                searchBody.appendChild(row);
+            } else {
+                // Display search results in the separate table
+                data.forEach((user, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${user.name}</td>
+                        <td>${user.points}</td>
+                    `;
+                    searchBody.appendChild(row);
+                });
+            }
+        })
+        .catch(error => console.error('Error fetching search results:', error));
+}
+
+// ============================
+//  User Profile Display Logic
+// ============================
+
+document.addEventListener('DOMContentLoaded', function() {
+    const userNameElement = document.getElementById('user-name');
+    const nicknameElement = document.getElementById('nickname');
+    const email = localStorage.getItem('userEmail');
+    const name = localStorage.getItem('userName');
+
+    if (email && name) {
+        // Set the user's name in the navigation
+        userNameElement.style.display = 'inline';
+        nicknameElement.textContent = name;
+
+        // Ensure the profile link passes the email as a query parameter
+        userNameElement.querySelector('a').setAttribute('href', `/profile?email=${email}`);
+    }
 });
 
 
