@@ -27,7 +27,7 @@ public class FirebaseFirestoreService {
         userData.put("email", email);
         userData.put("name", name);
         userData.put("birth", birth);
-        userData.put("points", 0);  // Store points as an integer, default to 0
+        userData.put("points", "0");
 
         DocumentReference docRef = db.collection("users").document(email);
         ApiFuture<WriteResult> result = docRef.set(userData);
