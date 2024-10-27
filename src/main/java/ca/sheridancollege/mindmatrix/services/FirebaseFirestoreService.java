@@ -48,7 +48,7 @@ public class FirebaseFirestoreService {
             currentUser.setBirth(document.getString("birth"));
 
             // Safely handle points whether it's stored as a Number or String
-            Object pointsField = document.get("points");
+            Object pointsField = document.getString("points");
 
             if (pointsField instanceof Long) {
                 currentUser.setPoints(String.valueOf(pointsField));  // Convert Long to String
