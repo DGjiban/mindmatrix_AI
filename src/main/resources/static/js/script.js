@@ -176,6 +176,7 @@ async function signUpUser() {
         } else {
             alert('Sign-up failed: ' + result);
         }
+		window.location.href = '/';  // Redirect to homepage
     } catch (error) {
         console.error('Error during sign-up:', error);
         alert('An error occurred during sign-up.');
@@ -217,7 +218,7 @@ function logoutUser() {
 
     // Redirect to login page
     alert('You have been logged out.');
-    window.location.href = '/login';
+    window.location.href = '/';  // Redirect to homepage
 }
 
 // ============================
