@@ -42,8 +42,8 @@ public class FlashcardService {
 
                     if (card != null) {
                         // Check if a flashcard with the same question or answer exists
-                        boolean exists = !flashCardRepository.findByQuestion(card.getQuestion()).isEmpty()
-                                         || !flashCardRepository.findByAnswer(card.getAnswer()).isEmpty();
+                       // boolean exists = !flashCardRepository.findByQuestion(card.getQuestion()).isEmpty()
+                         //                || !flashCardRepository.findByAnswer(card.getAnswer()).isEmpty();
 
                         if (!exists) {
                             flashCardRepository.save(card);
