@@ -27,7 +27,7 @@ public class FirebaseFirestoreService {
         userData.put("email", email);
         userData.put("name", name);
         userData.put("birth", birth);
-        userData.put("points", 0);  // Store points as an integer, default to 0
+        userData.put("points", "0");
 
         DocumentReference docRef = db.collection("users").document(email);
         ApiFuture<WriteResult> result = docRef.set(userData);
@@ -48,7 +48,7 @@ public class FirebaseFirestoreService {
             currentUser.setBirth(document.getString("birth"));
 
             // Safely handle points whether it's stored as a Number or String
-            Object pointsField = document.get("points");
+            Object pointsField = document.getString("points");
 
             if (pointsField instanceof Long) {
                 currentUser.setPoints(String.valueOf(pointsField));  // Convert Long to String
