@@ -65,6 +65,38 @@ document.addEventListener('DOMContentLoaded', function () {
     window.openTab = openTab;
 });
 
+	// display loading overlay when submitting forms
+document.addEventListener("DOMContentLoaded", function() {
+    const flashcardForm = document.getElementById("flashcard-form");
+    const quizForm = document.getElementById("quiz-form");
+    const loadingOverlay = document.getElementById("loading-overlay");
+
+    function showLoading() {
+        loadingOverlay.style.display = "flex";
+    }
+
+    function hideLoading() {
+        loadingOverlay.style.display = "none";
+    }
+
+    // Display loading animation when submitting forms
+    if (flashcardForm) {
+        flashcardForm.addEventListener("submit", function(event) {
+            showLoading();
+        });
+    }
+
+    if (quizForm) {
+        quizForm.addEventListener("submit", function(event) {
+            showLoading();
+        });
+    }
+
+    // after loading, hide loading animation
+    window.addEventListener("load", hideLoading);
+});
+
+
 // ============================
 //  Login / Sign-Up Logic
 // ============================
