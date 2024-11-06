@@ -140,9 +140,6 @@ nav ul li a:hover {
     margin: 0 auto;
 }
 
-
-
-
 /* Adjust tab container for Flashcards and Quizzes */
 .tab-container {
     flex-grow: 1;  /* Let the tab container grow to fill the vertical space */
@@ -190,6 +187,53 @@ nav ul li a:hover {
 
 .tab-content.active {
     display: block;
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+form label {
+    font-size: 16px;
+    color: #333;
+}
+
+form input[type="number"], form input[type="text"] {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+form button {
+    padding: 10px 20px;
+    background-color: #ff9900;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #e68a00;
+}
+
+/* Input Styles */
+input[type="number"], input[type="text"] {
+    width: 50px;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+input[type="text"] {
+    width: 120px;
 }
 
 /* Bottom Sections */
@@ -391,42 +435,7 @@ nav ul li a:hover {
     display: none;
 }
 
-
-/* Form Styling */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-form label {
-    font-size: 16px;
-    color: #333;
-}
-
-form input[type="number"], form input[type="text"] {
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-}
-
-form button {
-    padding: 10px 20px;
-    background-color: #ff9900;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-form button:hover {
-    background-color: #e68a00;
-}
-
-/* Navigation buttons */
+/* Quiz navigation buttons */
 .navigation-buttons {
     display: flex;
     justify-content: center;
@@ -457,18 +466,7 @@ form button:hover {
     color: #555;
 }
 
-/* Input Styles */
-input[type="number"], input[type="text"] {
-    width: 50px;
-    padding: 5px;
-    margin: 5px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
 
-input[type="text"] {
-    width: 120px;
-}
 
 /* Show Answer Button Styling */
 .show-answer-button {

@@ -51,24 +51,37 @@ public class WebController {
     }
 	
 	@GetMapping("/flashcards/generate")
-    public String generateFlashcards(@RequestParam("prompt") String subject, 
-                                     @RequestParam("number") int number, Model model) {
-        model.addAttribute("message", "Welcome to MindMatrix");
-        List<Flashcard> flashcards = flashcardService.generateFlashcards(subject, number);
-        
-        
-        model.addAttribute("flashcards", flashcards);
-        System.out.println(flashcards);
-        return "flashcard"; // Redirecting back to index page with flashcards
-    }
-	
+	public String generateFlashcards(@RequestParam("prompt") String subject,
+	                                 @RequestParam("number") int number, Model model) {
+	    // 限制生成的 flashcard 数量
+	    final int FLASHCARD_LIMIT = 10;
+	    if (number > FLASHCARD_LIMIT) {
+	        model.addAttribute("error", "You can only generate up to " + FLASHCARD_LIMIT + " flashcards at a time.");
+	        return "index"; // 返回到首页或适当的页面，并显示错误消息
+	    }
+
+	    model.addAttribute("message", "Welcome to MindMatrix");
+	    List<Flashcard> flashcards = flashcardService.generateFlashcards(subject, number);
+	    model.addAttribute("flashcards", flashcards);
+	    System.out.println(flashcards);
+	    return "flashcard"; // 返回 flashcard 模板
+	}
+
 	@GetMapping("/quizzes/generate")
-    public String generateQuizzes(@RequestParam("subject") String subject, 
-                                  @RequestParam("number") int number, Model model) {
-        List<Quiz> quizzes = quizService.getOrCreateQuizzes(subject, number);
-        model.addAttribute("quizzes", quizzes);
-        return "quiz"; // Or adjust based on your page structure
-    }
+	public String generateQuizzes(@RequestParam("subject") String subject,
+	                              @RequestParam("number") int number, Model model) {
+	    // 限制生成的 quiz 数量
+	    final int QUIZ_LIMIT = 20;
+	    if (number > QUIZ_LIMIT) {
+	        model.addAttribute("error", "You can only generate up to " + QUIZ_LIMIT + " quizzes at a time.");
+	        return "index"; // 返回到首页或适当的页面，并显示错误消息
+	    }
+
+	    List<Quiz> quizzes = quizService.getOrCreateQuizzes(subject, number);
+	    model.addAttribute("quizzes", quizzes);
+	    return "quiz"; // 返回 quiz 模板
+	}
+
 	
 
 	@GetMapping("/challenge")
